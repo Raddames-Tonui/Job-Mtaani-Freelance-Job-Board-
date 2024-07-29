@@ -3,7 +3,7 @@ import womanprop from '../assets/womanprop.png';
 
 const FreelancerSection = () => {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between bg-blue-500  rounded-3xl ">
+    <div className="flex flex-col md:flex-row items-center justify-between bg-blue-400  rounded-3xl  ">
       <div className="text-white px-10 mb-8 md:mb-0 md:mr-8 mt-10 md:mt-4">
         <div className='flex-row items-center justify-center'>
             <h1 className="text-3xl font-bold mb-4">With talented freelancers do more work.</h1>

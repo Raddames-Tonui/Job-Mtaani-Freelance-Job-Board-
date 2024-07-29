@@ -1,11 +1,12 @@
 import React from 'react';
 import { FaSearch } from 'react-icons/fa';
 import FeaturesSection from '../components/FeaturesSection';
-import FreelancerSection from '../components/FreelancerSection';
-import ServicesSection from '../components/ServiceSection';
+import FreelancerSection from '../home/FreelancerSection';
+import ServicesSection from '../home/ServiceSection';
 import Footer from '../components/Footer';
-import ProfileCard from '../components/ProfileCard';
-import JobFinder from '../components/JobFinder';
+import JobFinder from '../home/JobFinder';
+import AdvertiseJob from '../home/AdvertiseJob';
+import TalentSection from '../home/TalentSection';
 
 function Home() {
   const profiles = [
@@ -51,15 +52,9 @@ function Home() {
     <div className="bg-blue-50 min-h-screen">
       <JobFinder />
       <ServicesSection />
-      <FeaturesSection />
-      {/* <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {profiles.map(profile => (
-            <ProfileCard key={profile.name} {...profile} />
-          ))}
-        </div>
-      </div> */}
+      <TalentSection />
       <FreelancerSection />
+      <AdvertiseJob />
       <Footer />
     </div>
   );
