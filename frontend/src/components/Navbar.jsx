@@ -1,97 +1,61 @@
-import React, { useContext, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { BiSolidBadgeCheck } from 'react-icons/bi';
+import React, { useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 
 const Navbar = () => {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
-    const closeMobileMenu = () => {
-        setIsMobileMenuOpen(false);
-    };
+  const toggleDropdown = (index) => {
+    setIsDropdownOpen(isDropdownOpen === index ? null : index);
+  };
 
-    return (
-        <>
-            <div className="relative bg-green-800 flex h-[10vh]">
-                <div className="container mx-auto flex justify-between items-center py-4 px-6">
-                    <div className="flex items-center">
-                        <NavLink to="/" className="flex text-2xl font-bold text-white ml-2">
-                        GigConnect
-                            <BiSolidBadgeCheck className="text-3xl text-[#35ca22]" />
-                        </NavLink>
-
-                    </div>
-
-                    {/* Desktop menu */}
-                    <div className="hidden md:flex items-center space-x-6">
-                     
-                    <NavLink to="/" className="text-white hover:underline font-semibold hover:font-bold">Home</NavLink>
-
-                                <NavLink to="/users/profile_update" className="text-white hover:underline font-semibold hover:font-bold">Update profile</NavLink>
-                                {/* <button
-                                    className="relative w-24 h-10 rounded-3xl text-sm font-inherit border-none overflow-hidden z-10 bg-gradient-to-r from-[#36e66e] to-[#f9f047] hover:bg-gradient-to-r hover:from-[#0fd850] hover:to-[#35ca22] transition-all duration-500 ring-slate-900 hover:ring-black"
-                                    // onClick={logout_user}
-                                >
-                                    <span className="relative z-10 px-2 text-black font-semibold">
-                                        Log Out
-                                    </span>
-                                </button> */}
-                                <img 
-                                    // src={currentUser?.avatar} 
-                                    alt="Profile Picture" 
-                                    className="rounded-full w-12 h-12 ring-2 ring-[#35ca22] object-cover" 
-                                />
-                   
-                                <NavLink to="/users/signup" className="text-white hover:underline font-semibold hover:font-bold">Sign Up</NavLink>
-                                <button
-                                    className="relative w-24 h-10 rounded-3xl text-sm font-inherit border-none overflow-hidden z-10 bg-gradient-to-r from-[#36e66e] to-[#f9f047] hover:bg-gradient-to-r hover:from-[#0fd850] hover:to-[#35ca22] transition-all duration-500 ring-slate-900 hover:ring-black"
-                                >
-                                    <NavLink to="/users/signin" className="relative z-10 text-black font-semibold">
-                                        Sign In
-                                    </NavLink>
-                                </button>
-                   
-                    </div>
-
-                    {/* Mobile menu */}
-                    <div className="md:hidden flex items-center">
-                        <button onClick={toggleMobileMenu}>
-                            {isMobileMenuOpen ? <FaTimes className="text-2xl text-white" /> : <FaBars className="text-2xl text-white" />}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* {isMobileMenuOpen && (
-                <>
-                    <div className="md:hidden fixed inset-0 z-10" onClick={closeMobileMenu}></div>
-                    <div className="md:hidden fixed top-auto right-0 w-[40vw] h-[90vh] z-20 bg-gray-800 opacity-90 flex justify-center items-center shadow-lg">
-                        <div className="flex flex-col items-center space-y-6 py-4 px-6">
-                            {currentUser ? (
-                                <>
-                                    <NavLink to="/users/tasks" className="text-white hover:text-gray-900 text-2xl font-semibold" onClick={toggleMobileMenu}>My Tasks</NavLink>
-                                    <NavLink to="/users/profile_update" className="text-white hover:text-gray-900 text-2xl font-semibold" onClick={toggleMobileMenu}>Profile</NavLink>
-                                    <button className="text-white hover:text-gray-900 text-2xl font-semibold" onClick={logout_user}>
-                                        Sign out
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <NavLink to="/" className="text-white hover:text-gray-900 text-2xl font-semibold" onClick={toggleMobileMenu}>Home</NavLink>
-                                    <NavLink to="/users/signup" className="text-white hover:text-gray-900 text-2xl font-semibold" onClick={toggleMobileMenu}>Sign Up</NavLink>
-                                    <NavLink to="/users/signin" className="text-white hover:text-gray-900 text-2xl font-semibold" onClick={toggleMobileMenu}>Sign In</NavLink>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </>
-            )} */}
-        </>
-    );
+  return (
+    <header className="w-full flex justify-between items-center px-6 bg-gradient-to-r from-purple-600 to-blue-400 h-[10vh]">
+      <div className="flex items-center space-x-2">
+        <h1 className="text-xl font-bold text-white">My Job</h1>
+      </div>
+      <nav className="hidden md:flex space-x-6 text-white">
+        <NavLink to="/" className="hover:underline">Home</NavLink>
+        <NavLink to="/job-listings" className="hover:underline">Job Listings</NavLink>
+        <NavLink to="/my-jobs" className="hover:underline">My Jobs</NavLink>
+        <NavLink to="/messages" className="hover:underline">Messages</NavLink>
+        <NavLink to="/profile" className="hover:underline">Profile</NavLink>
+        <NavLink to="/admin-dashboard" className="hover:underline">Admin</NavLink>
+      </nav>
+      <div className="hidden md:flex items-center space-x-4">
+        <NavLink to="/become-seller" className="text-white hover:underline">Got Job?</NavLink>
+        <NavLink to="/login" className="py-2 px-4 border border-white text-white rounded-full hover:bg-white hover:text-black">Sign in</NavLink>
+        <NavLink to="/signup" className="py-2 px-4 bg-black text-white rounded-full">Join</NavLink>
+      </div>
+      <div className="md:hidden">
+        <button onClick={toggleMenu} className="text-white focus:outline-none">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}></path>
+          </svg>
+        </button>
+      </div>
+      {isOpen && (
+        <div className="absolute top-[10vh] left-0 w-full bg-gradient-to-r from-purple-600 to-blue-400 md:hidden">
+          <nav className="flex flex-col items-center space-y-4 py-4 text-white">
+            <NavLink to="/" className="hover:underline">Home</NavLink>
+            <NavLink to="/job-listings" className="hover:underline">Job Listings</NavLink>
+            <NavLink to="/my-jobs" className="hover:underline">My Jobs</NavLink>
+            <NavLink to="/messages" className="hover:underline">Messages</NavLink>
+            <NavLink to="/profile" className="hover:underline">Profile</NavLink>
+            <NavLink to="/admin-dashboard" className="hover:underline">Admin</NavLink>
+            <NavLink to="/become-seller" className="hover:underline">Become a Seller</NavLink>
+            <NavLink to="/login" className="py-2 px-4 border border-white text-white rounded-full hover:bg-white hover:text-black">Sign in</NavLink>
+            <NavLink to="/signup" className="py-2 px-4 bg-black text-white rounded-full">Join</NavLink>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
 };
 
 export default Navbar;
+
