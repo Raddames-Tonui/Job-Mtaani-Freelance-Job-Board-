@@ -5,7 +5,7 @@ import clientprop3 from '../assets/client-prop3.jpeg';
 const FreelanceFeatures = () => {
   return (
 <div>
-  <div className="bg-blue-100 text-black py-16">
+  <div className="bg-blue-50 text-black py-16">
     <div className="container mx-auto px-4 sm:px-6 md:px-8">
       <div className="flex flex-col md:flex-row md:items-center">
         <div className="space-y-6 md:w-1/2">

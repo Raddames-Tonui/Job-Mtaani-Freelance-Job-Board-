@@ -1,71 +1,52 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-700 text-white py-12">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6 lg:px-8">
+    <footer className="bg-blue-300 pt-10 ">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-lg font-bold">About Us</h3>
-          {/* Welcome to JobSearch, your premier destination for finding your dream job.  */}
-          <p className="mt-4 text-gray-400">
-
-          We are dedicated to connecting job seekers with top employers, offering a platform that simplifies the job search process and empowers individuals to take control of their careers.          </p>
-          <div className="mt-4 flex space-x-4">
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <i className="fab fa-instagram"></i>
-            </a>
-          </div>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">For Candidates</h2>
+          <nav className="flex flex-col space-y-2">
+            <NavLink to="/browse-jobs" className="  text-gray-900   font-semibold  hover:underline">Browse Jobs</NavLink>
+            <NavLink to="/browse-categories" className="  text-gray-900   font-semibold  hover:underline">Browse Categories</NavLink>
+            <NavLink to="/candidate-dashboard" className="  text-gray-900   font-semibold  hover:underline">Candidate Dashboard</NavLink>
+            <NavLink to="/job-alerts" className="  text-gray-900   font-semibold  hover:underline">Job Alerts</NavLink>
+            <NavLink to="/bookmarks" className="  text-gray-900   font-semibold  hover:underline">My Bookmarks</NavLink>
+          </nav>
         </div>
         <div>
-          <h4 className="text-lg font-bold">For Employer</h4>
-          <ul className="mt-4 space-y-2">
-            <li><a href="#" className="text-gray-400 hover:text-white">Browse Candidates</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Employers Dashboard</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Job Packages</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Jobs Featured</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Post A Job</a></li>
-          </ul>
+          <h2 className="text-xl  font-bold text-gray-800 mb-4">For Employers</h2>
+          <nav className="flex flex-col space-y-2">
+            <NavLink to="/browse-candidates" className="  text-gray-900   font-semibold  hover:underline">Browse Candidates</NavLink>
+            <NavLink to="/employer-dashboard" className="  text-gray-900   font-semibold  hover:underline">Employer Dashboard</NavLink>
+            <NavLink to="/add-job" className="  text-gray-900   font-semibold  hover:underline">Add Job</NavLink>
+            <NavLink to="/job-packages" className="  text-gray-900   font-semibold  hover:underline">Job Packages</NavLink>
+          </nav>
         </div>
         <div>
-          <h4 className="text-lg font-bold">Company</h4>
-          <ul className="mt-4 space-y-2">
-            <li><a href="#" className="text-gray-400 hover:text-white">About Us</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Contact Us</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Terms & Conditions</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Privacy Policy</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Candidate Listing</a></li>
-          </ul>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">About Us</h2>
+          <nav className="flex flex-col space-y-2">
+            <NavLink to="/about" className="  text-gray-900   font-semibold  hover:underline">About Us</NavLink>
+            <NavLink to="/job-page-invoice" className="  text-gray-900   font-semibold  hover:underline">Job Page Invoice</NavLink>
+            <NavLink to="/terms" className="  text-gray-900   font-semibold  hover:underline">Terms Page</NavLink>
+            <NavLink to="/blog" className="  text-gray-900   font-semibold  hover:underline">Blog</NavLink>
+            <NavLink to="/contact" className="  text-gray-900   font-semibold  hover:underline">Contact</NavLink>
+          </nav>
         </div>
         <div>
-          <h4 className="text-lg font-bold">Official Info</h4>
-          <ul className="mt-4 space-y-2">
-            <li className="flex items-center space-x-2">
-              <i className="fas fa-map-marker-alt"></i>
-              <span className="text-gray-400">2976 sunrise road las vegas</span>
-            </li>
-            <li className="flex items-center space-x-2">
-              <i className="fas fa-envelope"></i>
-              {/* <span className="text-gray-400">youdeserveit@gmail.com</span> */}
-            </li>
-            <li className="flex items-center space-x-2">
-              <i className="fas fa-phone-alt"></i>
-              {/* <span className="text-gray-400">098765432150</span> */}
-            </li>
-          </ul>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Helpful Resources</h2>
+          <nav className="flex flex-col space-y-2">
+            <NavLink to="/site-map" className="  text-gray-900   font-semibold  hover:underline">Site Map</NavLink>
+            <NavLink to="/terms-of-use" className="  text-gray-900   font-semibold  hover:underline">Terms of Use</NavLink>
+            <NavLink to="/privacy-center" className="  text-gray-900   font-semibold  hover:underline">Privacy Center</NavLink>
+            <NavLink to="/security-center" className="  text-gray-900   font-semibold  hover:underline">Security Center</NavLink>
+            <NavLink to="/accessibility-center" className="  text-gray-900   font-semibold  hover:underline">Accessibility Center</NavLink>
+          </nav>
         </div>
       </div>
-      <div className="mt-16 border-t border-gray-700  text-center">
-        <hr className='border-gray-500'/>
-            <p className="text-gray-400 pt-10">
-                © Copyright 2024. All rights reserved.
-            </p>
-      </div>
+      <hr className='border-gray-300 mt-12'/>
+      <p className="text-center font-semibold text-black mt-10">© 2024 JobQuest. All rights reserved.</p>
     </footer>
   );
 };

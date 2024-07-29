@@ -3,7 +3,7 @@ import freelancer1 from '../assets/freelancer1.png';
 
 const JobFinder = () => {
   return (
-    <div className="h-screen bg-gradient-to-b from-blue-300 to-blue-100  flex flex-col items-center px-4">
+    <div className="h-screen bg-gradient-to-b from-blue-200 to-blue-50  flex flex-col items-center px-4">
       <main className="w-full max-w-6xl mt-12 flex flex-col lg:flex-row justify-between items-center space-y-8 lg:space-y-0 lg:space-x-8">
         <div className="flex-1 text-center lg:text-left">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">Find the perfect job for you</h1>
