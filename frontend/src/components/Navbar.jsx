@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="w-full flex justify-between items-center px-6 bg-gradient-to-r from-purple-600 to-blue-400 h-[10vh]">
+    <header className="w-full flex justify-between items-center px-6 bg-gradient-to-b from-blue-400 to-blue-300 h-[10vh] border-b-1 border-gray-100">
       <div className="flex items-center space-x-2">
         <h1 className="text-xl font-bold text-white">My Job</h1>
       </div>
@@ -39,7 +39,7 @@ const Navbar = () => {
         </button>
       </div>
       {isOpen && (
-        <div className="absolute top-[10vh] left-0 w-full bg-gradient-to-r from-purple-600 to-blue-400 md:hidden">
+        <div className="absolute top-[10vh] left-0 w-full bg-gradient-to-b from-blue-300 to-blue-400 md:hidden">
           <nav className="flex flex-col items-center space-y-4 py-4 text-white">
             <NavLink to="/" className="hover:underline">Home</NavLink>
             <NavLink to="/job-listings" className="hover:underline">Job Listings</NavLink>
