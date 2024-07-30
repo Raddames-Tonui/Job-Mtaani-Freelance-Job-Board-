@@ -13,7 +13,7 @@ db = SQLAlchemy(metadata=metadata)
 # Client Model
 class Client(db.Model, SerializerMixin):
     __tablename__ = "clients"
-    
+  
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -36,6 +36,7 @@ class Client(db.Model, SerializerMixin):
             "updated_at": self.updated_at,
         }
     
+
     def __repr__(self):
         return f"<Client(name='{self.name}')>"
 
@@ -93,6 +94,6 @@ class Administrator(db.Model, SerializerMixin):
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
-    
+
     def __repr__(self):
         return f"<Administrator(name='{self.name}', role='{self.role}')>"

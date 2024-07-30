@@ -5,14 +5,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+
 from flask_cors import CORS
-
-
 
 from models import db, Administrator, Client, Freelancer
 
+app = Flask(_name_)
 
-app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -21,6 +20,7 @@ app.json.compact = False
 migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)
+
 CORS(app)
 
 
@@ -94,6 +94,7 @@ def create_administrator():
 def get_administrators():
     administrators = Administrator.query.all()
     return jsonify([administrator.to_dict() for administrator in administrators])
+
 
 
 
