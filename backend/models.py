@@ -96,3 +96,4 @@ class Administrator(db.Model, SerializerMixin):
     
     def _repr_(self):
         return f"<Administrator(name='{self.name}', role='{self.role}')>"
+
