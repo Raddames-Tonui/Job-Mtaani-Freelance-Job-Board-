@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 function Layout() {
   return (
     <div className="h-screen overflow-y-scroll no-scrollbar">
-      <Navbar />
+      <Navbar  />
       <Toaster
         position="top-right"
         reverseOrder={true}
@@ -17,7 +17,7 @@ function Layout() {
           },
         }}
       />
-      <div className="bg-slate-200">
+      <div className="bg-gray-100 mt-[10vh] h-[90vh] "> 
         <Outlet />
       </div>
     </div>

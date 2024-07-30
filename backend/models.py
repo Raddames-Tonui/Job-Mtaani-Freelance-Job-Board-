@@ -12,8 +12,8 @@ db = SQLAlchemy(metadata=metadata)
 
 # Client Model
 class Client(db.Model, SerializerMixin):
-    _tablename_ = "clients"
-    
+    __tablename__ = "clients"
+  
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -36,12 +36,13 @@ class Client(db.Model, SerializerMixin):
             "updated_at": self.updated_at,
         }
     
-    def _repr_(self):
+
+    def __repr__(self):
         return f"<Client(name='{self.name}')>"
 
 # Freelancer Model
 class Freelancer(db.Model, SerializerMixin):
-    _tablename_ = "freelancers"
+    __tablename__ = "freelancers"
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -67,12 +68,12 @@ class Freelancer(db.Model, SerializerMixin):
             "updated_at": self.updated_at,
         }
     
-    def _repr_(self):
+    def __repr__(self):
         return f"<Freelancer(name='{self.name}')>"
 
 # Administrator Model
 class Administrator(db.Model, SerializerMixin):
-    _tablename_ = "administrators"
+    __tablename__ = "administrators"
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -93,6 +94,6 @@ class Administrator(db.Model, SerializerMixin):
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
-    
-    def _repr_(self):
+
+    def __repr__(self):
         return f"<Administrator(name='{self.name}', role='{self.role}')>"

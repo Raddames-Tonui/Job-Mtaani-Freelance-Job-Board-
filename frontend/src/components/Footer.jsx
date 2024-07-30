@@ -46,7 +46,7 @@ const Footer = () => {
         </div>
       </div>
       <hr className='border-gray-300 mt-12'/>
-      <p className="text-center font-semibold text-black mt-10">© 2024 JobQuest. All rights reserved.</p>
+      <p className="text-center font-semibold text-black py-8">© 2024 JobQuest. All rights reserved.</p>
     </footer>
   );
 };
