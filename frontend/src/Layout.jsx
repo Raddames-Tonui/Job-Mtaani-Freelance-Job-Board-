@@ -17,7 +17,7 @@ function Layout() {
           },
         }}
       />
-      <div className="bg-slate-200">
+      <div className="bg-gray-100 ">
         <Outlet />
       </div>
     </div>

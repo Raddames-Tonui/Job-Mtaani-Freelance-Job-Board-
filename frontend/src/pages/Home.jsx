@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import JobFinder from '../home/JobFinder';
 import AdvertiseJob from '../home/AdvertiseJob';
 import TalentSection from '../home/TalentSection';
+import MessageComponent from '../components/MessageComponent';
 
 function Home() {
   const profiles = [
@@ -55,6 +56,7 @@ function Home() {
       <TalentSection />
       <FreelancerSection />
       <AdvertiseJob />
+      <MessageComponent />
       <Footer />
     </div>
   );
