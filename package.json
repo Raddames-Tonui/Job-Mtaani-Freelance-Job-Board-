@@ -1,0 +1,26 @@
+{
+  "name": "freelance-job-board",
+  "version": "1.0.0",
+  "description": "[SQL Models](https://drawsql.app/teams/raddames/diagrams/job-apllication)",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raddames-Tonui/Freelance-Job-Board.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Raddames-Tonui/Freelance-Job-Board/issues"
+  },
+  "homepage": "https://github.com/Raddames-Tonui/Freelance-Job-Board#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

@@ -1,10 +1,10 @@
-import React from 'react'
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from './Layout';
+import Layout from './src/Layout';
 
 import Home from './pages/Home';
 import NoPage from './pages/NoPage';
-
+import Signup from './src/Signup';
 
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />} >
+          <Route path="signup" element={<Signup />} />
           <Route index element={<Home />} />
           <Route path="*" element={<NoPage />} />
         </Route>
