@@ -1,6 +1,9 @@
 import React from 'react';
 import teammembers1 from '../assets/teammembers1.jpeg';
+
 import MessageComponent from '../components/MessageComponent';
+import Footer from '../components/Footer';
+
 
 const About = () => {
   return (
@@ -65,6 +68,7 @@ const About = () => {
         </div>
       </section>
       <MessageComponent />
+      <Footer />
 
     </div>
   );
