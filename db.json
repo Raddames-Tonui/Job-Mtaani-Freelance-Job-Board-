@@ -1,0 +1,146 @@
+{
+    "freelancers": [
+        {
+            "id": 1,
+            "name": "Rehema",
+            "email": "rehema@gmail.com",
+            "password": "rehema@123",
+            "skills": ["Python", "Django"],
+            "experience": "5 years in web development",
+            "rating": 4.7,
+            "reviews": [
+                {
+                    "reviewer": "Alice",
+                    "comment": "Great work on the last project!",
+                    "rating": 5
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "John ",
+            "email": "john@gmail.com",
+            "password": "john@123",
+            "skills": ["JavaScript", "React"],
+            "experience": "3 years in frontend development",
+            "rating": 4.5,
+            "reviews": [
+                {
+                    "reviewer": "Bob",
+                    "comment": "Delivered on time and exceeded expectations.",
+                    "rating": 4
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Sarah Smith",
+            "email": "sarah.smith@gmail.com",
+            "password": "sarah@123",
+            "skills": ["Java", "Spring Boot"],
+            "experience": "7 years in backend development",
+            "rating": 4.9,
+            "reviews": []
+        },
+        {
+            "id": 4,
+            "name": "Michael Brown",
+            "email": "michael.brown@gmail.com",
+            "password": "michael@123",
+            "skills": ["PHP", "Laravel"],
+            "experience": "4 years in web development",
+            "rating": 4.3,
+            "reviews": []
+        }
+    ],
+    "clients": [
+        {
+            "id": 1,
+            "name": "Tech.Co",
+            "email": "contact@123.com",
+            "business_description": "Tech solutions and software development",
+            "rating": 4.2,
+            "reviews": [
+                {
+                    "reviewer": "Rehema",
+                    "comment": "Pleasant to work with.",
+                    "rating": 4
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "InnovateX",
+            "email": "info@innovatex.com",
+            "business_description": "Innovative tech solutions and consulting",
+            "rating": 4.8,
+            "reviews": []
+        },
+        {
+            "id": 3,
+            "name": "CreativeDesigns",
+            "email": "contact@creativedesigns.com",
+            "business_description": "Design and creative services",
+            "rating": 4.5,
+            "reviews": []
+        }
+    ],
+    "jobs": [
+        {
+            "id": 1,
+            "client_id": 1,
+            "title": "Data Analyst",
+            "description": "Looking for a data analyst to work on various datasets.",
+            "requirements": ["Python", "SQL"],
+            "budget": 2000.00,
+            "deadline": "2024-08-15",
+            "status": "Open"
+        },
+        {
+            "id": 2,
+            "client_id": 2,
+            "title": "Frontend Developer",
+            "description": "Need a frontend developer with React experience.",
+            "requirements": ["React", "JavaScript"],
+            "budget": 1500.00,
+            "deadline": "2024-09-01",
+            "status": "Open"
+        },
+        {
+            "id": 3,
+            "client_id": 3,
+            "title": "UI/UX Designer",
+            "description": "Design the UI/UX for a new mobile application.",
+            "requirements": ["Figma", "Adobe XD"],
+            "budget": 1800.00,
+            "deadline": "2024-08-20",
+            "status": "Closed"
+        }
+    ],
+    "proposals": [
+        {
+            "id": 1,
+            "job_id": 1,
+            "freelancer_id": 1,
+            "proposal_text": "I have extensive experience with Python and SQL. I can start immediately.",
+            "bid_amount": 1900.00,
+            "status": "Submitted"
+        },
+        {
+            "id": 2,
+            "job_id": 2,
+            "freelancer_id": 2,
+            "proposal_text": "I am highly skilled in React and JavaScript. I am confident I can deliver high-quality work.",
+            "bid_amount": 1400.00,
+            "status": "Accepted"
+        },
+        {
+            "id": 3,
+            "job_id": 3,
+            "freelancer_id": 3,
+            "proposal_text": "I have a strong background in UI/UX design and have worked on similar projects before.",
+            "bid_amount": 1700.00,
+            "status": "Rejected"
+        }
+    ]
+}
