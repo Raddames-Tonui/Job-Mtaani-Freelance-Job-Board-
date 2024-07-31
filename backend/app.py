@@ -100,7 +100,7 @@ def delete_user(user_id):
 # ================================ JOB POSTINGS ============================
 
 # Route to create a job posting
-@app.route('/job_postings', methods=['POST'])
+@app.route('/jobpostings', methods=['POST'])
 def create_job_posting():
     data = request.get_json()
     if not data or not all(key in data for key in ('title', 'description', 'client_id')):
@@ -117,19 +117,19 @@ def create_job_posting():
     return jsonify(job_posting.to_dict()), 201
 
 # Route to get all job postings
-@app.route('/job_postings', methods=['GET'])
+@app.route('/jobpostings', methods=['GET'])
 def get_job_postings():
     job_postings = JobPosting.query.all()
     return jsonify([job_posting.to_dict() for job_posting in job_postings]), 200
 
 # Route to get a single job posting by ID
-@app.route('/job_postings/<int:job_posting_id>', methods=['GET'])
+@app.route('/jobpostings/<int:job_posting_id>', methods=['GET'])
 def get_job_posting(job_posting_id):
     job_posting = JobPosting.query.get_or_404(job_posting_id)
     return jsonify(job_posting.to_dict()), 200
 
 # Route to update a job posting
-@app.route('/job_postings/<int:job_posting_id>', methods=['PUT'])
+@app.route('/jobpostings/<int:job_posting_id>', methods=['PUT'])
 def update_job_posting(job_posting_id):
     data = request.get_json()
     job_posting = JobPosting.query.get_or_404(job_posting_id)
@@ -143,7 +143,7 @@ def update_job_posting(job_posting_id):
     return jsonify(job_posting.to_dict()), 200
 
 # Route to delete a job posting
-@app.route('/job_postings/<int:job_posting_id>', methods=['DELETE'])
+@app.route('/jobpostings/<int:job_posting_id>', methods=['DELETE'])
 def delete_job_posting(job_posting_id):
     job_posting = JobPosting.query.get_or_404(job_posting_id)
     db.session.delete(job_posting)

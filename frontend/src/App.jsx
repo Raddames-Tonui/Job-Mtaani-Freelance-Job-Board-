@@ -9,8 +9,11 @@ import { UserProvider } from './context/UserContext';
 import Home from './pages/Home';
 import NoPage from './pages/NoPage';
 import About from './pages/About';
-import Login from './Authentication/Login';
+import JobFind from './pages/JobFind';
 import CustomerSupport from './pages/CustomerSupport';
+
+
+import Login from './Authentication/Login';
 import SignUpForm from './Authentication/SignUpForm';
 
 
@@ -22,10 +25,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />} >
           <Route index element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/customer-support" element={<CustomerSupport />} />
+          <Route path="/jobs" element={<JobFind/>}/>
+    
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUpForm />} />
+          
+          <Route path="/customer-support" element={<CustomerSupport />} />
+
+          <Route path="/about" element={<About />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

@@ -21,8 +21,8 @@ const Navbar = () => {
           <NavLink to="/find-jobs" className="hover:underline font-semibold">Find Jobs</NavLink>
           <div className="absolute hidden group-hover:flex ">
             <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/job-list" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job List</NavLink>
-              <NavLink to="/job-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job Grid</NavLink>
+              <NavLink to="/jobs" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job List</NavLink>
+              <NavLink to="/job-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Available Jobs</NavLink>
               <NavLink to="/job-details" className="block px-16 py-2 hover:bg-blue-300  whitespace-nowrap">Job Details</NavLink>
             </div>
           </div>
