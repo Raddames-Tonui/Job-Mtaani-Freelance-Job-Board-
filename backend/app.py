@@ -40,7 +40,7 @@ def create_user():
     if not data or not all(key in data for key in ('username', 'email', 'password_hash')):
         abort(400, description="Invalid input")
 
-    try:
+    
         user = User(
             username=data['username'],
             email=data['email'],
@@ -55,8 +55,7 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         return jsonify(user.to_dict()), 201
-    except ValueError as e:
-        abort(400, description=str(e))
+   
 
 
 
@@ -81,13 +80,11 @@ def update_user(user_id):
     user.skills = data.get('skills', user.skills)
     user.experience = data.get('experience', user.experience)
 
-    try:
+    
         user.validate()
         db.session.commit()
         return jsonify(user.to_dict()), 200
-    except ValueError as e:
-        abort(400, description=str(e))
-
+  
 # Route to delete a user
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
