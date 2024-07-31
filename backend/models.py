@@ -11,9 +11,10 @@ metadata = MetaData(
 
 db = SQLAlchemy(metadata=metadata)
 
-class User(db.Model, SerializerMixin):
-    __tablename__ = "users"
-
+# Client Model
+class Client(db.Model, SerializerMixin):
+    __tablename__ = "clients"
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -187,7 +188,7 @@ class Project(db.Model, SerializerMixin):
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
-
+    
     def __repr__(self):
         return f"<Project(title='{self.title}', status='{self.status}')>"
 

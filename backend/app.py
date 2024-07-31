@@ -5,11 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
-from flask_cors import CORS
-from models import db, User, JobPosting, Proposal, Payment, Message, Project, Milestone, Rating
-from flask_jwt_extended import JWTManager, create_access_token,create_refresh_token, jwt_required, get_jwt_identity
 
-app = Flask(__name__)
+from flask_cors import CORS
+
+
+
+from models import db, Administrator, Client, Freelancer
+
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = 'adccb02d3e2e6a689917410cc84a940260a137c8b712b66ba4a12913047f43a0'
@@ -23,6 +26,7 @@ jwt = JWTManager(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)
+
 CORS(app)
 
 @app.route('/')
@@ -408,36 +412,16 @@ def create_rating():
     )
     db.session.add(rating)
     db.session.commit()
-    return jsonify(rating.to_dict()), 201
+    return jsonify(new_administrator.to_dict()), 201
 
-@app.route('/ratings', methods=['GET'])
-def get_ratings():
-    ratings = Rating.query.all()
-    return jsonify([rating.to_dict() for rating in ratings]), 200
 
-@app.route('/ratings/<int:rating_id>', methods=['GET'])
-def get_rating(rating_id):
-    rating = Rating.query.get_or_404(rating_id)
-    return jsonify(rating.to_dict()), 200
+# Route to get all administrators
+@app.route('/administrators', methods=['GET'])
+def get_administrators():
+    administrators = Administrator.query.all()
+    return jsonify([administrator.to_dict() for administrator in administrators])
 
-@app.route('/ratings/<int:rating_id>', methods=['PUT'])
-def update_rating(rating_id):
-    data = request.get_json()
-    rating = Rating.query.get_or_404(rating_id)
 
-    rating.rating = data.get('rating', rating.rating)
-    rating.comment = data.get('comment', rating.comment)
-    rating.user_id = data.get('user_id', rating.user_id)
 
-    db.session.commit()
-    return jsonify(rating.to_dict()), 200
-
-@app.route('/ratings/<int:rating_id>', methods=['DELETE'])
-def delete_rating(rating_id):
-    rating = Rating.query.get_or_404(rating_id)
-    db.session.delete(rating)
-    db.session.commit()
-    return jsonify({"message": "Rating deleted"}), 200
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True, port=5555)
