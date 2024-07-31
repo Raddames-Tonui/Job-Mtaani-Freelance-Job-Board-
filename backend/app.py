@@ -81,9 +81,9 @@ def update_user(user_id):
     user.experience = data.get('experience', user.experience)
 
     
-        user.validate()
-        db.session.commit()
-        return jsonify(user.to_dict()), 200
+    user.validate()
+    db.session.commit()
+    return jsonify(user.to_dict()), 200
   
 # Route to delete a user
 @app.route('/users/<int:user_id>', methods=['DELETE'])
