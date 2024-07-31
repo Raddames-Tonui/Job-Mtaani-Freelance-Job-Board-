@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
 
-function Layout() {
+function LayoutClient() {
   return (
     <div className="h-screen overflow-y-scroll no-scrollbar">
       <Navbar  />
@@ -18,6 +18,7 @@ function Layout() {
           },
         }}
       />
+     <Sidebar className="mt-[10vh]"/>
 
       <div className="bg-blue-50 mt-[10vh] min-h-[90vh] "> 
         <Outlet />
@@ -26,4 +27,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export default LayoutClient;

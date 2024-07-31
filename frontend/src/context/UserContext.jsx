@@ -8,8 +8,8 @@ export const UserProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // FETCH USER
     useEffect(() => {
-        // Fetch user data
         fetch(`${server_url}/users`, {
             method: 'GET',
             headers: {

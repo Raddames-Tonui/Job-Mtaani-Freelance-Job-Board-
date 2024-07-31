@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from 'react';
 import { JobContext } from '../context/JobContext';
 
@@ -33,10 +34,12 @@ const JobCreation = () => {
                 <input type="text" name="title" value={jobDetails.title} onChange={handleChange} placeholder="Add job title, role, vacancies etc" className="w-full px-3 py-2 border rounded-lg" />
             </div>
             <div className="mb-4">
+
                 <label className="block text-gray-700 font-bold mb-2">Description</label>
                 <textarea name="description" value={jobDetails.description} onChange={handleChange} placeholder="Add your job description..." className="w-full px-3 py-2 border rounded-lg"></textarea>
             </div>
             <div className="mb-4">
+
                 <label className="block text-gray-700 font-bold mb-2">Requirements</label>
                 <textarea name="requirements" value={jobDetails.requirements} onChange={handleChange} placeholder="Add your job requirements..." className="w-full px-3 py-2 border rounded-lg"></textarea>
             </div>
