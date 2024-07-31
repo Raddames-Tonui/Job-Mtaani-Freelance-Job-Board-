@@ -16,6 +16,7 @@ import CustomerSupport from './pages/CustomerSupport';
 import Login from './Authentication/Login';
 import SignUpForm from './Authentication/SignUpForm';
 import { JobProvider } from './context/JobContext';
+import JobCreation from './jobs/JobCreation';
 
 
 
@@ -28,9 +29,11 @@ function App() {
               <Route path="/" element={<Layout />} >
                 <Route index element={<Home />} />
                 <Route path="/jobs-list" element={<JobList/>}/>
+                <Route path="/create-job" element={<JobCreation/>}/>
           
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUpForm />} />
+                
                 
                 <Route path="/customer-support" element={<CustomerSupport />} />
 
