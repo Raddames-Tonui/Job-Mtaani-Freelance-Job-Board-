@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 
 import { UserProvider } from './context/UserContext';
-
+import { JobProvider } from './context/JobContext';
 
 import Home from './pages/Home';
 import NoPage from './pages/NoPage';
@@ -15,7 +15,7 @@ import CustomerSupport from './pages/CustomerSupport';
 
 import Login from './Authentication/Login';
 import SignUpForm from './Authentication/SignUpForm';
-import { JobProvider } from './context/JobContext';
+import JobCreation from './jobs/JobCreation';
 
 
 
@@ -28,6 +28,7 @@ function App() {
               <Route path="/" element={<Layout />} >
                 <Route index element={<Home />} />
                 <Route path="/jobs-list" element={<JobList/>}/>
+                <Route  path="/create-job" element={<JobCreation/>}/>
           
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUpForm />} />
