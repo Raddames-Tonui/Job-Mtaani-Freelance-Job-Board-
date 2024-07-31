@@ -5,42 +5,46 @@ from models import User, JobPosting, Proposal, Payment, Message, Project, Milest
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 from datetime import datetime
+from faker import Faker
+import random
 
-# Create a function to seed the database
+fake = Faker()
+
 def seed_database():
     with app.app_context():
-        # Clear existing data
         db.drop_all()
         db.create_all()
         print("Seeding data...")
 
-        # Sample users
-        users = [
-            {
-                "username": "admin",
-                "email": "admin@example.com",
+        # Generate sample users
+        users = []
+        for _ in range(6):  # Admins
+            users.append({
+                "username": fake.user_name(),
+                "email": fake.email(),
                 "password": "adminpass",
                 "is_admin": True,
                 "is_freelancer": False,
                 "is_client": False
-            },
-            {
-                "username": "freelancer1",
-                "email": "freelancer1@example.com",
+            })
+        for _ in range(5):  # Freelancers
+            users.append({
+                "username": fake.user_name(),
+                "email": fake.email(),
                 "password": "freelancerpass",
                 "is_admin": False,
                 "is_freelancer": True,
                 "is_client": False
-            },
-            {
-                "username": "client1",
-                "email": "client1@example.com",
+            })
+        for _ in range(3):  # Clients
+            users.append({
+                "username": fake.user_name(),
+                "email": fake.email(),
                 "password": "clientpass",
                 "is_admin": False,
                 "is_freelancer": False,
                 "is_client": True
-            }
-        ]
+            })
 
         # Add sample users to the database
         for user_data in users:
@@ -60,21 +64,15 @@ def seed_database():
                 db.session.rollback()
                 print(f"User with email {user_data['email']} already exists")
 
-        # Sample job postings
-        job_postings = [
-            {
-                "title": "Web Development Project",
-                "description": "Need a website built from scratch.",
-                "requirements": "HTML, CSS, JavaScript",
-                "client_id": 3  # Assume this user ID exists
-            },
-            {
-                "title": "Mobile App Development",
-                "description": "Develop a mobile app for iOS and Android.",
-                "requirements": "React Native, Firebase",
-                "client_id": 3  # Assume this user ID exists
-            }
-        ]
+        # Generate sample job postings
+        job_postings = []
+        for _ in range(5):
+            job_postings.append({
+                "title": fake.job(),
+                "description": fake.text(),
+                "requirements": fake.text(),
+                "client_id": 3
+            })
 
         # Add sample job postings to the database
         for job_posting_data in job_postings:
@@ -87,19 +85,14 @@ def seed_database():
             db.session.add(job_posting)
             db.session.commit()
 
-        # Sample proposals
-        proposals = [
-            {
-                "content": "I can build the website for you.",
-                "freelancer_id": 2,  # Assume this user ID exists
-                "job_posting_id": 1  # Assume this job posting ID exists
-            },
-            {
-                "content": "I have experience in mobile app development.",
-                "freelancer_id": 2,  # Assume this user ID exists
-                "job_posting_id": 2  # Assume this job posting ID exists
-            }
-        ]
+        # Generate sample proposals
+        proposals = []
+        for num in range(1, 6):
+            proposals.append({
+                "content": fake.text(),
+                "freelancer_id": random.randint(1, 5),
+                "job_posting_id": num
+            })
 
         # Add sample proposals to the database
         for proposal_data in proposals:
@@ -111,21 +104,15 @@ def seed_database():
             db.session.add(proposal)
             db.session.commit()
 
-        # Sample payments
-        payments = [
-            {
-                "amount": 500.0,
-                "client_id": 3,  # Assume this user ID exists
-                "freelancer_id": 2,  # Assume this user ID exists
-                "status": "pending"
-            },
-            {
-                "amount": 1000.0,
-                "client_id": 3,  # Assume this user ID exists
-                "freelancer_id": 2,  # Assume this user ID exists
-                "status": "completed"
-            }
-        ]
+        # Generate sample payments
+        payments = []
+        for num in range(1, 6):
+            payments.append({
+                "amount": float(num * 100),
+                "client_id": 3,
+                "freelancer_id": random.randint(1, 5),
+                "status": random.choice(["pending", "completed"])
+            })
 
         # Add sample payments to the database
         for payment_data in payments:
@@ -138,19 +125,14 @@ def seed_database():
             db.session.add(payment)
             db.session.commit()
 
-        # Sample messages
-        messages = [
-            {
-                "sender_id": 2,  # Assume this user ID exists
-                "receiver_id": 3,  # Assume this user ID exists
-                "content": "I am interested in your project."
-            },
-            {
-                "sender_id": 3,  # Assume this user ID exists
-                "receiver_id": 2,  # Assume this user ID exists
-                "content": "Thank you for your interest. Can you send me more details?"
-            }
-        ]
+        # Generate sample messages
+        messages = []
+        for _ in range(10):
+            messages.append({
+                "sender_id": random.randint(1, 5),
+                "receiver_id": 3,
+                "content": fake.text()
+            })
 
         # Add sample messages to the database
         for message_data in messages:
@@ -162,17 +144,17 @@ def seed_database():
             db.session.add(message)
             db.session.commit()
 
-        # Sample projects
-        projects = [
-            {
-                "title": "Website Development",
-                "description": "Create a new website for the client.",
-                "client_id": 3,  # Assume this user ID exists
-                "freelancer_id": 2,  # Assume this user ID exists
-                "status": "ongoing",
-                "deadline": datetime(2024, 12, 31)
-            }
-        ]
+        # Generate sample projects
+        projects = []
+        for num in range(1, 6):
+            projects.append({
+                "title": fake.catch_phrase(),
+                "description": fake.text(),
+                "client_id": 3,
+                "freelancer_id": random.randint(1, 5),
+                "status": random.choice(["ongoing", "completed"]),
+                "deadline": fake.date_this_year()
+            })
 
         # Add sample projects to the database
         for project_data in projects:
@@ -187,23 +169,16 @@ def seed_database():
             db.session.add(project)
             db.session.commit()
 
-        # Sample milestones
-        milestones = [
-            {
-                "project_id": 1,  # Assume this project ID exists
-                "title": "Design Phase",
-                "description": "Complete the design of the website.",
-                "due_date": datetime(2024, 8, 31),
-                "completed": False
-            },
-            {
-                "project_id": 1,  # Assume this project ID exists
-                "title": "Development Phase",
-                "description": "Complete the development of the website.",
-                "due_date": datetime(2024, 11, 30),
-                "completed": False
-            }
-        ]
+        # Generate sample milestones
+        milestones = []
+        for num in range(1, 6):
+            milestones.append({
+                "project_id": num,
+                "title": fake.bs(),
+                "description": fake.text(),
+                "due_date": fake.date_this_year(),
+                "completed": random.choice([True, False])
+            })
 
         # Add sample milestones to the database
         for milestone_data in milestones:
@@ -217,15 +192,15 @@ def seed_database():
             db.session.add(milestone)
             db.session.commit()
 
-        # Sample ratings
-        ratings = [
-            {
-                "user_id": 2,  # Assume this user ID exists
-                "rater_id": 3,  # Assume this user ID exists
-                "score": 5,
-                "review": "Excellent work!"
-            }
-        ]
+        # Generate sample ratings
+        ratings = []
+        for num in range(1, 6):
+            ratings.append({
+                "user_id": random.randint(1, 5),
+                "rater_id": 3,
+                "score": random.randint(1, 5),
+                "review": fake.text()
+            })
 
         # Add sample ratings to the database
         for rating_data in ratings:
