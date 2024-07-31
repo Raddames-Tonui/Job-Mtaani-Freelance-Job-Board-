@@ -2,7 +2,8 @@ import React from 'react'
 
 function NoPage() {
   return (
-    <div className='h-[90vh]'>NoPage</div>
+    <div className='h-[90vh]'>NoPage
+    </div>
   )
 }
 

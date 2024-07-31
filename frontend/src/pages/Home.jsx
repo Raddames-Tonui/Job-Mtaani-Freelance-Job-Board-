@@ -3,10 +3,12 @@ import { FaSearch } from 'react-icons/fa';
 import FeaturesSection from '../components/FeaturesSection';
 import FreelancerSection from '../home/FreelancerSection';
 import ServicesSection from '../home/ServiceSection';
+
 import Footer from '../components/Footer';
 import JobFinder from '../home/JobFinder';
 import AdvertiseJob from '../home/AdvertiseJob';
 import TalentSection from '../home/TalentSection';
+import MessageComponent from '../components/MessageComponent';
 
 function Home() {
   const profiles = [
@@ -49,12 +51,13 @@ function Home() {
   ];
 
   return (
-    <div className="bg-blue-50 min-h-screen">
+    <div className="bg-blue-50 min-h-screen"> 
       <JobFinder />
       <ServicesSection />
       <TalentSection />
       <FreelancerSection />
       <AdvertiseJob />
+      <MessageComponent />
       <Footer />
     </div>
   );
