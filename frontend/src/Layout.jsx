@@ -17,7 +17,7 @@ function Layout() {
           },
         }}
       />
-      <div className="bg-gray-100 mt-[10vh] h-[90vh] "> 
+      <div className="bg-blue-50 mt-[10vh] min-h-[90vh] "> 
         <Outlet />
       </div>
     </div>

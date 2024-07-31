@@ -9,7 +9,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full flex justify-between items-center px-6 bg-gradient-to-b from-blue-300 to-blue-200 h-[10vh] z-50">
+    <header className="fixed border-b-2 border-gray-200 top-0 w-full flex justify-between items-center px-6 bg-gradient-to-b from-blue-300 to-blue-200 h-[10vh] z-50">
       <div className="flex items-center space-x-2">
         <Link to="/" className="text-xl font-bold text-blue-600">JobQuest</Link>
       </div>

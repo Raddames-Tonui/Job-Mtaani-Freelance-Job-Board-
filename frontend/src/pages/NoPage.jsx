@@ -1,18 +1,8 @@
-import React, { useContext } from 'react'
-import { UserContext } from '../context/UserContext'
+import React from 'react'
 
 function NoPage() {
-  const {user} = useContext(UserContext)
   return (
     <div className='h-[90vh]'>NoPage
-
-        <ul>
-          {user && user?.map ((user, index) => {
-            return <li key={index}>{user}</li>
-          })
-
-          }
-        </ul>
     </div>
   )
 }
