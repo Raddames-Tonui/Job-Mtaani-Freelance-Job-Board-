@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-// import server_url from "../../config.json";
+import { server_url } from "../../config.json";
 
 export const UserContext = createContext();
 
@@ -10,26 +10,17 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         // Fetch user data
-        fetch("http://127.0.0.1:5555/users", {
+        fetch(`${server_url}/users`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         })
         .then(response => {
-            // Log the entire response for debugging
-            console.log('Response:', response);
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                return response.json();
-            } else {
-                throw new Error('Expected JSON response but got ' + contentType);
-            }
+            return response.json();          
         })
         .then(data => {
             console.log('Fetched user data:', data);
