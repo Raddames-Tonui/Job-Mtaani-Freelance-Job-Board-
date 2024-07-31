@@ -28,10 +28,12 @@ const Navbar = () => {
           </div>
         </div>
         <div className="relative group">
-          <NavLink to="/employers" className="hover:underline font-semibold whitespace-nowrap">Clents</NavLink>
+
+          <NavLink to="/employers" className="hover:underline font-semibold whitespace-nowrap">Clients</NavLink>
           <div className="absolute hidden group-hover:flex">
             <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/create-job" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Create Job</NavLink>
+              <NavLink to="/create-job" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Create Jobs</NavLink>
+
               <NavLink to="/employer-grid" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Grid</NavLink>
               <NavLink to="/employer-details" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Details</NavLink>
             </div>
