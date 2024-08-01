@@ -1,8 +1,8 @@
-"""initial migration
+"""Add firstname and lastname columns
 
-Revision ID: 09a233b2b99e
+Revision ID: f4d86f030b35
 Revises: 
-Create Date: 2024-07-31 14:41:53.646255
+Create Date: 2024-08-01 00:33:08.553955
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '09a233b2b99e'
+revision = 'f4d86f030b35'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,12 +21,15 @@ def upgrade():
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=80), nullable=False),
+    sa.Column('firstname', sa.String(length=80), nullable=False),
+    sa.Column('lastname', sa.String(length=80), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=128), nullable=False),
     sa.Column('is_admin', sa.Boolean(), nullable=True),
     sa.Column('is_freelancer', sa.Boolean(), nullable=True),
     sa.Column('is_client', sa.Boolean(), nullable=True),
     sa.Column('skills', sa.Text(), nullable=True),
+    sa.Column('avatar', sa.String(length=150), nullable=True),
     sa.Column('experience', sa.Text(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
