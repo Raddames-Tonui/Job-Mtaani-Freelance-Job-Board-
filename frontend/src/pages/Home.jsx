@@ -1,6 +1,6 @@
 import React from 'react';
-import { FaSearch } from 'react-icons/fa';
-import FeaturesSection from '../components/FeaturesSection';
+// import { FaSearch } from 'react-icons/fa';
+// import FeaturesSection from '../components/FeaturesSection';
 import FreelancerSection from '../home/FreelancerSection';
 import ServicesSection from '../home/ServiceSection';
 

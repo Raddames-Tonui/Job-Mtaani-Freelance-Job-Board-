@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
-from email_validator import validate_email, EmailNotValidError
+# from email_validator import validate_email, EmailNotValidError
 
 # Define metadata naming conventions
 metadata = MetaData(
@@ -40,10 +40,10 @@ class User(db.Model, SerializerMixin):
             raise ValueError("Username must be at least 3 characters long.")
         if len(self.password_hash) < 3:
             raise ValueError("Password must be at least 3 characters long.")
-        try:
-            validate_email(self.email)
-        except EmailNotValidError as e:
-            raise ValueError(f"Invalid email address: {e}")
+        # try:
+        #     validate_email(self.email)
+        # except EmailNotValidError as e:
+        #     raise ValueError(f"Invalid email address: {e}")
 
     def to_dict(self):
         return {
