@@ -1,57 +1,109 @@
 #!/usr/bin/env python3
 
+import random
+from datetime import timedelta
+
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_serializer import SerializerMixin
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 from flask_cors import CORS
+
 from models import db, User, JobPosting, Proposal, Payment, Message, Project, Milestone, Rating
 
+# Initialize Flask app
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
+app.config["SECRET_KEY"] = "$hhjd4q%h%$#@%ggh^#7&893" + str(random.randint(1, 1000000))
+app.config["JWT_SECRET_KEY"] = "a44u5$%*47992n3i*#*#99s29" + str(random.randint(1, 100000))
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 app.json.compact = False
 
+# Initialize extensions
 migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 CORS(app)
-
 
 @app.route('/')
 def index():
     return 'Welcome to the Job Board API!'
 
-# ================================ USERS =================================
+# ===================== AUTHENTICATION ======================
 
-# Route to get all users
+@app.route("/login", methods=["POST"])
+def login_user():
+    identifier = request.json.get("identifier")
+    password = request.json.get("password")
+
+    user = User.query.filter(
+        (User.email == identifier) | (User.username == identifier)
+    ).first()
+
+    if user and bcrypt.check_password_hash(user.password_hash, password):
+        access_token = create_access_token(identity=user.id)
+        return jsonify({"access_token": access_token}), 200
+
+    return jsonify({"message": "Check your username or password"}), 401
+
+@app.route("/current_user", methods=["GET"])
+@jwt_required()
+def current_user():
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify(user.to_dict()), 200
+    except Exception as e:
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
+# Token blacklist to manage token invalidation
+BLACKLIST = set()
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blocklist(jwt_header, decrypted_token):
+    return decrypted_token['jti'] in BLACKLIST
+
+@app.route("/logout", methods=["DELETE"])
+@jwt_required()
+def logout():
+    jti = get_jwt()["jti"]
+    BLACKLIST.add(jti)
+    return jsonify({"success": "Successfully logged out"}), 200
+
+
+# ================================ USERS =================================
+# Get all users
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users]), 200
 
-
-# Route to create a user
+# Create a new user
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
-    if not data or not all(key in data for key in ('username', 'email', 'password_hash')):
+    if not data or not all(key in data for key in ('username', 'email', 'password')):
         abort(400, description="Invalid input")
 
     
         user = User(
             username=data['username'],
             email=data['email'],
-            password_hash=data['password_hash'],
-            is_admin=data.get('is_admin', False),
-            is_freelancer=data.get('is_freelancer', False),
-            is_client=data.get('is_client', False),
-            skills=data.get('skills'),
-            experience=data.get('experience')
+            password_hash=bcrypt.generate_password_hash(data['password']).decode('utf-8'),
+            firstname=data.get('firstname', ''), 
+            lastname=data.get('lastname', ''),    
+            is_admin=is_admin,
+            is_freelancer=is_freelancer,
+            is_client=is_client,
+
         )
-        user.validate()
+        user.validate()  
         db.session.add(user)
         db.session.commit()
         return jsonify(user.to_dict()), 201
@@ -59,13 +111,13 @@ def create_user():
 
 
 
-# Route to get a single user by ID
+# Get a single user
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = User.query.get_or_404(user_id)
     return jsonify(user.to_dict()), 200
 
-# Route to update a user
+# Update a user
 @app.route('/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.get_json()
@@ -73,7 +125,8 @@ def update_user(user_id):
 
     user.username = data.get('username', user.username)
     user.email = data.get('email', user.email)
-    user.password_hash = data.get('password_hash', user.password_hash)
+    if 'password' in data:
+        user.password_hash = bcrypt.generate_password_hash(data['password']).decode('utf-8')
     user.is_admin = data.get('is_admin', user.is_admin)
     user.is_freelancer = data.get('is_freelancer', user.is_freelancer)
     user.is_client = data.get('is_client', user.is_client)
@@ -86,6 +139,10 @@ def update_user(user_id):
     return jsonify(user.to_dict()), 200
   
 # Route to delete a user
+    db.session.commit()
+    return jsonify(user.to_dict()), 200
+
+# Delete a user
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     user = User.query.get_or_404(user_id)
@@ -97,7 +154,7 @@ def delete_user(user_id):
 # ================================ JOB POSTINGS ============================
 
 # Route to create a job posting
-@app.route('/job_postings', methods=['POST'])
+@app.route('/jobpostings', methods=['POST'])
 def create_job_posting():
     data = request.get_json()
     if not data or not all(key in data for key in ('title', 'description', 'client_id')):
@@ -114,19 +171,19 @@ def create_job_posting():
     return jsonify(job_posting.to_dict()), 201
 
 # Route to get all job postings
-@app.route('/job_postings', methods=['GET'])
+@app.route('/jobpostings', methods=['GET'])
 def get_job_postings():
     job_postings = JobPosting.query.all()
     return jsonify([job_posting.to_dict() for job_posting in job_postings]), 200
 
 # Route to get a single job posting by ID
-@app.route('/job_postings/<int:job_posting_id>', methods=['GET'])
+@app.route('/jobpostings/<int:job_posting_id>', methods=['GET'])
 def get_job_posting(job_posting_id):
     job_posting = JobPosting.query.get_or_404(job_posting_id)
     return jsonify(job_posting.to_dict()), 200
 
 # Route to update a job posting
-@app.route('/job_postings/<int:job_posting_id>', methods=['PUT'])
+@app.route('/jobpostings/<int:job_posting_id>', methods=['PUT'])
 def update_job_posting(job_posting_id):
     data = request.get_json()
     job_posting = JobPosting.query.get_or_404(job_posting_id)
@@ -140,7 +197,7 @@ def update_job_posting(job_posting_id):
     return jsonify(job_posting.to_dict()), 200
 
 # Route to delete a job posting
-@app.route('/job_postings/<int:job_posting_id>', methods=['DELETE'])
+@app.route('/jobpostings/<int:job_posting_id>', methods=['DELETE'])
 def delete_job_posting(job_posting_id):
     job_posting = JobPosting.query.get_or_404(job_posting_id)
     db.session.delete(job_posting)

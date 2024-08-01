@@ -21,17 +21,19 @@ const Navbar = () => {
           <NavLink to="/find-jobs" className="hover:underline font-semibold">Find Jobs</NavLink>
           <div className="absolute hidden group-hover:flex ">
             <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/job-list" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job List</NavLink>
-              <NavLink to="/job-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job Grid</NavLink>
+              <NavLink to="/jobs-list" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job List</NavLink>
+              <NavLink to="/job-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Available Jobs</NavLink>
               <NavLink to="/job-details" className="block px-16 py-2 hover:bg-blue-300  whitespace-nowrap">Job Details</NavLink>
             </div>
           </div>
         </div>
         <div className="relative group">
-          <NavLink to="/employers" className="hover:underline font-semibold whitespace-nowrap">Employers</NavLink>
+
+          <NavLink to="/employers" className="hover:underline font-semibold whitespace-nowrap">Clients</NavLink>
           <div className="absolute hidden group-hover:flex">
             <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/employer-list" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer List</NavLink>
+              <NavLink to="/create-job" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Create Jobs</NavLink>
+
               <NavLink to="/employer-grid" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Grid</NavLink>
               <NavLink to="/employer-details" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Details</NavLink>
             </div>
@@ -60,9 +62,8 @@ const Navbar = () => {
         </div>
       </nav>
       <div className="hidden md:flex items-center space-x-4">
-        <NavLink to="/upload-cv" className="text-blue-600 hover:underline font-semibold">Upload your CV</NavLink>
-        <NavLink to="/login" className="py-2 px-4 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white">Login / Register</NavLink>
-        <NavLink to="/job-post" className="py-2 px-4 bg-blue-600 text-white rounded-full">Job Post</NavLink>
+        <NavLink to="/login" className="text-blue-600 hover:underline font-semibold">Login</NavLink>
+        <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
       </div>
 
       {/* Mobile Menu */}
@@ -82,9 +83,8 @@ const Navbar = () => {
             <NavLink to="/candidates" className="hover:underline font-semibold">Candidates</NavLink>
             <NavLink to="/blog" className="hover:underline font-semibold">Blog</NavLink>
             <NavLink to="/pages" className="hover:underline font-semibold">Pages</NavLink>
-            <NavLink to="/upload-cv" className="text-blue-600 hover:underline font-semibold">Upload your CV</NavLink>
             <NavLink to="/login" className="py-2 px-4 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white">Login / Register</NavLink>
-            <NavLink to="/job-post" className="py-2 px-4 bg-blue-600 text-white rounded-full">Job Post</NavLink>
+            <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
           </nav>
         </div>
       )}
