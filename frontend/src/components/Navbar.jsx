@@ -62,9 +62,8 @@ const Navbar = () => {
         </div>
       </nav>
       <div className="hidden md:flex items-center space-x-4">
-        <NavLink to="/upload-cv" className="text-blue-600 hover:underline font-semibold">Upload your CV</NavLink>
-        <NavLink to="/login" className="py-2 px-4 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white">Login / Register</NavLink>
-        <NavLink to="/job-post" className="py-2 px-4 bg-blue-600 text-white rounded-full">Job Post</NavLink>
+        <NavLink to="/login" className="text-blue-600 hover:underline font-semibold">Login</NavLink>
+        <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
       </div>
 
       {/* Mobile Menu */}
@@ -84,9 +83,8 @@ const Navbar = () => {
             <NavLink to="/candidates" className="hover:underline font-semibold">Candidates</NavLink>
             <NavLink to="/blog" className="hover:underline font-semibold">Blog</NavLink>
             <NavLink to="/pages" className="hover:underline font-semibold">Pages</NavLink>
-            <NavLink to="/upload-cv" className="text-blue-600 hover:underline font-semibold">Upload your CV</NavLink>
             <NavLink to="/login" className="py-2 px-4 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white">Login / Register</NavLink>
-            <NavLink to="/job-post" className="py-2 px-4 bg-blue-600 text-white rounded-full">Job Post</NavLink>
+            <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
           </nav>
         </div>
       )}

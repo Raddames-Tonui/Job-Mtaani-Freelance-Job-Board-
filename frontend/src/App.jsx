@@ -1,5 +1,6 @@
-import React from 'react'
+import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Layout from './Layout';
 
@@ -16,35 +17,37 @@ import JobCreation from './jobs/JobCreation';
 import Login from './Authentication/Login';
 import SignUpForm from './Authentication/SignUpForm';
 
-
-
-
 function App() {
   return (
     <BrowserRouter>
       <UserProvider>
-          <JobProvider>
-            <Routes>
-              <Route path="/" element={<Layout />} >
-                <Route index element={<Home />} />
-                <Route path="/jobs-list" element={<JobList/>}/>
-
-                <Route path="/create-job" element={<JobCreation/>}/>
-          
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUpForm />} />
-                
-                
-                <Route path="/customer-support" element={<CustomerSupport />} />
-
-                <Route path="/about" element={<About />} />
-                <Route path="*" element={<NoPage />} />
-              </Route>
-            </Routes>
-          </JobProvider>
-        </UserProvider>
+        <JobProvider>
+        <Toaster
+        position="top-right"
+        reverseOrder={true}
+        toastOptions={{
+          style: {
+            zIndex: 100,
+            top: '10vh',
+          },
+        }}
+      />
+          <Routes>
+            <Route path="/" element={<Layout />} >
+              <Route index element={<Home />} />
+              <Route path="/jobs-list" element={<JobList />} />
+              <Route path="/create-job" element={<JobCreation />} />
+              <Route path="/customer-support" element={<CustomerSupport />} />
+              <Route path="/about" element={<About />} />
+              <Route path="*" element={<NoPage />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUpForm />} />
+          </Routes>
+        </JobProvider>
+      </UserProvider>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

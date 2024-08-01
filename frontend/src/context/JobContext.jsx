@@ -17,7 +17,7 @@ export const JobProvider = ({ children }) => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            // console.log(data);
             setJobs(data);
         })
         .catch(error => {

@@ -3,12 +3,14 @@ from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
 from email_validator import validate_email, EmailNotValidError
 
+# Define metadata naming conventions
 metadata = MetaData(
     naming_convention={
         "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
     }
 )
 
+# Initialize SQLAlchemy
 db = SQLAlchemy(metadata=metadata)
 
 class User(db.Model, SerializerMixin):
@@ -16,23 +18,22 @@ class User(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    firstname = db.Column(db.String(80), nullable=False)
+    lastname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+
     is_admin = db.Column(db.Boolean, default=False)
     is_freelancer = db.Column(db.Boolean, default=False)
     is_client = db.Column(db.Boolean, default=False)
+
     skills = db.Column(db.Text)
+    avatar = db.Column(db.String(150))
     experience = db.Column(db.Text)
-    ratings = db.relationship(
-        'Rating',
-        backref='user',
-        lazy=True,
-        foreign_keys='Rating.user_id'
-    )
+    ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id')
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-    
 
     def validate(self):
         if len(self.username) < 3:
@@ -47,8 +48,11 @@ class User(db.Model, SerializerMixin):
     def to_dict(self):
         return {
             "id": self.id,
-            "username": self.username,
+            "username": self.username,            
             "email": self.email,
+            "avatar": self.avatar,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
             "is_admin": self.is_admin,
             "is_freelancer": self.is_freelancer,
             "is_client": self.is_client,
@@ -58,7 +62,6 @@ class User(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<User(username='{self.username}')>"
-
 
 class JobPosting(db.Model, SerializerMixin):
     __tablename__ = "job_postings"
@@ -227,7 +230,7 @@ class Rating(db.Model, SerializerMixin):
     rater_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     score = db.Column(db.Integer, nullable=False)  # e.g., 1-5
     review = db.Column(db.Text)
-    
+
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
