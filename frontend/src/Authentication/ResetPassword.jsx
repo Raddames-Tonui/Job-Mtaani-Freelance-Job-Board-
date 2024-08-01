@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function ForgotPassword() {
-  const [email, setEmail] = useState("");
+function ResetPassword() {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Add logic to handle forgot password
-    setEmail("");
+    // Add logic to handle reset password
+    setNewPassword("");
+    setConfirmPassword("");
   }
 
   return (
@@ -16,25 +18,44 @@ function ForgotPassword() {
         <Link to="/" className="text-3xl font-bold text-blue-600 w-auto">JobQuest</Link>
 
         <h2 className="mt-3 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Forgot Password
+          Reset Password
         </h2>
 
         <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-              Email address
+            <label htmlFor="new-password" className="block text-sm font-medium leading-6 text-gray-900">
+              New Password
             </label>
             <div className="mt-2">
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email || ""}
-                onChange={e => setEmail(e.target.value)}
+                id="new-password"
+                name="new-password"
+                type="password"
+                autoComplete="new-password"
+                value={newPassword || ""}
+                onChange={e => setNewPassword(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-                placeholder="Email"
+                placeholder="New Password"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
+              Confirm Password
+            </label>
+            <div className="mt-2">
+              <input
+                id="confirm-password"
+                name="confirm-password"
+                type="password"
+                autoComplete="new-password"
+                value={confirmPassword || ""}
+                onChange={e => setConfirmPassword(e.target.value)}
+                required
+                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                placeholder="Confirm Password"
               />
             </div>
           </div>
@@ -44,7 +65,7 @@ function ForgotPassword() {
               type="submit"
               className="relative w-full h-10 rounded-md text-md font-bold border-none overflow-hidden z-10 bg-gradient-to-r from-[#448bf5] to-[#47c1f9] hover:bg-gradient-to-r hover:from-[#3b73c7] hover:to-[#229aca] ring-1 ring-gray-600 transition-all duration-500"
             >
-              Send Reset Link
+              Reset Password
             </button>
           </div>
         </form>
@@ -63,4 +84,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default ResetPassword;

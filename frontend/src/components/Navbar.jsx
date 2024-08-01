@@ -18,12 +18,12 @@ const Navbar = () => {
           <NavLink to="/" className="hover:underline font-semibold">Home</NavLink>
         </div>
         <div className="relative group">
-          <NavLink to="/find-jobs" className="hover:underline font-semibold">Find Jobs</NavLink>
+          <p className="hover:underline font-semibold">Freelancer</p>
           <div className="absolute hidden group-hover:flex ">
             <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/jobs-list" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Job List</NavLink>
-              <NavLink to="/job-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Available Jobs</NavLink>
-              <NavLink to="/job-details" className="block px-16 py-2 hover:bg-blue-300  whitespace-nowrap">Job Details</NavLink>
+              <NavLink to="/find-jobs"  className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Find Jobs</NavLink>
+              <NavLink to="/available-jobs" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap"> All Available Jobs</NavLink>
+              <NavLink to="/job-details" className="block px-16 py-2 hover:bg-blue-300  whitespace-nowrap">Browse Employers</NavLink>
             </div>
           </div>
         </div>
@@ -35,7 +35,7 @@ const Navbar = () => {
               <NavLink to="/create-job" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Create Jobs</NavLink>
 
               <NavLink to="/employer-grid" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Grid</NavLink>
-              <NavLink to="/employer-details" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Details</NavLink>
+              <NavLink to="/employer-details" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Browse Freelancers</NavLink>
             </div>
           </div>
         </div>

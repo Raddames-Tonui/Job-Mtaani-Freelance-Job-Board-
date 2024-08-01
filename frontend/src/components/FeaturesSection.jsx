@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaMedal, FaUserShield, FaLock } from 'react-icons/fa';
-import clientprop3 from '../assets/client-prop3.jpeg';
+// import clientprop3 from '../assets/client-prop3.jpeg';
 
 const FreelanceFeatures = () => {
   return (
