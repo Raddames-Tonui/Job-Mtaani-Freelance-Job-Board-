@@ -139,7 +139,7 @@ class Payment(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<Payment(id='{self.id}', status='{self.status}')>"
 
-class Message(db.Model, SerializerMixin):
+class Usermessage(db.Model, SerializerMixin):
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -161,7 +161,7 @@ class Message(db.Model, SerializerMixin):
         }
 
     def __repr__(self):
-        return f"<Message(id='{self.id}')>"
+        return f"<Usermessage(id='{self.id}')>"
 
 class Project(db.Model, SerializerMixin):
     __tablename__ = "projects"

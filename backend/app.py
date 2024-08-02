@@ -9,7 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-from models import db, User, JobPosting, Proposal, Payment, Message, Project, Milestone, Rating
+from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -363,7 +363,7 @@ def create_message():
     if not data or not all(key in data for key in ('sender_id', 'receiver_id', 'content')):
         abort(400, description="Invalid input")
 
-    message = Message(
+    message = Usermessage(
         sender_id=data['sender_id'],
         receiver_id=data['receiver_id'],
         content=data['content']
@@ -375,20 +375,20 @@ def create_message():
 # Route to get all messages
 @app.route('/messages', methods=['GET'])
 def get_messages():
-    messages = Message.query.all()
+    messages = Usermessage.query.all()
     return jsonify([message.to_dict() for message in messages]), 200
 
 # Route to get a single message by ID
 @app.route('/messages/<int:message_id>', methods=['GET'])
 def get_message(message_id):
-    message = Message.query.get_or_404(message_id)
+    message = Usermessage.query.get_or_404(message_id)
     return jsonify(message.to_dict()), 200
 
 # Route to update a message
 @app.route('/messages/<int:message_id>', methods=['PUT'])
 def update_message(message_id):
     data = request.get_json()
-    message = Message.query.get_or_404(message_id)
+    message = Usermessage.query.get_or_404(message_id)
 
     message.content = data.get('content', message.content)
 
@@ -398,10 +398,10 @@ def update_message(message_id):
 # Route to delete a message
 @app.route('/messages/<int:message_id>', methods=['DELETE'])
 def delete_message(message_id):
-    message = Message.query.get_or_404(message_id)
+    message = Usermessage.query.get_or_404(message_id)
     db.session.delete(message)
     db.session.commit()
-    return jsonify({"message": "Message deleted"}), 200
+    return jsonify({"message": "Usermessage deleted"}), 200
 
 
 # ================================ PROJECTS ================================
