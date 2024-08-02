@@ -2,14 +2,13 @@
 
 import random
 from datetime import timedelta
-
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 from flask_cors import CORS
-
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from models import db, User, JobPosting, Proposal, Payment, Message, Project, Milestone, Rating
 
 # Initialize Flask app
@@ -28,9 +27,49 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 CORS(app)
 
+# Serializer for generating reset tokens
+s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
 @app.route('/')
 def index():
     return 'Welcome to the Job Board API!'
+
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    
+    token = s.dumps(email, salt='password-reset-salt')
+    
+    # Here, you would send the token to the user's email. For demonstration, we'll just return it.
+    return jsonify({"reset_token": token}), 200
+
+@app.route('/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    try:
+        email = s.loads(token, salt='password-reset-salt', max_age=3600)
+    except SignatureExpired:
+        return jsonify({"message": "The token has expired"}), 400
+    except BadSignature:
+        return jsonify({"message": "Invalid token"}), 400
+
+    data = request.get_json()
+    new_password = data.get('new_password')
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    db.session.commit()
+    
+    return jsonify({"message": "Password has been reset"}), 200
+
+
 
 # ===================== AUTHENTICATION ======================
 
