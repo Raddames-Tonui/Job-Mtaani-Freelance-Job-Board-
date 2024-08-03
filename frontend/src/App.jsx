@@ -18,6 +18,7 @@ import ResetPassword from "./Authentication/ResetPassword";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import FindJobs from "./freelancer/FindJobs";
 import AvailableJobs from "./freelancer/AvailableJobs";
+import UpdateProfile from "./Client/UpdateProfile";
 
 
 

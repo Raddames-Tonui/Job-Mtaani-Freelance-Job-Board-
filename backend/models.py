@@ -22,14 +22,18 @@ class User(db.Model, SerializerMixin):
     lastname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    avatar = db.Column(db.String(150))
 
     is_admin = db.Column(db.Boolean, default=False)
     is_freelancer = db.Column(db.Boolean, default=False)
     is_client = db.Column(db.Boolean, default=False)
-
+    # Freelancer
     skills = db.Column(db.Text)
-    avatar = db.Column(db.String(150))
     experience = db.Column(db.Text)
+    # client
+    about = db.Column(db.Text)
+    needs = db.Column(db.Text)
+  
     ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id')
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())

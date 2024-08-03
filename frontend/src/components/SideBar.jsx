@@ -8,7 +8,7 @@ const Sidebar = () => {
   const {currentUser} = useContext(UserContext)
   // console.log(currentUser)
   return (
-    <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50  bg-gray-100 shadow-md">
+    <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50  bg-gradient-to-b from-blue-300 to-blue-200 border-r-white shadow-md ">
       {/* <div className="p-4 font-bold text-xl"><h1>{currentUser.firstname}</h1></div> */}
       <nav className="mt-4">
         <ul>
