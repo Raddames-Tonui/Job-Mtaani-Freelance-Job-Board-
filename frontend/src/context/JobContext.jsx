@@ -9,7 +9,7 @@ export const JobProvider = ({ children }) => {
 
     // FETCH JOBS
     useEffect(() => {
-        fetch(`${server_url}/projects`, {
+        fetch(`${server_url}/jobpostings`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,42 +17,44 @@ export const JobProvider = ({ children }) => {
         })
         .then(response => response.json())
         .then(data => {
-            // console.log(data);
+            console.log(data);
             setJobs(data);
         })
         .catch(error => {
             console.error("Error fetching jobs:", error);
         });
-    }, []); 
+    }, []);
 
     // CREATE JOB
-    const createJob = (title, description, client_id, requirements) => {
-        fetch(`${server_url}/jobpostings`, {
+    const createJob = (title, description, requirements) => {
+        return fetch(`${server_url}/jobpostings`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('access_token')}`
             },
             body: JSON.stringify({
                 title,
                 description,
-                client_id,
-                requirements
-            })
+                requirements,
+            }),
         })
         .then(response => response.json())
         .then(newJob => {
             setJobs(previousJobs => [...previousJobs, newJob]);
-            toast.success("Task added successfully");
+            toast.success("Job posted successfully");
+            return newJob;
         })
         .catch(error => {
             console.error("Error creating job:", error);
+            throw error;
         });
     };
 
     const contextData = {
         jobs,
         setJobs,
-        createJob
+        createJob,
     };
 
     return (

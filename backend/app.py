@@ -2,15 +2,17 @@
 
 import random
 from datetime import timedelta
-
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 from flask_cors import CORS
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+from flask_mail import Mail, Message  # Importing Flask-Mail
 
-from models import db, User, JobPosting, Proposal, Payment, Message, Project, Milestone, Rating
+
+from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -21,18 +23,83 @@ app.config["JWT_SECRET_KEY"] = "a44u5$%*47992n3i*#*#99s29" + str(random.randint(
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 app.json.compact = False
 
+# Mailtrap configuration
+app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
+app.config['MAIL_PORT'] = 2525
+app.config['MAIL_USERNAME'] = '2883ede72140a2'
+app.config['MAIL_PASSWORD'] = 'f43cc51036c6b9'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
 # Initialize extensions
 migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 CORS(app)
+mail = Mail(app)  # Initialize Flask-Mail
 
+# Serializer for generating reset tokens
+s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+# =================================== MAIL TRAP =====================================================
+
+# Route for testing Mailtrap connection
+@app.route('/test-mail', methods=['GET'])
+def test_mail():
+    try:
+        msg = Message('Test Email', sender='noreply@example.com', recipients=['test@example.com'])
+        msg.body = 'This is a test email sent from Flask using Mailtrap.'
+        mail.send(msg)
+        return jsonify({"message": "Test email sent successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": "Failed to send test email", "details": str(e)}), 500
+
+
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    
+    token = s.dumps(email, salt='password-reset-salt')
+    reset_url = f'http://localhost:5173/reset-password/{token}'  # Adjust the URL to match your React frontend
+    
+    # Send the token to the user's email
+    msg = Message('Password Reset Request', sender='noreply@example.com', recipients=[email])
+    msg.body = f'Hi, to reset your password, please click the following link: {reset_url}'
+    mail.send(msg)
+    
+    return jsonify({"message": "A password reset email has been sent"}), 200
+
+@app.route('/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    try:
+        email = s.loads(token, salt='password-reset-salt', max_age=3600)
+    except SignatureExpired:
+        return jsonify({"message": "The token has expired"}), 400
+    except BadSignature:
+        return jsonify({"message": "Invalid token"}), 400
+
+    data = request.get_json()
+    new_password = data.get('new_password')
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    db.session.commit()
+    
+    return jsonify({"message": "Password has been reset"}), 200
+
+# ===================== AUTHENTICATION ======================
 @app.route('/')
 def index():
     return 'Welcome to the Job Board API!'
-
-# ===================== AUTHENTICATION ======================
 
 @app.route("/login", methods=["POST"])
 def login_user():
@@ -155,16 +222,19 @@ def delete_user(user_id):
 
 # Route to create a job posting
 @app.route('/jobpostings', methods=['POST'])
-def create_job_posting():
+@jwt_required()
+def create_job_posting():    
     data = request.get_json()
-    if not data or not all(key in data for key in ('title', 'description', 'client_id')):
+    if not data or not all(key in data for key in ('title', 'description', 'requirements')):
         abort(400, description="Invalid input")
+
+    client_id = get_jwt_identity()
 
     job_posting = JobPosting(
         title=data['title'],
         description=data['description'],
         requirements=data.get('requirements'),
-        client_id=data['client_id']
+        client_id=client_id
     )
     db.session.add(job_posting)
     db.session.commit()
@@ -320,7 +390,7 @@ def create_message():
     if not data or not all(key in data for key in ('sender_id', 'receiver_id', 'content')):
         abort(400, description="Invalid input")
 
-    message = Message(
+    message = Usermessage(
         sender_id=data['sender_id'],
         receiver_id=data['receiver_id'],
         content=data['content']
@@ -332,20 +402,20 @@ def create_message():
 # Route to get all messages
 @app.route('/messages', methods=['GET'])
 def get_messages():
-    messages = Message.query.all()
+    messages = Usermessage.query.all()
     return jsonify([message.to_dict() for message in messages]), 200
 
 # Route to get a single message by ID
 @app.route('/messages/<int:message_id>', methods=['GET'])
 def get_message(message_id):
-    message = Message.query.get_or_404(message_id)
+    message = Usermessage.query.get_or_404(message_id)
     return jsonify(message.to_dict()), 200
 
 # Route to update a message
 @app.route('/messages/<int:message_id>', methods=['PUT'])
 def update_message(message_id):
     data = request.get_json()
-    message = Message.query.get_or_404(message_id)
+    message = Usermessage.query.get_or_404(message_id)
 
     message.content = data.get('content', message.content)
 
@@ -355,10 +425,10 @@ def update_message(message_id):
 # Route to delete a message
 @app.route('/messages/<int:message_id>', methods=['DELETE'])
 def delete_message(message_id):
-    message = Message.query.get_or_404(message_id)
+    message = Usermessage.query.get_or_404(message_id)
     db.session.delete(message)
     db.session.commit()
-    return jsonify({"message": "Message deleted"}), 200
+    return jsonify({"message": "Usermessage deleted"}), 200
 
 
 # ================================ PROJECTS ================================
