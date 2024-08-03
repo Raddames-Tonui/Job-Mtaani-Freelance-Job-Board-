@@ -1,11 +1,14 @@
 // Sidebar.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { FiHome, FiUser, FiFilePlus, FiBriefcase, FiBookmark, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
+import { UserContext } from '../context/UserContext';
 
 const Sidebar = () => {
+  const {currentUser} = useContext(UserContext)
+  console.log(currentUser)
   return (
-    <div className="w-64 h-[90vh] fixed top-[10vh] z-50  bg-gray-100 shadow-md">
-      <div className="p-4 font-bold text-xl">EMPLOYERS DASHBOARD</div>
+    <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50  bg-gray-100 shadow-md">
+      <div className="p-4 font-bold text-xl"><h1>{currentUser.firstname}</h1></div>
       <nav className="mt-4">
         <ul>
           <li className="p-4 hover:bg-gray-200 flex items-center">

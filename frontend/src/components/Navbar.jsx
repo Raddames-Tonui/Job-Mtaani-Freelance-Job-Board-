@@ -41,9 +41,9 @@ const Navbar = () => {
               <>
                 {currentUser.is_freelancer ?(
                     <>                  
-                      <NavLink to="/find-jobs"  className="hover:underline font-semibold">Find Jobs</NavLink>
-                      <NavLink to="/available-jobs" className="hover:underline font-semibold"> All Available Jobs</NavLink>
-                      <NavLink to="/job-details" className="hover:underline font-semibold">Browse Employers</NavLink>
+                      <NavLink to="/freelancer/find-jobs"  className="hover:underline font-semibold">Find Jobs</NavLink>
+                      <NavLink to="/freelancer/available-jobs" className="hover:underline font-semibold"> All Available Jobs</NavLink>
+                      <NavLink to="/freelancer/job-details" className="hover:underline font-semibold">Browse Employers</NavLink>
                      
                     </>
                 ):(
@@ -54,7 +54,7 @@ const Navbar = () => {
                  
                     <NavLink to="/employers" className="hover:underline font-semibold whitespace-nowrap">Clients</NavLink>
                     <NavLink to="/employer-details" className="hover:underline font-semibold whitespace-nowrap">Browse Freelancers</NavLink>
-                    <NavLink to="/create-job" className="hover:underline font-semibold whitespace-nowrap">Create Jobs</NavLink>
+                    <NavLink to="/client/create-job" className="hover:underline font-semibold whitespace-nowrap">Create Jobs</NavLink>
                     <NavLink to="/employer-grid" className="hover:underline font-semibold whitespace-nowrap">Employer Grid</NavLink>
                      
                   </>

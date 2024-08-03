@@ -9,7 +9,7 @@ export const JobProvider = ({ children }) => {
 
     // FETCH JOBS
     useEffect(() => {
-        fetch(`${server_url}/projects`, {
+        fetch(`${server_url}/jobpostings`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export const JobProvider = ({ children }) => {
         })
         .then(response => response.json())
         .then(data => {
-            // console.log(data);
+            console.log(data);
             setJobs(data);
         })
         .catch(error => {

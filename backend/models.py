@@ -72,6 +72,8 @@ class JobPosting(db.Model, SerializerMixin):
     requirements = db.Column(db.Text)
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    client = db.relationship('User', backref=db.backref('job_postings', lazy=True))
+
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -82,6 +84,7 @@ class JobPosting(db.Model, SerializerMixin):
             "description": self.description,
             "requirements": self.requirements,
             "client_id": self.client_id,
+            "client": self.client.to_dict(),  
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
