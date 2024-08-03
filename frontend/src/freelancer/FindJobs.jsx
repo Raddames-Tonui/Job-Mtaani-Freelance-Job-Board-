@@ -151,15 +151,17 @@ const FindJobs = () => {
               {job.client && (
                 <img
                 src={job.client.avatar}
-                alt={job.company}
+                alt="image"
                 className="w-10 h-10 mr-4 rounded-full"
               />
               )                
               }
               
               <div>
+                <h2 className='font-bold text-blue-600'>{job.client.firstname}</h2>
                 <h3 className="text-lg font-semibold">{job.title}</h3>
                 <p className="text-sm text-gray-600">{job.description}</p>
+                <button className='bg-blue-700 rounded-sm px-2 '> APPLY</button>
               </div>
             </div>
             <div className="text-sm text-gray-600">

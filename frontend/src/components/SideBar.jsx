@@ -2,13 +2,14 @@
 import React, { useContext } from 'react';
 import { FiHome, FiUser, FiFilePlus, FiBriefcase, FiBookmark, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
 import { UserContext } from '../context/UserContext';
+// import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   const {currentUser} = useContext(UserContext)
-  console.log(currentUser)
+  // console.log(currentUser)
   return (
     <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50  bg-gray-100 shadow-md">
-      <div className="p-4 font-bold text-xl"><h1>{currentUser.firstname}</h1></div>
+      {/* <div className="p-4 font-bold text-xl"><h1>{currentUser.firstname}</h1></div> */}
       <nav className="mt-4">
         <ul>
           <li className="p-4 hover:bg-gray-200 flex items-center">
@@ -17,9 +18,9 @@ const Sidebar = () => {
           <li className="p-4 hover:bg-gray-200 flex items-center">
             <FiUser className="mr-2" /> Employers Profile
           </li>
-          <li className="p-4 bg-gray-200 flex items-center">
+          {/* <NavLink to="/client/create-job"  className="p-4 bg-gray-200 flex items-center">
             <FiFilePlus className="mr-2" /> Post a Job
-          </li>
+          </NavLink> */}
           <li className="p-4 hover:bg-gray-200 flex items-center">
             <FiBriefcase className="mr-2" /> My Jobs
           </li>
