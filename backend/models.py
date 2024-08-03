@@ -22,14 +22,18 @@ class User(db.Model, SerializerMixin):
     lastname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    avatar = db.Column(db.String(150))
 
     is_admin = db.Column(db.Boolean, default=False)
     is_freelancer = db.Column(db.Boolean, default=False)
     is_client = db.Column(db.Boolean, default=False)
-
+    # Freelancer
     skills = db.Column(db.Text)
-    avatar = db.Column(db.String(150))
     experience = db.Column(db.Text)
+    # client
+    about = db.Column(db.Text)
+    needs = db.Column(db.Text)
+  
     ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id')
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -72,6 +76,8 @@ class JobPosting(db.Model, SerializerMixin):
     requirements = db.Column(db.Text)
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    client = db.relationship('User', backref=db.backref('job_postings', lazy=True))
+
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -82,6 +88,7 @@ class JobPosting(db.Model, SerializerMixin):
             "description": self.description,
             "requirements": self.requirements,
             "client_id": self.client_id,
+            "client": self.client.to_dict(),  
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
@@ -139,7 +146,7 @@ class Payment(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<Payment(id='{self.id}', status='{self.status}')>"
 
-class Message(db.Model, SerializerMixin):
+class Usermessage(db.Model, SerializerMixin):
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -161,7 +168,7 @@ class Message(db.Model, SerializerMixin):
         }
 
     def __repr__(self):
-        return f"<Message(id='{self.id}')>"
+        return f"<Usermessage(id='{self.id}')>"
 
 class Project(db.Model, SerializerMixin):
     __tablename__ = "projects"

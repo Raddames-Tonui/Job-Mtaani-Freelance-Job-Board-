@@ -1,70 +1,114 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+
 
 const Navbar = () => {
+  const {currentUser, logoutUser} = useContext(UserContext)
   const [isOpen, setIsOpen] = useState(false);
+
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+
   return (
     <header className="fixed border-b-2 border-gray-200 top-0 w-full flex justify-between items-center px-6 bg-gradient-to-b from-blue-300 to-blue-200 h-[10vh] z-50">
       <div className="flex items-center space-x-2">
         <Link to="/" className="text-xl font-bold text-blue-600">JobQuest</Link>
+        {currentUser && currentUser.username ?
+        <h2 className='text xl font-semibold pl-3'> Welcome {currentUser.firstname}</h2>
+          :(
+           <>          
+           </>
+          )
+        }
       </div>
+
+
+     
       <nav className="hidden md:flex space-x-6 text-gray-700">
-        <div className="relative group">
-          <NavLink to="/" className="hover:underline font-semibold">Home</NavLink>
-        </div>
-        <div className="relative group">
-          <p className="hover:underline font-semibold">Freelancer</p>
-          <div className="absolute hidden group-hover:flex ">
-            <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/find-jobs"  className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Find Jobs</NavLink>
-              <NavLink to="/available-jobs" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap"> All Available Jobs</NavLink>
-              <NavLink to="/job-details" className="block px-16 py-2 hover:bg-blue-300  whitespace-nowrap">Browse Employers</NavLink>
-            </div>
-          </div>
-        </div>
-        <div className="relative group">
-
-          <NavLink to="/employers" className="hover:underline font-semibold whitespace-nowrap">Clients</NavLink>
-          <div className="absolute hidden group-hover:flex">
-            <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/create-job" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Create Jobs</NavLink>
-
-              <NavLink to="/employer-grid" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Employer Grid</NavLink>
-              <NavLink to="/employer-details" className="flex-row px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Browse Freelancers</NavLink>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative group">
-          <NavLink to="/candidates" className="hover:underline font-semibold">Candidates</NavLink>
-          <div className="absolute hidden group-hover:flex ">
-            <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
-              <NavLink to="/candidate-list" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Candidate List</NavLink>
-              <NavLink to="/candidate-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Candidate Grid</NavLink>
-              <NavLink to="/candidate-details" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Candidate Details</NavLink>
-            </div>
-          </div>
-        </div>
-
-        <div className='relative group'>
+        {!currentUser ? (
+          <>
+          <NavLink to="/" className="hover:underline font-semibold">Home</NavLink>      
           <NavLink to="/customer-support" className="hover:underline font-semibold">Customer Support</NavLink>
-          <div className='absolute hidden group-hover:flex'>
-            <div className='bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full'>
-              <NavLink to='/customer-support' className='block px-16 py-2 hover:bg-blue-300 whitespace-nowrap'>Customer Support</NavLink>
-              <NavLink to='/about' className='block px-16 py-2 hover:bg-blue-300 whitespace-nowrap'>About Us</NavLink>
-            </div>
-          </div>
-        </div>
+          <NavLink to='/about' className="hover:underline font-semibold">About Us</NavLink>
+          </>
+        ):(
+          <>
+            {currentUser ? (
+              <>
+                {currentUser.is_freelancer ?(
+                    <>                  
+                      <NavLink to="/freelancer/find-jobs"  className="hover:underline font-semibold">Find Jobs</NavLink>
+                      {/* <NavLink to="/freelancer/available-jobs" className="hover:underline font-semibold"> All Available Jobs</NavLink> */}
+                      <NavLink to="/freelancer/job-details" className="hover:underline font-semibold">Applied Jobs</NavLink>
+                     
+                    </>
+                ):(
+                  <></>
+                )}    
+                {currentUser.is_client?(
+                  <>
+                    <NavLink to="" className="hover:underline font-semibold whitespace-nowrap">Update Profile</NavLink>
+                    <NavLink to="/client/create-job" className="hover:underline font-semibold whitespace-nowrap">Create Jobs</NavLink>
+                    <NavLink to="/employer-grid" className="hover:underline font-semibold whitespace-nowrap">Proposals</NavLink>
+                     
+                    <NavLink to="/employer-grid" className="hover:underline font-semibold whitespace-nowrap">Available Freelancers</NavLink>
+                     
+                  </>
+                ):(
+                  <></>
+                )
+
+
+                }            
+
+
+              </>
+             
+
+
+            ):
+            (
+              <>
+             
+              </>)
+
+
+            }
+                  {/* <div className="relative group">
+                    <NavLink to="/candidates" className="hover:underline font-semibold">Candidates</NavLink>
+                    <div className="absolute hidden group-hover:flex ">
+                      <div className="bg-blue-200 shadow-md rounded-md flex flex-col justify-center mx-auto w-full">
+                        <NavLink to="/candidate-list" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Candidate List</NavLink>
+                        <NavLink to="/candidate-grid" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Candidate Grid</NavLink>
+                        <NavLink to="/candidate-details" className="block px-16 py-2 hover:bg-blue-300 whitespace-nowrap">Candidate Details</NavLink>
+                      </div>
+                    </div>
+                  </div> */}
+
+
+          </>
+        )}
+       
       </nav>
       <div className="hidden md:flex items-center space-x-4">
-        <NavLink to="/login" className="text-blue-600 hover:underline font-semibold">Login</NavLink>
-        <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
+        {currentUser ? (
+          <div className="flex items-center space-x-4">
+            {/* <NavLink to="/dashboard" className="text-blue-600 hover:underline font-semibold">Dashboard</NavLink> */}
+            <button onClick={logoutUser} className="hover:underline font-semibold bg-blue-600 text-white rounded-full py-2 px-4">Logout</button>
+          </div>
+        ) : (
+          <>
+                    <NavLink to="/login" className="text-blue-600 hover:underline font-semibold">Login</NavLink>
+                    <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
+          </>
+        )
+        }
       </div>
+
 
       {/* Mobile Menu */}
       <div className="md:hidden">
@@ -83,8 +127,24 @@ const Navbar = () => {
             <NavLink to="/candidates" className="hover:underline font-semibold">Candidates</NavLink>
             <NavLink to="/blog" className="hover:underline font-semibold">Blog</NavLink>
             <NavLink to="/pages" className="hover:underline font-semibold">Pages</NavLink>
-            <NavLink to="/login" className="py-2 px-4 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white">Login / Register</NavLink>
-            <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
+           
+
+
+            {currentUser ? (
+              <>
+                <NavLink to="/" className="py-2 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700">Sign out</NavLink>
+
+
+              </>
+          ):
+          <>
+              <NavLink to="/login" className="py-2 px-4  text-blue-600 rounded-fullhover:text-white">Login </NavLink>
+              <NavLink to="/signup" className="py-2 px-4 bg-blue-600 text-white rounded-full">Sign up</NavLink>
+         
+          </>
+            }
+
+
           </nav>
         </div>
       )}
@@ -92,4 +152,7 @@ const Navbar = () => {
   );
 };
 
+
 export default Navbar;
+
+

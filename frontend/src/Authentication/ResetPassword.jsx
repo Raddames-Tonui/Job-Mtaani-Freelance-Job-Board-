@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+import toast from 'react-hot-toast';
 
 function ResetPassword() {
+  const { resetPassword } = useContext(UserContext);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { token } = useParams();
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Add logic to handle reset password
+    if (newPassword === confirmPassword) {
+      resetPassword(token, newPassword);
+    } else {
+      toast.error("Passwords do not match");
+    }
     setNewPassword("");
     setConfirmPassword("");
   }

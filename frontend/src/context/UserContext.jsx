@@ -10,52 +10,49 @@ export const UserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [authToken, setAuthToken] = useState(() => localStorage.getItem("access_token") || null);
 
-// REGISTER USER
-const registerUser = (username, email, password, firstname = '', lastname = '', role = '') => {
-    let is_admin = false;
-    let is_freelancer = false;
-    let is_client = false;
-    // Set flags based on role
-    switch (role) {
-        case 'Admin':
-            is_admin = true;
-            break;
-        case 'Freelancer':
-            is_freelancer = true;
-            break;
-        case 'Client':
-            is_client = true;
-            break;
-        default:
-            break;
-    }
-
-    fetch(`${server_url}/users`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-            username, email, password, firstname,
-            lastname, 
-            is_admin, is_freelancer, is_client 
-        })
-    })
-    .then((response) => response.json())
-    .then((res) => {
-        if (res.username) {
-            toast.success('Registration successful!');
-            nav("/login");
-        } else if (res.error) {
-            toast.error("User with this email or username already exists");
-        } else {
-            toast.error("An error occurred");
+    // REGISTER USER
+    const registerUser = (username, email, password, firstname = '', lastname = '', role = '') => {
+        let is_admin = false;
+        let is_freelancer = false;
+        let is_client = false;
+        // Set flags based on role
+        switch (role) {
+            case 'Admin':
+                is_admin = true;
+                break;
+            case 'Freelancer':
+                is_freelancer = true;
+                break;
+            case 'Client':
+                is_client = true;
+                break;
+            default:
+                break;
         }
-    })
 
-};
-
-
+        fetch(`${server_url}/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ 
+                username, email, password, firstname,
+                lastname, 
+                is_admin, is_freelancer, is_client 
+            })
+        })
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.username) {
+                toast.success('Registration successful!');
+                nav("/login");
+            } else if (res.error) {
+                toast.error("User with this email or username already exists");
+            } else {
+                toast.error("An error occurred");
+            }
+        })
+    };
 
     // UPDATE USER
     const updateUser = (username, avatar, password) => {
@@ -142,6 +139,33 @@ const registerUser = (username, email, password, firstname = '', lastname = '', 
         });
     };
 
+    // RESET PASSWORD
+    const resetPassword = (token, newPassword) => {
+        fetch(`${server_url}/reset-password/${token}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ new_password: newPassword })
+        })
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.message === "Password has been reset") {
+                toast.success(res.message);
+                nav("/login");
+            } else if (res.message) {
+                toast.error(res.message);
+            } else {
+                toast.error("An error occurred");
+            }
+        })
+        .catch((error) => {
+            toast.error("Network error: " + error.message);
+        });
+    };
+
+    // FETCH CURRENT USER
+
     useEffect(() => {
         if (!authToken) return;
 
@@ -175,6 +199,7 @@ const registerUser = (username, email, password, firstname = '', lastname = '', 
         loginUser,
         updateUser,
         logoutUser,
+        resetPassword,
         authToken
     };
 
