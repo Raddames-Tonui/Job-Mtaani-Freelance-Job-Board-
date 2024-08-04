@@ -9,6 +9,7 @@ import NoPage from "./pages/NoPage";
 import About from "./pages/About";
 import CustomerSupport from "./pages/CustomerSupport";
 
+
 import Login from "./Authentication/Login";
 import SignUpForm from "./Authentication/SignUpForm";
 import ResetPassword from "./Authentication/ResetPassword";
@@ -26,7 +27,8 @@ import UpdateProfile from "./Client/UpdateProfile";
 import Proposals from "./Client/Proposals";
 import JobList from "./Client/JobList";
 import JobCreation from "./Client/JobCreation";
-import Freelancers from "./Client/Freelancers";
+
+import AvailableFreelancers from "./Client/AvailableFreelancers";
 import Overview from "./Client/ClientDashboard";
 
 
@@ -67,7 +69,7 @@ function App() {
               <Route path="create-job" element={<JobCreation />} />
               <Route path="update-profile" element={<UpdateProfile/>}/>
               <Route path="proposals" element={<Proposals/>}/>
-              <Route path="freelancers" element={<Freelancers/>}/>
+              <Route path="freelancers" element={<AvailableFreelancers/>}/>
             </Route>
             {/* ADMIN ROUTES */}
             <Route path="/admin" element={<LayoutAdmin />}>
