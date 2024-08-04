@@ -22,7 +22,6 @@ function Layout() {
             }}
           />
       
-      {/* <Sidebar className="mt-[10vh]"/> */}
       <div className="bg-blue-50 mt-[10vh] min-h-[90vh] "> 
         <Outlet />
       </div>

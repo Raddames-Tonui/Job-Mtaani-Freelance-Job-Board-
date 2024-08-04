@@ -13,14 +13,15 @@ function SignUpForm() {
     repeatPassword: "",
     firstname: "",
     lastname: "",
-    role: ""
+    role: "",
+    termsAccepted: false, 
   });
 
   function handleChange(e) {
-    const { id, value } = e.target;
+    const { id, type, checked, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
-      [id]: value
+      [id]: type === "checkbox" ? checked : value
     }));
   }
 
@@ -33,11 +34,14 @@ function SignUpForm() {
       repeatPassword,
       firstname,
       lastname,
-      role
+      role,
+      termsAccepted
     } = formData;
 
     if (password !== repeatPassword) {
       toast.error("Passwords do not match");
+    } else if (!termsAccepted) {
+      toast.error("You must accept the terms and conditions");
     } else {
       registerUser(
         username,
@@ -55,7 +59,8 @@ function SignUpForm() {
         repeatPassword: "",
         firstname: "",
         lastname: "",
-        role: ""
+        role: "",
+        termsAccepted: false
       });
     }
   }
@@ -195,6 +200,27 @@ function SignUpForm() {
                 <option value="Client">Client</option>
               </select>
             </div>
+          </div>
+
+          {/* Terms and Conditions */}
+          <div className="mt-4 flex items-center">
+            <input
+              type="checkbox"
+              id="termsAccepted"
+              checked={formData.termsAccepted}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              required
+            />
+            <label htmlFor="termsAccepted" className="ml-2 text-sm text-gray-600">
+              I accept the{" "}
+              <Link
+                to="/terms-and-conditions"
+                className="text-blue-500 hover:text-blue-700 transition duration-300"
+              >
+                terms and conditions
+              </Link>
+            </label>
           </div>
 
           <div className="mt-4">

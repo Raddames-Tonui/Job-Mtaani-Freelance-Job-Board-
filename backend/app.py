@@ -9,7 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-from flask_mail import Mail, Message  # Importing Flask-Mail
+from flask_mail import Mail, Message  
 
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
@@ -41,6 +41,8 @@ mail = Mail(app)  # Initialize Flask-Mail
 
 # Serializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+# ================================ CUSTOMER SUPPORT ===================================
 
 # =================================== MAIL TRAP =====================================================
 
@@ -144,7 +146,8 @@ def logout():
     return jsonify({"success": "Successfully logged out"}), 200
 
 
-# ================================ USERS =================================
+# ================================ USERS ================================
+
 # Get all users
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -158,12 +161,10 @@ def create_user():
     if not data or not all(key in data for key in ('username', 'email', 'password')):
         abort(400, description="Invalid input")
 
-    # Extract values and apply the logic for is_client
     is_admin = data.get('is_admin', False)
     is_freelancer = data.get('is_freelancer', False)
     is_client = data.get('is_client', False)
 
-    # If all are False, set is_client to True
     if not is_admin and not is_freelancer and not is_client:
         is_client = True
 
@@ -177,7 +178,10 @@ def create_user():
             is_admin=is_admin,
             is_freelancer=is_freelancer,
             is_client=is_client,
-
+            skills=data.get('skills', ''),
+            experience=data.get('experience', ''),
+            about=data.get('about', ''), 
+            needs=data.get('needs', '')  
         )
         user.validate()  
         db.session.add(user)
@@ -185,8 +189,6 @@ def create_user():
         return jsonify(user.to_dict()), 201
     except ValueError as e:
         abort(400, description=str(e))
-
-
 
 # Get a single user
 @app.route('/users/<int:user_id>', methods=['GET'])
@@ -209,6 +211,8 @@ def update_user(user_id):
     user.is_client = data.get('is_client', user.is_client)
     user.skills = data.get('skills', user.skills)
     user.experience = data.get('experience', user.experience)
+    user.about = data.get('about', user.about)  # For clients
+    user.needs = data.get('needs', user.needs)  # For clients
 
     db.session.commit()
     return jsonify(user.to_dict()), 200
@@ -221,7 +225,6 @@ def delete_user(user_id):
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
 
-
 # ================================ JOB POSTINGS ============================
 
 # Route to create a job posting
@@ -229,7 +232,7 @@ def delete_user(user_id):
 @jwt_required()
 def create_job_posting():    
     data = request.get_json()
-    if not data or not all(key in data for key in ('title', 'description', 'requirements')):
+    if not data or not all(key in data for key in ('title', 'description', 'requirements', 'budget', 'experience_level', 'location')):
         abort(400, description="Invalid input")
 
     client_id = get_jwt_identity()
@@ -238,6 +241,9 @@ def create_job_posting():
         title=data['title'],
         description=data['description'],
         requirements=data.get('requirements'),
+        budget=data['budget'],
+        experience_level=data.get('experience_level'),
+        location=data.get('location'),
         client_id=client_id
     )
     db.session.add(job_posting)
@@ -265,6 +271,9 @@ def update_job_posting(job_posting_id):
     job_posting.title = data.get('title', job_posting.title)
     job_posting.description = data.get('description', job_posting.description)
     job_posting.requirements = data.get('requirements', job_posting.requirements)
+    job_posting.budget = data.get('budget', job_posting.budget)
+    job_posting.experience_level = data.get('experience_level', job_posting.experience_level)
+    job_posting.location = data.get('location', job_posting.location)
     job_posting.client_id = data.get('client_id', job_posting.client_id)
 
     db.session.commit()
@@ -277,7 +286,6 @@ def delete_job_posting(job_posting_id):
     db.session.delete(job_posting)
     db.session.commit()
     return jsonify({"message": "Job posting deleted"}), 200
-
 
 # ================================ PROPOSALS ================================
 
