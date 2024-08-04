@@ -44,10 +44,7 @@ class User(db.Model, SerializerMixin):
             raise ValueError("Username must be at least 3 characters long.")
         if len(self.password_hash) < 3:
             raise ValueError("Password must be at least 3 characters long.")
-        # try:
-        #     validate_email(self.email)
-        # except EmailNotValidError as e:
-        #     raise ValueError(f"Invalid email address: {e}")
+     
 
     def to_dict(self):
         return {
@@ -72,10 +69,24 @@ class JobPosting(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
+    tags = db.Column(db.String(200))
+    role = db.Column(db.String(100))
+    min_salary = db.Column(db.Numeric(10))
+    max_salary = db.Column(db.Numeric(10))
+    salary_type = db.Column(db.String(50))
+    education = db.Column(db.String(100))
+    experience = db.Column(db.String(50))
+    job_type = db.Column(db.String(50))
+    vacancies = db.Column(db.Integer)
+    expiration_date = db.Column(db.String(50))
+    job_level = db.Column(db.String(50))
     description = db.Column(db.Text, nullable=False)
-    requirements = db.Column(db.Text)
-    client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    responsibilities = db.Column(db.Text)
+    location = db.Column(db.String(100))
+    experience_level =db.Column(db.String(50)) 
 
+    
+    client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     client = db.relationship('User', backref=db.backref('job_postings', lazy=True))
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -85,13 +96,29 @@ class JobPosting(db.Model, SerializerMixin):
         return {
             "id": self.id,
             "title": self.title,
+            "tags": self.tags,
+            "role": self.role,
+            "min_salary": float(self.min_salary) if self.min_salary is not None else None,
+            "max_salary": float(self.max_salary) if self.max_salary is not None else None,
+            "salary_type": self.salary_type,
+            "education": self.education,
+            "experience": self.experience,
+            "job_type": self.job_type,
+            "vacancies": self.vacancies,
+            "expiration_date": self.expiration_date,
+            "job_level": self.job_level,
             "description": self.description,
-            "requirements": self.requirements,
+            "responsibilities": self.responsibilities,
+            "experience_level": self.experience_level,
+            "location": self.location,
+            
             "client_id": self.client_id,
-            "client": self.client.to_dict(),  
+            "client": self.client.to_dict(),
+
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
+
 
     def __repr__(self):
         return f"<JobPosting(title='{self.title}')>"

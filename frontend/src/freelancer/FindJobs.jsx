@@ -1,45 +1,54 @@
 import React, { useContext } from 'react';
 import { JobContext } from '../context/JobContext';
+import { formatDistanceToNow } from 'date-fns';
 
-
-const FindJobs = ({ job }) => {
-  const {jobs} = useContext(JobContext)
+const FindJobs = () => {
+  const { jobs } = useContext(JobContext);
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4">
-      <div className="p-8">
-        <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{job.created_at}</div>
-        <h2 className="block mt-1 text-lg leading-tight font-medium text-black">{job.title}</h2>
-        <p className="mt-2 text-gray-500">{job.description}</p>
-        <div className="flex items-center mt-4">
-          <span className="text-sm text-gray-500 mr-2">{job.paymentType}</span>
-          <span className="text-sm text-gray-500">{job.budget}</span>
-        </div>
-        <div className="flex items-center mt-4">
-          <span className="text-sm text-gray-500 mr-2">Proposals: </span>
-          <span className="text-sm text-gray-500">{job.proposals}</span>
-        </div>
-        <div className="flex items-center mt-4">
-          {job.tags.map((tag, index) => (
-            <span key={index} className="text-sm text-indigo-500 mr-2">{tag}</span>
-          ))}
-        </div>
+    <div className="p-4">
+      <div className=''>
+          {jobs.map(job => {
+            const jobCreatedAt = new Date(job.created_at);
+            const timeAgo = formatDistanceToNow(jobCreatedAt, { addSuffix: true }); // To post time
+
+            return (
+              <div key={job.id} className="bg-white hover:bg-blue-100 shadow-md rounded-lg p-6 mb-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-bold">{job.title}</h2>
+                  <span className="text-sm text-gray-500">Posted {timeAgo}</span>
+                </div>
+                <div className="flex items-center mt-2">
+                  {job.role && (
+                    <span className="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">{job.role}</span>
+                  )}
+                  <span className="text-gray-500 ml-2">{job.job_level}</span>
+                  <span className="text-gray-500 ml-2">{job.education}</span>
+                </div>
+                <div className="mt-4 text-gray-700">
+                  <p>{job.description}</p>
+                </div>
+                <div className="flex flex-wrap mt-4">
+                  {job.tags.map(tag => (
+                    <span key={tag} className="bg-gray-200 text-gray-700 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">{tag}</span>
+                  ))}
+                </div>
+                <div className="flex justify-between items-center mt-4 text-gray-500 text-sm">
+                  <span>{job.salary_type}</span>
+                  {job.max_salary && <span>Est. budget: {job.max_salary}</span>}
+                  {job.rate && <span>{job.salary_type}</span>}
+                  {job.job_level && <span>{job.location}</span>}
+                  {job.expiration_date && <span>{job.expiration_date}</span>}
+                </div>
+                <div className='flex justify-end mt-4'>
+                  <button className='bg-blue-500 hover:bg-blue-700 px-3 text-white py-1 rounded-md'>Apply</button>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
 };
 
 export default FindJobs;
-
-// Example usage:
-// const job = {
-//   postedTime: "Posted 8 minutes ago",
-//   title: "Develop a WebApp o reply to user reviews on AppStores with AI",
-//   description: "This WebApp is designed to help app and game developers manage user reviews on platforms like Google Play more efficiently by providing automated, pre-written, and canned replies. The tool aims to simplify the process of responding to user feedback while offering customizable options...",
-//   paymentType: "Fixed price - Expert",
-//   budget: "Est. budget: $570.00",
-//   proposals: "Less than 5",
-//   tags: ["AI App Development", "AI Development", "AI Agent Development", "Web Development", "Web Application", "JavaScript"]
-// };
-
-// <FindJobs job={job} />

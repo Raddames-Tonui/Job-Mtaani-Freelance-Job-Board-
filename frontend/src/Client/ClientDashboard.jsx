@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Overview() {
+function ClientDashboard() {
   return (
     <div>Overview</div>
   )
 }
 
-export default Overview
+export default ClientDashboard

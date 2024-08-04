@@ -101,12 +101,23 @@ export const UserProvider = ({ children }) => {
                 localStorage.setItem("access_token", res.access_token);
                 setAuthToken(res.access_token);
                 toast.success('Logged in', { icon: '👏' });
-                nav("/jobs-list");
+
+                if (res.is_admin) {
+                    nav("/admin");
+                } else if (res.is_client) {
+                    nav("/client");
+                } else if (res.is_freelancer) {
+                    nav("/freelancer");
+                } else {
+                    nav("/jobs-list");
+                }
+
             } else if (res.message) {
                 toast.error(res.message);
             } else {
                 toast.error("An error occurred");
             }
+
         })
         .catch((error) => {
             toast.error("Network error: " + error.message);

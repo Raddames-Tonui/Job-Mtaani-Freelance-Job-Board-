@@ -14,9 +14,9 @@ const Navbar = () => {
     <header className="fixed top-0 w-full bg-gradient-to-b from-blue-300 to-blue-200 border-b-2 border-gray-200 flex justify-between items-center px-6 h-[10vh] z-50">
       <div className="flex items-center space-x-2">
         <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
-        {currentUser && currentUser.username && (
+        {/* {currentUser && currentUser.username && (
           <h2 className="text-xl font-semibold pl-3 text-gray-700 capitalize">Welcome {currentUser.firstname}</h2>
-        )}
+        )} */}
       </div>
 
       <nav className="hidden md:flex space-x-6 text-gray-700">
@@ -31,7 +31,7 @@ const Navbar = () => {
             {currentUser.is_freelancer && (
               <>
 
-                <NavLink to="/freelancer/find-jobs" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>
+                <NavLink to="/freelancer" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>
                 <NavLink to="/freelancer/available-jobs" className="hover:underline font-semibold transition duration-300">Available Jobs</NavLink>
                 <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Update Profile</NavLink>
                 <NavLink to="/freelancer/job-details" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from app import app, db
-from models import User, JobPosting, Proposal, Payment, Message, Project, Milestone, Rating
+from models import User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 from datetime import datetime
@@ -12,7 +12,6 @@ fake = Faker()
 
 def seed_database():
     with app.app_context():
-        # Reset the database
         db.drop_all()
         db.create_all()
         print("Seeding data...")
@@ -47,8 +46,8 @@ def seed_database():
             for _ in range(data["count"]):
                 user = User(
                     username=fake.user_name(),
-                    firstname=fake.first_name(),  # Adding firstname
-                    lastname=fake.last_name(),    # Adding lastname
+                    firstname=fake.first_name(),
+                    lastname=fake.last_name(),
                     email=fake.email(),
                     password_hash=generate_password_hash(data["password"]),
                     is_admin=data["is_admin"],
@@ -65,13 +64,27 @@ def seed_database():
                     db.session.rollback()
                     print(f"User with email {user.email} already exists")
 
+
         # Sample job postings
         for _ in range(5):
             job_posting = JobPosting(
                 title=fake.job(),
+                tags=', '.join(fake.words(nb=3, ext_word_list=None, unique=True)),  # Convert list to comma-separated string
+                role=fake.job(),
+                min_salary=fake.pydecimal(left_digits=6, right_digits=2, positive=True),
+                max_salary=fake.pydecimal(left_digits=6, right_digits=2, positive=True),
+                salary_type=random.choice(["hourly", "monthly", "contract"]),
+                education=fake.job(),
+                experience=fake.job(),
+                job_type=random.choice(["full-time", "part-time", "contract", "internship"]),
+                vacancies=random.randint(1, 10),
+                expiration_date=fake.date_between(start_date='today', end_date='+30d'),
+                job_level=random.choice(["Beginner", "Intermediate", "Expert"]),
                 description=fake.text(),
-                requirements=fake.text(),
-                client_id=random.randint(1, 6)  # Assuming user IDs are 1 through 6
+                responsibilities=fake.text(),
+                location=fake.city(),
+                experience_level=random.choice(["Entry-level", "Mid-level", "Senior-level"]),  
+                client_id=random.randint(1, 3)  
             )
             db.session.add(job_posting)
             db.session.commit()
@@ -80,18 +93,18 @@ def seed_database():
         for num in range(1, 6):
             proposal = Proposal(
                 content=fake.text(),
-                freelancer_id=random.randint(1, 6),
+                freelancer_id=random.randint(1, 11), 
                 job_posting_id=num
             )
             db.session.add(proposal)
             db.session.commit()
 
         # Sample payments
-        for num in range(1, 6):
+        for _ in range(5):
             payment = Payment(
-                amount=float(num * 100),
-                client_id=3,  # Assuming client ID is 3
-                freelancer_id=random.randint(1, 6),
+                amount=float(random.randint(100, 1000)),
+                client_id=random.randint(1, 3),
+                freelancer_id=random.randint(1, 11),
                 status=random.choice(["pending", "completed"])
             )
             db.session.add(payment)
@@ -99,21 +112,21 @@ def seed_database():
 
         # Sample messages
         for _ in range(10):
-            message = Message(
-                sender_id=random.randint(1, 6),
-                receiver_id=3,  # Assuming receiver ID is 3
+            message = Usermessage(
+                sender_id=random.randint(1, 11),
+                receiver_id=random.randint(1, 11),
                 content=fake.text()
             )
             db.session.add(message)
             db.session.commit()
 
         # Sample projects
-        for num in range(1, 6):
+        for _ in range(5):
             project = Project(
                 title=fake.catch_phrase(),
                 description=fake.text(),
-                client_id=3,  # Assuming client ID is 3
-                freelancer_id=random.randint(1, 6),
+                client_id=random.randint(1, 3),
+                freelancer_id=random.randint(1, 11),
                 status=random.choice(["ongoing", "completed"]),
                 deadline=fake.date_this_year()
             )
@@ -121,9 +134,9 @@ def seed_database():
             db.session.commit()
 
         # Sample milestones
-        for num in range(1, 6):
+        for _ in range(5):
             milestone = Milestone(
-                project_id=num,
+                project_id=random.randint(1, 5),
                 title=fake.bs(),
                 description=fake.text(),
                 due_date=fake.date_this_year(),
@@ -133,10 +146,10 @@ def seed_database():
             db.session.commit()
 
         # Sample ratings
-        for num in range(1, 6):
+        for _ in range(5):
             rating = Rating(
-                user_id=random.randint(1, 6),
-                rater_id=3,  # Assuming rater ID is 3
+                user_id=random.randint(1, 11),
+                rater_id=random.randint(1, 11),
                 score=random.randint(1, 5),
                 review=fake.text()
             )

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import random
-from datetime import timedelta
+from datetime import timedelta, datetime
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -103,6 +103,7 @@ def reset_password(token):
 def index():
     return 'Welcome to the Job Board API!'
 
+# Route for user login
 @app.route("/login", methods=["POST"])
 def login_user():
     identifier = request.json.get("identifier")
@@ -114,23 +115,31 @@ def login_user():
 
     if user and bcrypt.check_password_hash(user.password_hash, password):
         access_token = create_access_token(identity=user.id)
-        return jsonify({"access_token": access_token}), 200
+        return jsonify({
+            "access_token": access_token,
+            "is_admin": user.is_admin,
+            "is_client": user.is_client,
+            "is_freelancer": user.is_freelancer
+        }), 200
 
     return jsonify({"message": "Check your username or password"}), 401
 
+
+# Route for getting current user
 @app.route("/current_user", methods=["GET"])
 @jwt_required()
 def current_user():
     try:
         current_user_id = get_jwt_identity()
-        user = User.query.get(current_user_id)
+        user = db.session.get(User, current_user_id)  
+
         if not user:
             return jsonify({"error": "User not found"}), 404
 
         return jsonify(user.to_dict()), 200
     except Exception as e:
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
-
+    
 # Token blacklist to manage token invalidation
 BLACKLIST = set()
 
@@ -171,10 +180,10 @@ def create_user():
     try:
         user = User(
             username=data['username'],
-            email=data['email'],
-            password_hash=bcrypt.generate_password_hash(data['password']).decode('utf-8'),
             firstname=data.get('firstname', ''), 
-            lastname=data.get('lastname', ''),    
+            lastname=data.get('lastname', ''),
+            email=data['email'],
+            password_hash=bcrypt.generate_password_hash(data['password']).decode('utf-8'),                
             is_admin=is_admin,
             is_freelancer=is_freelancer,
             is_client=is_client,
@@ -211,8 +220,8 @@ def update_user(user_id):
     user.is_client = data.get('is_client', user.is_client)
     user.skills = data.get('skills', user.skills)
     user.experience = data.get('experience', user.experience)
-    user.about = data.get('about', user.about)  # For clients
-    user.needs = data.get('needs', user.needs)  # For clients
+    user.about = data.get('about', user.about) 
+    user.needs = data.get('needs', user.needs) 
 
     db.session.commit()
     return jsonify(user.to_dict()), 200
@@ -225,30 +234,54 @@ def delete_user(user_id):
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
 
-# ================================ JOB POSTINGS ============================
+# ================================ JOB POSTINGS ======================================
 
-# Route to create a job posting
+# create a new job posting
 @app.route('/jobpostings', methods=['POST'])
 @jwt_required()
-def create_job_posting():    
+def create_job_posting():
     data = request.get_json()
-    if not data or not all(key in data for key in ('title', 'description', 'requirements', 'budget', 'experience_level', 'location')):
+    if not data or not all(key in data for key in ('title', 'description')):
         abort(400, description="Invalid input")
+    # Convert expiration_date to a Python date object
 
     client_id = get_jwt_identity()
 
+    # try:
+    #     expiration_date = datetime.strptime(data.get('expiration_date'), '%Y-%m-%d').date()
+    # except (TypeError, ValueError):
+    #     return jsonify({'message': 'Invalid expiration date format. Expected YYYY-MM-DD.'}), 400
+    
+    # Create new job posting
     job_posting = JobPosting(
-        title=data['title'],
-        description=data['description'],
-        requirements=data.get('requirements'),
-        budget=data['budget'],
-        experience_level=data.get('experience_level'),
+        title=data.get('title'),
+        tags=data.get('tags'),
+        role=data.get('role'),
+        min_salary=data.get('min_salary'),
+        max_salary=data.get('max_salary'),
+        salary_type=data.get('salary_type'),
+        education=data.get('education'),
+        experience=data.get('experience'),
+        job_type=data.get('job_type'),
+        vacancies=data.get('vacancies'),
+        expiration_date=data.get('expiration_date'),
+        job_level=data.get('job_level'),
+        description=data.get('description'),
+        responsibilities=data.get('responsibilities'),
         location=data.get('location'),
+        experience_level=data.get('experience_level'),
         client_id=client_id
     )
+
     db.session.add(job_posting)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Failed to create job posting.', 'error': str(e)}), 500
+    
     return jsonify(job_posting.to_dict()), 201
+
 
 # Route to get all job postings
 @app.route('/jobpostings', methods=['GET'])
@@ -264,23 +297,35 @@ def get_job_posting(job_posting_id):
 
 # Route to update a job posting
 @app.route('/jobpostings/<int:job_posting_id>', methods=['PUT'])
+@jwt_required()
 def update_job_posting(job_posting_id):
     data = request.get_json()
     job_posting = JobPosting.query.get_or_404(job_posting_id)
 
     job_posting.title = data.get('title', job_posting.title)
+    job_posting.tags = data.get('tags', job_posting.tags)
+    job_posting.role = data.get('role', job_posting.role)
+    job_posting.min_salary = data.get('min_salary', job_posting.min_salary)
+    job_posting.max_salary = data.get('max_salary', job_posting.max_salary)
+    job_posting.salary_type = data.get('salary_type', job_posting.salary_type)
+    job_posting.education = data.get('education', job_posting.education)
+    job_posting.experience = data.get('experience', job_posting.experience)
+    job_posting.job_type = data.get('job_type', job_posting.job_type)
+    job_posting.vacancies = data.get('vacancies', job_posting.vacancies)
+    job_posting.expiration_date = data.get('expiration_date', job_posting.expiration_date)
+    job_posting.job_level = data.get('job_level', job_posting.job_level)
     job_posting.description = data.get('description', job_posting.description)
-    job_posting.requirements = data.get('requirements', job_posting.requirements)
-    job_posting.budget = data.get('budget', job_posting.budget)
+    job_posting.responsibilities = data.get('responsibilities', job_posting.responsibilities)
     job_posting.experience_level = data.get('experience_level', job_posting.experience_level)
     job_posting.location = data.get('location', job_posting.location)
-    job_posting.client_id = data.get('client_id', job_posting.client_id)
+    job_posting.client_id = get_jwt_identity()
 
     db.session.commit()
     return jsonify(job_posting.to_dict()), 200
 
 # Route to delete a job posting
 @app.route('/jobpostings/<int:job_posting_id>', methods=['DELETE'])
+@jwt_required()
 def delete_job_posting(job_posting_id):
     job_posting = JobPosting.query.get_or_404(job_posting_id)
     db.session.delete(job_posting)
