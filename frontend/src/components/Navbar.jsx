@@ -51,9 +51,9 @@ const Navbar = () => {
                 )}    
                 {currentUser.is_client?(
                   <>
-                    <NavLink to="" className="hover:underline font-semibold whitespace-nowrap">Update Profile</NavLink>
+                    <NavLink to="/client/update-profile" className="hover:underline font-semibold whitespace-nowrap">Update Profile</NavLink>
                     <NavLink to="/client/create-job" className="hover:underline font-semibold whitespace-nowrap">Create Jobs</NavLink>
-                    <NavLink to="/employer-grid" className="hover:underline font-semibold whitespace-nowrap">Proposals</NavLink>
+                    <NavLink to="/Client/proposals" className="hover:underline font-semibold whitespace-nowrap">Proposals</NavLink>
                      
                     <NavLink to="/employer-grid" className="hover:underline font-semibold whitespace-nowrap">Available Freelancers</NavLink>
                      

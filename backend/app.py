@@ -36,7 +36,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 mail = Mail(app)  # Initialize Flask-Mail
 
 # Serializer for generating reset tokens
@@ -105,6 +105,9 @@ def index():
 def login_user():
     identifier = request.json.get("identifier")
     password = request.json.get("password")
+
+    if not identifier or not password:
+       return jsonify({"message": "Identifier and password are required"}), 400
 
     user = User.query.filter(
         (User.email == identifier) | (User.username == identifier)
@@ -217,6 +220,26 @@ def delete_user(user_id):
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
 
+# ================================ UPDATE PROFILE ============================
+@app.route('/update_profile', methods=['POST'])
+@jwt_required()
+def update_profile():
+    data = request.json
+    about = data.get('about')
+    needs = data.get('needs')
+    location = data.get('location')
+    user_id = get_jwt_identity()  
+    
+    # Update the profile in the database
+    user = User.query.get(user_id)
+    if user:
+        user.about = about
+        user.needs = needs
+        user.location = location
+        db.session.commit()
+        return jsonify({'message': 'Profile updated successfully'}), 200
+    else:
+        return jsonify({'message': 'User not found'}), 404
 
 # ================================ JOB POSTINGS ============================
 

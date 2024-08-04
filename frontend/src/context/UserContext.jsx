@@ -86,6 +86,47 @@ export const UserProvider = ({ children }) => {
         });
     };
 
+// UPDATE USER PROFILE
+const updateUserProfile = (profileData) => {
+    const token = localStorage.getItem('access_token');
+
+    return fetch(`${server_url}/update_profile`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(profileData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorDetail => {
+                throw new Error(errorDetail.message || 'Network response was not ok');
+            });
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log('Profile updated:', result);
+
+        // Update currentUser with the new profile data
+        setCurrentUser((prevUser) => ({
+            ...prevUser,
+            ...profileData,
+        }));
+
+        // Notify user of success
+        toast.success('Profile updated successfully!');
+        return result;
+    })
+    .catch(error => {
+        console.error('Error updating profile:', error);
+        toast.error('Error updating profile.');
+        throw error;
+    });
+};
+
+
     // LOGIN USER
     const loginUser = (identifier, password) => {
         fetch(`${server_url}/login`, {
@@ -198,6 +239,7 @@ export const UserProvider = ({ children }) => {
         registerUser,
         loginUser,
         updateUser,
+        updateUserProfile,
         logoutUser,
         resetPassword,
         authToken

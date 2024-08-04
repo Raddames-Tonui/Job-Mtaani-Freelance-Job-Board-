@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
 import Layout from "./Layout";
 import LayoutClient from "./LayoutClient";
 import { UserProvider } from "./context/UserContext";
@@ -19,7 +18,7 @@ import ForgotPassword from "./Authentication/ForgotPassword";
 import FindJobs from "./freelancer/FindJobs";
 import AvailableJobs from "./freelancer/AvailableJobs";
 import UpdateProfile from "./Client/UpdateProfile";
-
+import Proposals from "./Client/proposals";
 
 
 function App() {
@@ -34,7 +33,6 @@ function App() {
               <Route path="find-jobs" element={<FindJobs />} />
               <Route path="available-jobs" element={<AvailableJobs />} />              
             </Route>
-
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="login" element={<Login />} />
@@ -49,6 +47,8 @@ function App() {
             <Route path="/client" element={<LayoutClient />}>
               <Route index element={<JobCreation/>} />
               <Route path="create-job" element={<JobCreation />} />
+              <Route path="update-profile" element={<UpdateProfile />} />
+              <Route path="proposals" element={<Proposals />} />
             </Route>
           </Routes>
         </JobProvider>
@@ -56,5 +56,4 @@ function App() {
     </BrowserRouter>
   );
 }
-
 export default App;
