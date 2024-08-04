@@ -18,7 +18,12 @@ export const JobProvider = ({ children }) => {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            setJobs(data);
+            const jobsWithTags = data.map(job => ({
+                ...job,
+                tags: job.tags ? job.tags.split(',').map(tag => tag.trim()) : []
+                // above checks if tags are empty it create null tags else splits the tags and returns an array
+            }));
+            setJobs(jobsWithTags);
         })
         .catch(error => {
             console.error("Error fetching jobs:", error);
@@ -26,27 +31,33 @@ export const JobProvider = ({ children }) => {
     }, []);
 
     // CREATE JOB
-    const createJob = (title, description, requirements) => {
+    const createJob = (jobDetails) => {
         return fetch(`${server_url}/jobpostings`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem('access_token')}`
             },
-            body: JSON.stringify({
-                title,
-                description,
-                requirements,
-            }),
+            body: JSON.stringify(jobDetails),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create job');
+            }
+            return response.json();
+        })
         .then(newJob => {
-            setJobs(previousJobs => [...previousJobs, newJob]);
+            const jobWithTags = {
+                ...newJob,
+                tags: newJob.tags ? newJob.tags.split(',').map(tag => tag.trim()) : []
+            };
+            setJobs(previousJobs => [...previousJobs, jobWithTags]);
             toast.success("Job posted successfully");
-            return newJob;
+            return jobWithTags;
         })
         .catch(error => {
             console.error("Error creating job:", error);
+            toast.error("Failed to post job");
             throw error;
         });
     };

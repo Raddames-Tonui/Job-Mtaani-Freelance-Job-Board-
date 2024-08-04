@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/SideBar";
 
-function LayoutClient() {
+function LayoutAdmin() {
   return (
     <div className=" overflow-y-scroll no-scrollbar">
       <Navbar  />
@@ -27,4 +27,4 @@ function LayoutClient() {
   );
 }
 
-export default LayoutClient;
+export default LayoutAdmin;

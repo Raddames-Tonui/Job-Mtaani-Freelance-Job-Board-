@@ -20,7 +20,7 @@ function Login() {
     <div className="h-[90vh] flex items-center justify-center py-12 px-6 lg:px-8">
       
 
-      <div className="}bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-md w-full py-6 rounded-md shadow-md border-2 border-gray-200">
+      <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-md w-full py-6 rounded-md shadow-md border-2 border-gray-200">
         <Link to="/" className="text-3xl font-bold text-blue-600 w-auto">JobQuest</Link>
 
         <h2 className="mt-3 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
