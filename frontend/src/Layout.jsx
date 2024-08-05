@@ -3,7 +3,6 @@ import { Toaster } from "react-hot-toast";
 import { Outlet } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/SideBar";
 
 import './app.css';
 
@@ -22,7 +21,6 @@ function Layout() {
             }}
           />
       
-      {/* <Sidebar className="mt-[10vh]"/> */}
       <div className="bg-blue-50 mt-[10vh] min-h-[90vh] "> 
         <Outlet />
       </div>

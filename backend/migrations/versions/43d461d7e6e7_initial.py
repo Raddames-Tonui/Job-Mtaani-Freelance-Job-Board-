@@ -1,8 +1,8 @@
-"""Add firstname and lastname columns
+"""initial
 
-Revision ID: f4d86f030b35
+Revision ID: 43d461d7e6e7
 Revises: 
-Create Date: 2024-08-01 00:33:08.553955
+Create Date: 2024-08-04 11:19:44.033253
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f4d86f030b35'
+revision = '43d461d7e6e7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,12 +25,14 @@ def upgrade():
     sa.Column('lastname', sa.String(length=80), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=128), nullable=False),
+    sa.Column('avatar', sa.String(length=150), nullable=True),
     sa.Column('is_admin', sa.Boolean(), nullable=True),
     sa.Column('is_freelancer', sa.Boolean(), nullable=True),
     sa.Column('is_client', sa.Boolean(), nullable=True),
     sa.Column('skills', sa.Text(), nullable=True),
-    sa.Column('avatar', sa.String(length=150), nullable=True),
     sa.Column('experience', sa.Text(), nullable=True),
+    sa.Column('about', sa.Text(), nullable=True),
+    sa.Column('needs', sa.Text(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
@@ -42,6 +44,9 @@ def upgrade():
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('description', sa.Text(), nullable=False),
     sa.Column('requirements', sa.Text(), nullable=True),
+    sa.Column('budget', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('experience_level', sa.String(length=50), nullable=True),
+    sa.Column('location', sa.String(length=200), nullable=True),
     sa.Column('client_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
