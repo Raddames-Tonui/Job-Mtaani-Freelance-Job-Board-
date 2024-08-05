@@ -140,7 +140,7 @@ export const UserProvider = ({ children }) => {
                 toast.success(res.success);
                 nav("/");
             } else {
-                toast.error(res.error);
+                toast.error("Unable to Log out!");
             }
         })
         .catch((error) => {
