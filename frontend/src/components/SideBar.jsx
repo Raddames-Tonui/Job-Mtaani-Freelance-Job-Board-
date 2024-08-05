@@ -48,6 +48,18 @@ const Sidebar = () => {
             <FiSettings className="mr-2" /> Settings
           </NavLink>
         </ul>
+        <ul>
+          <NavLink to="/freelancer/findjobs" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
+            <FiHome className="mr-2" /> Find Jobs
+          </NavLink>
+          <NavLink to="/freelancer/update-profile" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
+            <FiUser className="mr-2" /> Update Profile
+          </NavLink>
+          <NavLink to="/freelancer/available-jobs" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
+            <FiBriefcase className="mr-2" /> Available Jobs
+          </NavLink>
+          
+        </ul>
       </nav>
     </div>
   );

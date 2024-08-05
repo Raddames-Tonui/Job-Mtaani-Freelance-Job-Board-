@@ -1,8 +1,8 @@
-"""initial
+"""initial migrate
 
-Revision ID: 43d461d7e6e7
+Revision ID: bc1d98f445cb
 Revises: 
-Create Date: 2024-08-04 11:19:44.033253
+Create Date: 2024-08-05 15:27:32.581610
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '43d461d7e6e7'
+revision = 'bc1d98f445cb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,11 +42,21 @@ def upgrade():
     op.create_table('job_postings',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
+    sa.Column('tags', sa.String(length=200), nullable=True),
+    sa.Column('role', sa.String(length=100), nullable=True),
+    sa.Column('min_salary', sa.Numeric(precision=10), nullable=True),
+    sa.Column('max_salary', sa.Numeric(precision=10), nullable=True),
+    sa.Column('salary_type', sa.String(length=50), nullable=True),
+    sa.Column('education', sa.String(length=100), nullable=True),
+    sa.Column('experience', sa.String(length=50), nullable=True),
+    sa.Column('job_type', sa.String(length=50), nullable=True),
+    sa.Column('vacancies', sa.Integer(), nullable=True),
+    sa.Column('expiration_date', sa.String(length=50), nullable=True),
+    sa.Column('job_level', sa.String(length=50), nullable=True),
     sa.Column('description', sa.Text(), nullable=False),
-    sa.Column('requirements', sa.Text(), nullable=True),
-    sa.Column('budget', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('responsibilities', sa.Text(), nullable=True),
+    sa.Column('location', sa.String(length=100), nullable=True),
     sa.Column('experience_level', sa.String(length=50), nullable=True),
-    sa.Column('location', sa.String(length=200), nullable=True),
     sa.Column('client_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),

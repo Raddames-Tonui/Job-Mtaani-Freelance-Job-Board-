@@ -195,7 +195,7 @@ def create_user():
     data = request.get_json()
     if not data or not all(key in data for key in ('username', 'email', 'password')):
         abort(400, description="Invalid input")
-
+        return jsonify({"error": "Invalid input, required fields are missing."}), 400
     # Extract values and apply the logic for is_client
     is_admin = data.get('is_admin', False)
     is_freelancer = data.get('is_freelancer', False)
@@ -204,9 +204,8 @@ def create_user():
     # If all are False, set is_client to True
     if not is_admin and not is_freelancer and not is_client:
         is_client = True
-
-    try:
-        user = User(
+#try:
+    user = User(
             username=data['username'],
             firstname=data.get('firstname', ''), 
             lastname=data.get('lastname', ''),
@@ -220,10 +219,10 @@ def create_user():
             about=data.get('about', ''), 
             needs=data.get('needs', '')  
         )
-        user.validate()  
-        db.session.add(user)
-        db.session.commit()
-        return jsonify(user.to_dict()), 201
+    user.validate()  
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.to_dict()), 201
    
 
 # Get a single user

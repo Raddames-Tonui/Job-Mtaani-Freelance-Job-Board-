@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from app import app, db
 from models import User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
 from sqlalchemy.exc import IntegrityError
