@@ -49,7 +49,7 @@ function App() {
               <Route path="terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<SignUpForm />} />
-              <Route path="reset-password/:token" element={<ResetPassword />} /> {/* Updated for token parameter */}
+              <Route path="reset-password/:token" element={<ResetPassword />} /> 
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="customer-support" element={<CustomerSupport />} />
               <Route path="about" element={<About />} />

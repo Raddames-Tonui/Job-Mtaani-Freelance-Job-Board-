@@ -7,7 +7,7 @@ const JobCard = ({ job, actions }) => {
   const timeAgo = formatDistanceToNow(jobCreatedAt, { addSuffix: true });
 
   return (
-    <div className="bg-blue-50 hover:bg-blue-100 shadow-md rounded-lg p-6 mx-6">
+    <div className="bg-white hover:bg-blue-200 shadow-md rounded-lg p-6 mx-auto w-[60vw]">
       <h2>
         <span className="text-sm text-gray-500">Posted {timeAgo}</span>
       </h2>

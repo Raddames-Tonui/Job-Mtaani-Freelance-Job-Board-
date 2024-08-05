@@ -4,11 +4,11 @@ import Footer from '../components/Footer';
 const TermsAndConditions = () => {
   return (
 
-    <div>
-    <div className="container mx-auto p-6">
-      <section className="mb-8">
+    <div className=''>
+    <div className="container mx-auto p-6  bg-white rounded-lg ">
+      <section className="mb-8 ">
         <h2 className="text-2xl font-bold mb-4">01. Terms & Conditions</h2>
-        <p className="mb-4">
+        <p className="mb-4 ">
           Welcome to our job portal. By using our services, you agree to comply with and be bound by the following terms and conditions. Please review them carefully.
         </p>
         <ul className="list-disc list-inside">

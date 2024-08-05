@@ -20,7 +20,7 @@ function LayoutClient() {
       />
      <Sidebar className="mt-[10vh]"/>
 
-      <div className="bg-white mt-[10vh] min-h-[90vh] md:ml-[20vw]"> 
+      <div className="bg-blue-50 mt-[10vh] min-h-[90vh] md:ml-[20vw]"> 
         <Outlet />
       </div>
     </div>
