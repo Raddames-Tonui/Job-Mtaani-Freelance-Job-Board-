@@ -11,7 +11,6 @@ from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
 
-
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
 
 # Initialize Flask app
@@ -24,7 +23,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 app.json.compact = False
 
 # Mailtrap configuration
-app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
+app.config['MAIL_SERVER'] = 'sandbox.smtp.mailtrap.io'
 app.config['MAIL_PORT'] = 2525
 app.config['MAIL_USERNAME'] = '2883ede72140a2'
 app.config['MAIL_PASSWORD'] = 'f43cc51036c6b9'
@@ -42,7 +41,6 @@ mail = Mail(app)  # Initialize Flask-Mail
 # Serializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-# ================================ CUSTOMER SUPPORT ===================================
 
 # =================================== MAIL TRAP =====================================================
 
@@ -57,8 +55,7 @@ def test_mail():
     except Exception as e:
         return jsonify({"error": "Failed to send test email", "details": str(e)}), 500
 
-
-@app.route('/forgot-password', methods=['POST'])
+@app.route('/reset-password-request', methods=['POST'])
 def forgot_password():
     data = request.get_json()
     email = data.get('email')
@@ -68,15 +65,38 @@ def forgot_password():
         return jsonify({"message": "User not found"}), 404
     
     token = s.dumps(email, salt='password-reset-salt')
-    reset_url = f'http://localhost:5173/reset-password/{token}'  # Adjust the URL to match your React frontend
-    
-    # Send the token to the user's email
+    reset_url = f'http://localhost:5173/reset-password/{token}' 
+
+    # Compose HTML email
     msg = Message('Password Reset Request', sender='noreply@example.com', recipients=[email])
-    msg.body = f'Hi, to reset your password, please click the following link: {reset_url}'
+    msg.html = f"""
+    <html>
+    <body>
+        <p>Hi,</p>
+        <p>We received a request to reset your password. Click the button below to choose a new password:</p>
+        <a href="{reset_url}" style="
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        ">
+            Reset Password
+        </a>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <p>Thank you,<br>The JobQuest Team</p>
+    </body>
+    </html>
+    """
     mail.send(msg)
     
     return jsonify({"message": "A password reset email has been sent"}), 200
 
+# Route to reset the password using the token
 @app.route('/reset-password/<token>', methods=['POST'])
 def reset_password(token):
     try:
@@ -87,16 +107,22 @@ def reset_password(token):
         return jsonify({"message": "Invalid token"}), 400
 
     data = request.get_json()
-    new_password = data.get('new_password')
-    
+    new_password = data.get('new_password')  
+
+    if not new_password:
+        return jsonify({"message": "New password cannot be empty"}), 400
+
     user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({"message": "User not found"}), 404
     
-    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    user.password_hash = bcrypt.generate_password_hash(new_password).decode('utf-8') 
     db.session.commit()
     
     return jsonify({"message": "Password has been reset"}), 200
+
+
+
 
 # ===================== AUTHENTICATION ======================
 @app.route('/')
@@ -234,6 +260,49 @@ def delete_user(user_id):
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
 
+# Partially update a user
+@app.route('/users/<int:user_id>', methods=['PATCH'])
+def patch_user(user_id):
+    data = request.get_json()
+    user = User.query.get_or_404(user_id)
+
+    if 'username' in data:
+        user.username = data['username']
+    if 'email' in data:
+        user.email = data['email']
+    if 'password' in data:
+        user.password_hash = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+    if 'skills' in data:
+        user.skills = data['skills']
+    if 'experience' in data:
+        user.experience = data['experience']
+    if 'about' in data:
+        user.about = data['about']
+    if 'needs' in data:
+        user.needs = data['needs']
+    if 'avatar' in data:
+        user.avatar = data['avatar']
+
+    db.session.commit()
+    return jsonify(user.to_dict()), 200
+
+
+# Current user job postings
+@app.route('/user/job_postings', methods=['GET'])
+@jwt_required()
+def get_user_job_postings():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    job_postings = JobPosting.query.filter_by(client_id=current_user_id).all()
+    job_postings_list = [job_posting.to_dict() for job_posting in job_postings]
+
+    return jsonify(job_postings_list), 200
+
+
 # ================================ JOB POSTINGS ======================================
 
 # create a new job posting
@@ -247,11 +316,6 @@ def create_job_posting():
 
     client_id = get_jwt_identity()
 
-    # try:
-    #     expiration_date = datetime.strptime(data.get('expiration_date'), '%Y-%m-%d').date()
-    # except (TypeError, ValueError):
-    #     return jsonify({'message': 'Invalid expiration date format. Expected YYYY-MM-DD.'}), 400
-    
     # Create new job posting
     job_posting = JobPosting(
         title=data.get('title'),
