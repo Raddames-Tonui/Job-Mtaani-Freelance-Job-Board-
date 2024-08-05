@@ -54,19 +54,20 @@ export const UserProvider = ({ children }) => {
         })
     };
 
-    // UPDATE USER
-    const updateUser = (username, avatar, password) => {
-        const updatePromise = fetch(`${server_url}/users`, {
+    // UPDATE USER PROFILE
+    const updateUserProfile = (profileData) => {
+        const updatePromise = fetch(`${server_url}/users/${currentUser.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${authToken}`
             },
-            body: JSON.stringify({ username, avatar, password })
+            body: JSON.stringify(profileData)
         })
         .then((response) => response.json())
         .then(({ success, error }) => {
             if (success) {
+                setCurrentUser((prev) => ({ ...prev, ...profileData })); 
                 return success; 
             } else if (error) {
                 throw new Error(error); 
@@ -78,11 +79,8 @@ export const UserProvider = ({ children }) => {
 
         toast.promise(updatePromise, {
             loading: 'Saving...',
-            success: <b>Settings saved!</b>,
-            error: (error) => <b>{error.message || 'Could not save.'}</b>,
-        })
-        .then(() => {
-            nav("/users/tasks");
+            success: <b>Profile updated!</b>,
+            error: (error) => <b>{error.message || 'Could not update profile.'}</b>,
         });
     };
 
@@ -176,7 +174,6 @@ export const UserProvider = ({ children }) => {
     };
 
     // FETCH CURRENT USER
-
     useEffect(() => {
         if (!authToken) return;
 
@@ -195,7 +192,7 @@ export const UserProvider = ({ children }) => {
                 setCurrentUser(null);
                 localStorage.removeItem("access_token");
                 setAuthToken(null);
-                nav("/users/signin");
+                nav("/login");
             }
         })
         .catch((error) => {
@@ -208,7 +205,7 @@ export const UserProvider = ({ children }) => {
         setCurrentUser,
         registerUser,
         loginUser,
-        updateUser,
+        updateUserProfile, 
         logoutUser,
         resetPassword,
         authToken

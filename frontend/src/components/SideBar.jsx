@@ -13,7 +13,7 @@ const Sidebar = () => {
         <>
           <div className='flex flex-col items-center justify-center mt-4'>
             {currentUser.avatar ? (
-              <img src={currentUser.avatar} alt={currentUser.firstname} className='h-20 w-20 rounded-full border-2 border-white' />
+              <img src={currentUser.avatar} alt={currentUser.firstname} className='h-20 w-20 rounded-full border-2 border-white object-cover top-0' />
             ) : (
               <CgProfile className='h-16 w-16 text-black' />
             )}
@@ -23,7 +23,7 @@ const Sidebar = () => {
       )}
       <nav className="mt-4">
         <ul>
-          <NavLink to="/client/overview" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-white">
+          <NavLink to="/client" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-white">
             <FiHome className="mr-2" /> Overview
           </NavLink>
           <NavLink to="/client/update-profile" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
@@ -35,7 +35,7 @@ const Sidebar = () => {
           <NavLink to="/client/my-jobs" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
             <FiBriefcase className="mr-2" /> My Jobs
           </NavLink>
-          <NavLink to="/client/saved-candidates" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
+          <NavLink to="/client/freelancers" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
             <FiBookmark className="mr-2" /> Saved Candidates
           </NavLink>
           <NavLink to="/client/plans-billing" className="p-4 hover:bg-gray-200 flex items-center" activeClassName="bg-gray-300">
