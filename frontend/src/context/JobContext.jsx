@@ -6,9 +6,10 @@ export const JobContext = createContext();
 
 export const JobProvider = ({ children }) => {
     const [jobs, setJobs] = useState([]);
+    const [userJobs, setUserJobs] = useState([]);
 
     // FETCH JOBS
-    useEffect(() => {
+    const fetchJobs = () => {
         fetch(`${server_url}/jobpostings`, {
             method: 'GET',
             headers: {
@@ -17,18 +18,43 @@ export const JobProvider = ({ children }) => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             const jobsWithTags = data.map(job => ({
                 ...job,
                 tags: job.tags ? job.tags.split(',').map(tag => tag.trim()) : []
-                // above checks if tags are empty it create null tags else splits the tags and returns an array
             }));
             setJobs(jobsWithTags);
         })
         .catch(error => {
             console.error("Error fetching jobs:", error);
         });
-    }, []);
+    };
+
+    // FETCH USER JOBS
+    const fetchUserJobs = () => {
+        return fetch(`${server_url}/user/job_postings`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch user job postings');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const jobsWithTags = data.map(job => ({
+                ...job,
+                tags: job.tags ? job.tags.split(',').map(tag => tag.trim()) : []
+            }));
+            setUserJobs(jobsWithTags);
+        })
+        .catch(error => {
+            console.error("Error fetching user job postings:", error);
+        });
+    };
 
     // CREATE JOB
     const createJob = (jobDetails) => {
@@ -62,10 +88,91 @@ export const JobProvider = ({ children }) => {
         });
     };
 
+    // DELETE JOB
+    const deleteJob = (jobId) => {
+        return fetch(`${server_url}/jobpostings/${jobId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete job');
+            }
+            setUserJobs(prevJobs => prevJobs.filter(job => job.id !== jobId));
+            toast.success("Job deleted successfully");
+        })
+        .catch(error => {
+            console.error("Error deleting job:", error);
+            toast.error("Failed to delete job");
+        });
+    };
+
+    // UPDATE JOB
+    const updateJob = (jobId, jobDetails) => {
+        return fetch(`${server_url}/jobpostings/${jobId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify(jobDetails),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update job');
+            }
+            return response.json();
+        })
+        .then(updatedJob => {
+            const jobWithTags = {
+                ...updatedJob,
+                tags: updatedJob.tags ? updatedJob.tags.split(',').map(tag => tag.trim()) : []
+            };
+            setUserJobs(prevJobs => prevJobs.map(job => (job.id === jobId ? jobWithTags : job)));
+            toast.success("Job updated successfully");
+            return jobWithTags;
+        })
+        .catch(error => {
+            console.error("Error updating job:", error);
+            toast.error("Failed to update job");
+            throw error;
+        });
+    };
+
+    // APPLY FOR JOB
+    const applyForJob = (jobId) => {
+        return fetch(`${server_url}/jobpostings/${jobId}/apply`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to apply for job');
+            }
+            toast.success("Applied for job successfully");
+        })
+        .catch(error => {
+            console.error("Error applying for job:", error);
+            toast.error("Failed to apply for job");
+        });
+    };
+
     const contextData = {
         jobs,
+        userJobs,
         setJobs,
+        fetchJobs,
+        fetchUserJobs,
         createJob,
+        deleteJob,
+        updateJob,
+        applyForJob,
     };
 
     return (

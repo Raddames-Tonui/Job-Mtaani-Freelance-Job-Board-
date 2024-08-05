@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
-# from email_validator import validate_email, EmailNotValidError
 
 # Define metadata naming conventions
 metadata = MetaData(

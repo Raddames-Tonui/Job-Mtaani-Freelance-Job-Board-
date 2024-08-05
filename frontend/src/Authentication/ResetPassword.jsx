@@ -1,24 +1,46 @@
-import React, { useState, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
+import React, { useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { server_url } from "../../config.json";
 
 function ResetPassword() {
-  const { resetPassword } = useContext(UserContext);
+  const { token } = useParams();
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { token } = useParams();
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (newPassword === confirmPassword) {
-      resetPassword(token, newPassword);
+      fetch(`${server_url}/reset-password/${token}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ new_password: newPassword }),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.json().then(err => {
+              throw new Error(err.message || 'Error resetting password');
+            });
+          }
+        })
+        .then(() => {
+          toast.success('Password has been updated');
+          setNewPassword("");
+          setConfirmPassword("");
+          navigate('/login'); 
+        })
+        .catch(error => {
+          toast.error(error.message);
+        });
     } else {
-      toast.error("Passwords do not match");
+      toast.error('Passwords do not match');
     }
-    setNewPassword("");
-    setConfirmPassword("");
-  }
+  };
 
   return (
     <div className="h-[90vh] flex items-center justify-center py-12 px-6 lg:px-8">
@@ -40,7 +62,7 @@ function ResetPassword() {
                 name="new-password"
                 type="password"
                 autoComplete="new-password"
-                value={newPassword || ""}
+                value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
@@ -59,7 +81,7 @@ function ResetPassword() {
                 name="confirm-password"
                 type="password"
                 autoComplete="new-password"
-                value={confirmPassword || ""}
+                value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"

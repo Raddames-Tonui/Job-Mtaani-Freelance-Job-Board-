@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { server_url } from "../../config.json";
+
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // Add logic to handle forgot password
-    setEmail("");
-  }
+    fetch(`${server_url}/reset-password-request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json(); 
+        } else {
+          throw new Error('Error sending password reset email');
+        }
+      })
+      .then(() => {
+        toast.success('Password reset email sent');
+        setEmail(""); 
+      })
+      .catch(error => {
+        toast.error(error.message);
+      });
+  };
 
   return (
     <div className="h-[90vh] flex items-center justify-center py-12 px-6 lg:px-8">
@@ -30,7 +52,7 @@ function ForgotPassword() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                value={email || ""}
+                value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"

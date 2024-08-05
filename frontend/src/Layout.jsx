@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 import './app.css';
-import Sidebar from "./components/SideBar";
 
 function Layout() {
   return (
@@ -22,8 +21,7 @@ function Layout() {
             }}
           />
       
-      <Sidebar className="mt-[10vh]"/>
-      <div className="bg-blue-50 mt-[10vh] min-h-[90vh] md:ml-[20vw]"> 
+      <div className="bg-blue-50 mt-[10vh] min-h-[90vh] "> 
         <Outlet />
       </div>
     </div>
