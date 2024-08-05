@@ -18,6 +18,8 @@ import TermsAndConditions from "./Authentication/TermsAndConditions";
 import FindJobs from "./freelancer/FindJobs";
 import AvailableJobs from "./freelancer/AvailableJobs";
 import UpdateFreelancerProfile from "./freelancer/UpdateFreelancerProfile";
+import AppliedJobs from "./freelancer/AppliedJobs";
+
 
 import LayoutClient from "./LayoutClient";
 import UpdateProfile from "./Client/UpdateProfile";
@@ -41,6 +43,7 @@ function App() {
               <Route index element={<FindJobs />} />
               <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
               <Route path="available-jobs" element={<AvailableJobs />} />
+              <Route path="applied-jobs" element={<AppliedJobs />} />
             </Route>
 
             {/* HOME ROUTES */}

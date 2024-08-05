@@ -34,7 +34,7 @@ const Navbar = () => {
                 <NavLink to="/freelancer" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>
                 {/* <NavLink to="/freelancer/available-jobs" className="hover:underline font-semibold transition duration-300">Available Jobs</NavLink> */}
                 <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Update Profile</NavLink>
-                <NavLink to="/freelancer/job-details" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
+                <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
               </>
             )}
             {currentUser.is_client && (
