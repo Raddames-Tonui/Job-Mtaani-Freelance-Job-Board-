@@ -43,6 +43,7 @@ const Navbar = () => {
                 <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Create Jobs</NavLink>
                 <NavLink to="/client/proposals" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Proposals</NavLink>
                 <NavLink to="/client/freelancers" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Available Freelancers</NavLink>
+                <NavLink to="/client/project-status" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">projects status</NavLink>
               </>
             )}
           </>

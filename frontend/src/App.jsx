@@ -30,6 +30,7 @@ import JobCreation from "./Client/JobCreation";
 
 import AvailableFreelancers from "./Client/AvailableFreelancers";
 import Overview from "./Client/ClientDashboard";
+import TrackProjects from "./Client/TrackProjects";
 
 
 import LayoutAdmin from "./LayoutAdmin";
@@ -70,6 +71,7 @@ function App() {
               <Route path="update-profile" element={<UpdateProfile/>}/>
               <Route path="proposals" element={<Proposals/>}/>
               <Route path="freelancers" element={<AvailableFreelancers/>}/>
+              <Route path="track-projects" element={<TrackProjects/>}/>
             </Route>
             {/* ADMIN ROUTES */}
             <Route path="/admin" element={<LayoutAdmin />}>
