@@ -33,6 +33,15 @@ const AvailableFreelancers = () => {
     fetchFreelancers();
   }, []);
 
+  const handleChoose = (id) => {
+    console.log(`Chosen freelancer ID: ${id}`);
+    // Add your logic for handling the chosen freelancer
+  };
+
+  const handleRemove = (id) => {
+    setFreelancers(freelancers.filter(freelancer => freelancer.id !== id));
+  };
+
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;
   }
@@ -49,6 +58,20 @@ const AvailableFreelancers = () => {
           <div key={freelancer.id} className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-2">{freelancer.name}</h2>
             <p className="text-gray-700">{freelancer.email}</p>
+            <div className="mt-4 flex space-x-4">
+              <button
+                onClick={() => handleChoose(freelancer.id)}
+                className="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600"
+              >
+                Choose
+              </button>
+              <button
+                onClick={() => handleRemove(freelancer.id)}
+                className="bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600"
+              >
+                Decline
+              </button>
+            </div>
           </div>
         ))}
       </div>

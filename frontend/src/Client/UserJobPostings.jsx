@@ -9,9 +9,9 @@ const UserJobPostings = () => {
     fetchUserJobs();
   }, []);
 
-  const handleUpdate = (jobId) => {
-    console.log(`Update job with ID: ${jobId}`);
-  };
+  // const handleUpdate = (jobId) => {
+  //   console.log(`Update job with ID: ${jobId}`);
+  // };
 
   return (
     <div>

@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 const Sidebar = () => {
   const { currentUser } = useContext(UserContext);
   return (
-    <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50 bg-gradient-to-b from-blue-300 to-blue-200 border-r-white shadow-md">
+    <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50 bg-gradient-to-b from-blue-300 to-blue-200 border-t-gray-300 border-2 shadow-md">
       {currentUser && currentUser.username && (
         <>
           <div className='flex flex-col items-center justify-center mt-4'>

@@ -25,7 +25,7 @@ import LayoutClient from "./LayoutClient";
 import UpdateProfile from "./Client/UpdateProfile";
 import Proposals from "./Client/Proposals";
 import JobCreation from "./Client/JobCreation";
-// import AvailableFreelancers from "./Client/AvailableFreelancers";
+import Freelancers from "./Client/Freelancers";
 
 import LayoutAdmin from "./LayoutAdmin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -66,7 +66,7 @@ function App() {
               <Route path="update-profile" element={<UpdateProfile />} />
               <Route path="proposals" element={<Proposals />} />
               <Route path="my-jobs" element={<MyJobs />} />
-              {/* <Route path="freelancers" element={<AvailableFreelancers />}/> */}
+              <Route path="freelancers" element={<Freelancers />}/>
             </Route>
 
             {/* ADMIN ROUTES */}
