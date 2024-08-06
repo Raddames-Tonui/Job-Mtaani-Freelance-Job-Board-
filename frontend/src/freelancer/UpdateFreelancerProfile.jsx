@@ -1,7 +1,7 @@
+// UpdateFreelancerProfile.js
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import toast from 'react-hot-toast';
-
 
 const UpdateFreelancerProfile = () => {
     const { currentUser, updateUserProfile } = useContext(UserContext);
@@ -39,6 +39,7 @@ const UpdateFreelancerProfile = () => {
                     experience: '',
                     avatar: ''
                 });
+                
             })
             .catch((error) => {
                 toast.error('Failed to update profile: ' + error.message);
@@ -90,7 +91,7 @@ const UpdateFreelancerProfile = () => {
                                 </div>
                             </div>
 
-                            {/* Avatar URL */}
+                            {/* Avatar */}
                             <div>
                                 <label htmlFor="avatar" className="block text-sm font-medium leading-6 text-gray-900">
                                     Avatar URL
@@ -102,7 +103,8 @@ const UpdateFreelancerProfile = () => {
                                         type="text"
                                         value={formData.avatar}
                                         onChange={handleChange}
-                                        className="block w-full text-gray-900 border-0 py-2 pl-3 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                        required
+                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                                         placeholder="Enter avatar URL"
                                     />
                                 </div>
@@ -112,7 +114,7 @@ const UpdateFreelancerProfile = () => {
                             <div>
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                    className="w-full flex justify-center rounded-md border border-transparent bg-blue-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                 >
                                     Update Profile
                                 </button>
