@@ -332,6 +332,7 @@ def create_job_posting():
         job_level=data.get('job_level'),
         description=data.get('description'),
         responsibilities=data.get('responsibilities'),
+        requirements=data.get('requirements'),
         location=data.get('location'),
         experience_level=data.get('experience_level'),
         client_id=client_id
@@ -380,6 +381,7 @@ def update_job_posting(job_posting_id):
     job_posting.job_level = data.get('job_level', job_posting.job_level)
     job_posting.description = data.get('description', job_posting.description)
     job_posting.responsibilities = data.get('responsibilities', job_posting.responsibilities)
+    job_posting.requirements = data.get('requirements', job_posting.requirements)
     job_posting.experience_level = data.get('experience_level', job_posting.experience_level)
     job_posting.location = data.get('location', job_posting.location)
     job_posting.client_id = get_jwt_identity()
@@ -399,19 +401,31 @@ def delete_job_posting(job_posting_id):
 # ================================ PROPOSALS ================================
 
 # Route to create a proposal
-@app.route('/proposals', methods=['POST'])
-def create_proposal():
+@app.route('/proposals/<int:job_posting_id>/apply', methods=['POST'])
+@jwt_required()
+def create_proposal(job_posting_id):
     data = request.get_json()
-    if not data or not all(key in data for key in ('content', 'freelancer_id', 'job_posting_id')):
+    if not data or 'content' not in data:
         abort(400, description="Invalid input")
+
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        abort(404, description="User not found")
+
+    job_posting = JobPosting.query.get(job_posting_id)
+    if not job_posting:
+        abort(404, description="Job posting not found")
 
     proposal = Proposal(
         content=data['content'],
-        freelancer_id=data['freelancer_id'],
-        job_posting_id=data['job_posting_id']
+        freelancer_id=user_id,
+        job_posting_id=job_posting_id,
     )
+
     db.session.add(proposal)
     db.session.commit()
+
     return jsonify(proposal.to_dict()), 201
 
 # Route to get all proposals

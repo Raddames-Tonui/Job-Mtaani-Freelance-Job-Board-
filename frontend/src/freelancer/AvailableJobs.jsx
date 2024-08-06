@@ -32,12 +32,7 @@ const AvailableJobs = () => {
             >
               <div>
                 <div className="flex items-center mb-2">
-                  {/* <img
-                    src={`https://logo.clearbit.com/${job.client_id}.com`}
-                    alt={job.client_id}
-                    className="w-10 h-10 mr-4 rounded-full"
-                  /> */}
-                  <div>
+                                 <div>
                     <h3 className="text-lg font-semibold">{job.title}</h3>
                     <p className="text-sm text-gray-600">{job.client_id}</p>
                   </div>

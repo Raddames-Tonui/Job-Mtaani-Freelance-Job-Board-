@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { server_url } from "../../config.json";
 import { toast } from "react-hot-toast";
 
@@ -143,13 +143,14 @@ export const JobProvider = ({ children }) => {
     };
 
     // APPLY FOR JOB
-    const applyForJob = (jobId) => {
-        return fetch(`${server_url}/jobpostings/${jobId}/apply`, {
+    const applyForJob = ({ content, job_posting_id }) => {
+        return fetch(`${server_url}/proposals/${job_posting_id}/apply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
             },
+            body: JSON.stringify({ content, job_posting_id })
         })
         .then(response => {
             if (!response.ok) {

@@ -29,10 +29,10 @@ class User(db.Model, SerializerMixin):
     # Freelancer
     skills = db.Column(db.Text)
     experience = db.Column(db.Text)
-    # client
+    # Client
     about = db.Column(db.Text)
     needs = db.Column(db.Text)
-  
+
     ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id')
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -43,7 +43,6 @@ class User(db.Model, SerializerMixin):
             raise ValueError("Username must be at least 3 characters long.")
         if len(self.password_hash) < 3:
             raise ValueError("Password must be at least 3 characters long.")
-     
 
     def to_dict(self):
         return {
@@ -81,10 +80,10 @@ class JobPosting(db.Model, SerializerMixin):
     job_level = db.Column(db.String(50))
     description = db.Column(db.Text, nullable=False)
     responsibilities = db.Column(db.Text)
+    requirements = db.Column(db.Text)
     location = db.Column(db.String(100))
-    experience_level =db.Column(db.String(50)) 
+    experience_level = db.Column(db.String(50))
 
-    
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     client = db.relationship('User', backref=db.backref('job_postings', lazy=True))
 
@@ -108,16 +107,14 @@ class JobPosting(db.Model, SerializerMixin):
             "job_level": self.job_level,
             "description": self.description,
             "responsibilities": self.responsibilities,
+            "requirements": self.requirements,
             "experience_level": self.experience_level,
             "location": self.location,
-            
             "client_id": self.client_id,
             "client": self.client.to_dict(),
-
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
-
 
     def __repr__(self):
         return f"<JobPosting(title='{self.title}')>"
@@ -195,7 +192,6 @@ class Usermessage(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<Usermessage(id='{self.id}')>"
-
 class Project(db.Model, SerializerMixin):
     __tablename__ = "projects"
 

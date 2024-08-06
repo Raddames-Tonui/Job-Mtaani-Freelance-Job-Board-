@@ -6,7 +6,7 @@ import Sidebar from "./components/SideBar";
 
 function LayoutClient() {
   return (
-    <div className=" overflow-y-scroll no-scrollbar">
+    <div className="h-screen overflow-y-scroll no-scrollbar">
       <Navbar  />
       <Toaster
         position="top-right"

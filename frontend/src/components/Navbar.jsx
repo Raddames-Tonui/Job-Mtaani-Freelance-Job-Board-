@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full bg-gradient-to-b from-blue-300 to-blue-200 border-b-2 border-gray-200 flex justify-between items-center px-6 h-[10vh] z-50">
+    <header className="fixed top-0 w-full bg-blue-300 border-b-2  flex justify-between items-center px-6 h-[10vh] z-50">
       <div className="flex items-center space-x-2">
         <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
         {/* {currentUser && currentUser.username && (

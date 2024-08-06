@@ -53,9 +53,11 @@ def seed_database():
                     is_admin=data["is_admin"],
                     is_freelancer=data["is_freelancer"],
                     is_client=data["is_client"],
-                    skills=fake.text(),
-                    avatar=fake.image_url(),
-                    experience=fake.text()
+                    skills=fake.text() if data["is_freelancer"] else None,
+                    experience=fake.text() if data["is_freelancer"] else None,
+                    about=fake.text() if data["is_client"] else None,
+                    needs=fake.text() if data["is_client"] else None,
+                    avatar=fake.image_url()
                 )
                 try:
                     db.session.add(user)
@@ -82,21 +84,12 @@ def seed_database():
                 job_level=random.choice(["Beginner", "Intermediate", "Expert"]),
                 description=fake.text(),
                 responsibilities=fake.text(),
+                requirements=fake.text(),
                 location=fake.city(),
-                experience_level=random.choice(["Entry-level", "Mid-level", "Senior-level"]),  
-                client_id=random.randint(1, 3)  
+                experience_level=random.choice(["Entry-level", "Mid-level", "Senior-level"]),
+                client_id=random.randint(1, 3)
             )
             db.session.add(job_posting)
-            db.session.commit()
-
-        # Sample proposals
-        for num in range(1, 6):
-            proposal = Proposal(
-                content=fake.text(),
-                freelancer_id=random.randint(1, 11), 
-                job_posting_id=num
-            )
-            db.session.add(proposal)
             db.session.commit()
 
         # Sample payments
