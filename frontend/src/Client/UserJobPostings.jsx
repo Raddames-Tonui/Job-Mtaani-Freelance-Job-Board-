@@ -27,7 +27,7 @@ const UserJobPostings = () => {
               key={job.id}
               job={job}
               actions={[
-                { text: "Update", onClick: () => handleUpdate(job.id) },
+                // { text: "Update", onClick: () => handleUpdate(job.id) },
                 { text: "Delete", onClick: () => deleteJob(job.id) },
               ]}
             />

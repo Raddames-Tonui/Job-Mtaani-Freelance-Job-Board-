@@ -44,7 +44,7 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
             <h2 className="flex gap-10 items-center text-md mb-3 text-gray-500">
               <span>Posted {timeAgo}</span>
               <span className="flex items-center">
-                <FaLocationDot className="mr-1 text-xl" /> {job.location}
+                <FaLocationDot className="mr-1 text-xl text-yellow-500" /> {job.location}
               </span>
             </h2>
             <p>{job.description}</p>
