@@ -32,6 +32,9 @@ import AdminDashboard from "./admin/AdminDashboard";
 import ClientDashboard from "./Client/ClientDashboard";
 import MyJobs from "./Client/UserJobPostings";
 
+import SubmitProposal from './components/SubmitProposal';
+import TrackProposals from './components/TrackProposals';
+
 function App() {
   return (
     <BrowserRouter>
@@ -81,3 +84,4 @@ function App() {
 }
 
 export default App;
+

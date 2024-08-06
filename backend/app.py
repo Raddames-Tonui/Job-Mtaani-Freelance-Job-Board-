@@ -11,6 +11,7 @@ from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
 
+
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
 
 # Initialize Flask app
@@ -446,6 +447,26 @@ def delete_proposal(proposal_id):
     db.session.delete(proposal)
     db.session.commit()
     return jsonify({"message": "Proposal deleted"}), 200
+
+# ================================ track proposals ================================
+
+@app.route('/proposals', methods=['POST'])
+def submit_proposal():
+    data = request.json
+    proposal = Proposal(
+        freelancer_id=data['freelancer_id'],
+        job_posting_id=data['job_posting_id'],
+        content=data['content']
+    )
+    db.session.add(proposal)
+    db.session.commit()
+    return jsonify(proposal.to_dict()), 201
+
+@app.route('/proposals/<int:freelancer_id>', methods=['GET'])
+def track_proposals(freelancer_id):
+    proposals = Proposal.query.filter_by(freelancer_id=freelancer_id).all()
+    return jsonify([proposal.to_dict() for proposal in proposals]), 200
+
 
 
 # ================================ PAYMENTS ================================

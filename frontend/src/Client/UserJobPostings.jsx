@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { JobContext } from '../context/JobContext';
-import JobCard from '../components/JobCard';
+import JobCard from '../freelancer/JobCard';
 
 const UserJobPostings = () => {
     const { userJobs, fetchUserJobs, deleteJob, updateJob } = useContext(JobContext);

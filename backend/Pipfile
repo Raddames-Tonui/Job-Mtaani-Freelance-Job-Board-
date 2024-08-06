@@ -16,6 +16,7 @@ psycopg2-binary = "*"
 python-dotenv = "*"
 gunicorn = "*"
 email-validator = "*"
+flask-mail = "*"
 
 [dev-packages]
 

@@ -129,7 +129,7 @@ class Proposal(db.Model, SerializerMixin):
     content = db.Column(db.Text, nullable=False)
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
-
+    status = db.Column(db.String(50), default='Pending')  # Status can be 'Pending', 'Accepted', or 'Rejected'
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -139,13 +139,13 @@ class Proposal(db.Model, SerializerMixin):
             "content": self.content,
             "freelancer_id": self.freelancer_id,
             "job_posting_id": self.job_posting_id,
+            "status": self.status,
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
 
     def __repr__(self):
         return f"<Proposal(id='{self.id}')>"
-
 class Payment(db.Model, SerializerMixin):
     __tablename__ = "payments"
 
