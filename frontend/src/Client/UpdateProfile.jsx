@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import toast from 'react-hot-toast'; 
+import toast from 'react-hot-toast';
+
 const UpdateProfile = () => {
     const { currentUser, updateUserProfile } = useContext(UserContext);
     const [formData, setFormData] = useState({
@@ -31,8 +32,13 @@ const UpdateProfile = () => {
         <div className="mt-[10vh]">
             <div className="flex items-center justify-center py-12 px-6 lg:px-8">
                 <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-2xl w-full py-8 rounded-md shadow-md border-2 border-gray-200">
-                    <h2 className="text-3xl font-bold text-blue-500 capitalize">
-                        Update Profile
+                    {currentUser && currentUser.username ? (
+                        <h2 className="text-3xl font-bold text-blue-700 capitalize">
+                        {currentUser.username}
+                        </h2>
+                    ) : null}
+                    <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                        Update Your Profile
                     </h2>
                     <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
                         {/* About */}

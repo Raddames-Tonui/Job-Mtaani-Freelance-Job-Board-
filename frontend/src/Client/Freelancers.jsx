@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { server_url } from "../../config.json";
 
-const AvailableFreelancers = () => {
+const Freelancers = () => {
   const [freelancers, setFreelancers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,4 +79,4 @@ const AvailableFreelancers = () => {
   );
 };
 
-export default AvailableFreelancers;
+export default Freelancers;

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { FaLocationDot } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
-const ClientJobCard = ({ job, actions }) => {
+const ClientJobCard = ({ job, onDelete }) => {
+  const navigate = useNavigate(); 
   const jobCreatedAt = new Date(job.created_at);
   const timeAgo = formatDistanceToNow(jobCreatedAt, { addSuffix: true });
 
@@ -11,8 +13,18 @@ const ClientJobCard = ({ job, actions }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleProposalsClick = () => {
+    navigate(`/client/proposal/${job.id}`); 
+  };
+
+  const handleDeleteClick = () => {
+    if (window.confirm("Are you sure you want to delete this job?")) {
+      onDelete();
+    }
+  };
+
   return (
-    <div className="bg-white hover:bg-blue-200 shadow-md rounded-lg p-6 mx-auto w-[60vw]">
+    <div className="bg-white hover:bg-blue-200 shadow-md rounded-lg p-6 mx-auto md:w-[60vw]">
       <h2>
         <span className="text-sm text-gray-500">Posted {timeAgo}</span>
       </h2>
@@ -69,16 +81,18 @@ const ClientJobCard = ({ job, actions }) => {
         )}
       </div>
       <div className="flex justify-end mt-4">
-        {actions &&
-          actions.map((action, index) => (
-            <button
-              key={index}
-              className="bg-blue-500 hover:bg-blue-700 px-3 text-white py-1 rounded-md ml-2"
-              onClick={action.onClick || openModal}
-            >
-              {action.text}
-            </button>
-          ))}
+        <button
+          className="bg-blue-500 hover:bg-blue-700 px-3 text-white py-1 rounded-md ml-2 w-24"
+          onClick={handleProposalsClick}
+        >
+          Proposals
+        </button>
+        <button
+          className="bg-red-500 hover:bg-red-700 px-3 text-white py-1 rounded-md ml-2 w-24"
+          onClick={handleDeleteClick}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );
