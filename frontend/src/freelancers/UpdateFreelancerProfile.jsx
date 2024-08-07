@@ -2,7 +2,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import toast from 'react-hot-toast';
-import { Icon } from '@iconify/react';
 
 const UpdateFreelancerProfile = () => {
     const { currentUser, updateUserProfile } = useContext(UserContext);

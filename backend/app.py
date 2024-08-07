@@ -399,6 +399,7 @@ def delete_job_posting(job_posting_id):
     db.session.commit()
     return jsonify({"message": "Job posting deleted"}), 200
 
+
 # ================================ PROPOSALS ================================
 
 # Route to create a proposal

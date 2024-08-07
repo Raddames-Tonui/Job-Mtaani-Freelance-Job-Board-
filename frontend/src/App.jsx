@@ -23,7 +23,7 @@ import UpdateProfile from "./Client/UpdateProfile";
 import Proposals from "./Client/Proposals";
 import JobCreation from "./Client/JobCreation";
 import Freelancers from "./Client/Freelancers";
-import MyJobs from "./Client/UserJobPostings";
+import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
 
 import LayoutAdmin from "./LayoutAdmin";
@@ -31,7 +31,6 @@ import AdminDashboard from "./admin/AdminDashboard";
 
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
-import AvailableJobs from "./freelancers/AvailableJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
 
 
@@ -46,7 +45,6 @@ function App() {
               <Route path="/freelancer" element={<Layout />}>
                 <Route index element={<FindJobs />} />
                 <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
-                <Route path="available-jobs" element={<AvailableJobs />} />
                 <Route path="applied-jobs" element={<AppliedJobs />} />
               </Route>
 
@@ -68,7 +66,7 @@ function App() {
                 <Route index element={<ClientDashboard />} />
                 <Route path="create-job" element={<JobCreation />} />
                 <Route path="update-profile" element={<UpdateProfile />} />
-                <Route path="my-jobs" element={<MyJobs />} />
+                <Route path="my-jobs" element={<UserJobPostings />} />
                 <Route path="freelancers" element={<Freelancers />} />
                 <Route path="proposal/:jobId" element={<Proposals />} /> 
               </Route>

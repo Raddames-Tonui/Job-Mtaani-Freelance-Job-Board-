@@ -102,10 +102,12 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
                 <h3 className="text-lg font-bold capitalize">{job.client.firstname} {job.client.lastname}</h3>
                 <p className="text-gray-500">{job.client.about}</p>
                 <hr />
+                {/* <h1>About</h1> */}
+                 <p>{job.client.about}</p>
 
                 <div>
-                  <p>{job.client?.about}</p>
-                  <p>{job.client?.needs}</p>
+                 
+                  <p>{job.client.needs}</p>
                 </div>                
               </div>
               

@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { FaLocationDot } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const ClientJobCard = ({ job, onDelete }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const jobCreatedAt = new Date(job.created_at);
   const timeAgo = formatDistanceToNow(jobCreatedAt, { addSuffix: true });
 
@@ -14,12 +15,17 @@ const ClientJobCard = ({ job, onDelete }) => {
   const closeModal = () => setIsModalOpen(false);
 
   const handleProposalsClick = () => {
-    navigate(`/client/proposal/${job.id}`); 
+    navigate(`/client/proposal/${job.id}`);
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = async () => {
     if (window.confirm("Are you sure you want to delete this job?")) {
-      onDelete();
+      try {
+        await onDelete();
+        toast.success("Job deleted successfully");
+      } catch (error) {
+        toast.error("Failed to delete job");
+      }
     }
   };
 

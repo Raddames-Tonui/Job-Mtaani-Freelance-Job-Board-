@@ -58,14 +58,14 @@ const Navbar = () => {
                 <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
               </>
             )}
-            {/* {currentUser.is_client && (
+            {currentUser.is_client && (
               <>
-                <NavLink to="/client/update-profile" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Update Profile</NavLink>
-                <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Create Jobs</NavLink>
-                <NavLink to="/client/proposals" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Proposals</NavLink>
+                <NavLink to="/client/update-profile" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Profile</NavLink>
+                <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Post Job</NavLink>
+                {/* <NavLink to="/client/proposals" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Proposals</NavLink> */}
                 <NavLink to="/client/freelancers" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Available Freelancers</NavLink>
               </>
-            )} */}
+            )}
           </>
         )}
       </nav>

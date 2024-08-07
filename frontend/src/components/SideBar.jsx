@@ -1,62 +1,82 @@
-// Sidebar.jsx
 import React, { useContext } from 'react';
 import { FiHome, FiUser, FiFilePlus, FiBriefcase, FiBookmark, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
 import { UserContext } from '../context/UserContext';
 import { CgProfile } from "react-icons/cg";
 import { NavLink } from 'react-router-dom';
-
 import { FaHome } from "react-icons/fa";
 
 const Sidebar = () => {
   const { currentUser } = useContext(UserContext);
+
   return (
     <div className="hidden md:block w-[20vw] h-[90vh] fixed top-[10vh] z-50 bg-gradient-to-b from-blue-300 to-blue-200 border-t-gray-300 border-2 shadow-md">
       {currentUser && currentUser.username && (
-        <>
-          <div className='flex flex-col items-center justify-center mt-4'>
-            {currentUser.avatar ? (
-              <img src={currentUser.avatar} alt={currentUser.firstname} className='h-16 w-16 rounded-full border-2 border-white object-cover top-0 ring-1 ring-[#3322ca]' />
-            ) : (
-              <CgProfile className='h-16 w-16 text-black' />
-            )}
-            <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 capitalize">{currentUser.firstname} {currentUser.lastname}</h2>
-          </div>
-        </>
+        <div className='flex flex-col items-center justify-center mt-4'>
+          {currentUser.avatar ? (
+            <img src={currentUser.avatar} alt={currentUser.firstname} className='h-16 w-16 rounded-full border-2 border-white object-cover top-0 ring-1 ring-[#3322ca]' />
+          ) : (
+            <CgProfile className='h-16 w-16 text-black' />
+          )}
+          <h2 className="mt-2 text-center text-2xl font-semibold leading-9 tracking-tight text-gray-900 capitalize">
+            {currentUser.firstname} {currentUser.lastname}
+          </h2>
+        </div>
       )}
       <nav className="mt-4">
         <ul>
-          <NavLink to="/client" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-white">
+          <NavLink
+            to="/client"
+            end
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
             <FaHome className="mr-2" /> Overview
           </NavLink>
-          <NavLink to="/client/update-profile" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+          <NavLink
+            to="/client/update-profile"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
             <FiUser className="mr-2" /> Profile
-          
           </NavLink>
-          <NavLink to="/client/create-job" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+          <NavLink
+            to="/client/create-job"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
             <FiFilePlus className="mr-2" /> Post a Job
           </NavLink>
-          <NavLink to="/client/my-jobs" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+          <NavLink
+            to="/client/my-jobs"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
             <FiBriefcase className="mr-2" /> My Jobs
           </NavLink>
-          <NavLink to="/client/proposals" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+          <NavLink
+            to="/client/proposals"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
             <FiBookmark className="mr-2" /> Proposals
           </NavLink>
-          <NavLink to="/client/plans-billing" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+          <NavLink
+            to="/client/plans-billing"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
             <FiDollarSign className="mr-2" /> Plans & Billing
           </NavLink>
           {currentUser && currentUser.is_admin && (
             <>
-              <NavLink to="/client/all-companies" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+              <NavLink
+                to="/client/all-companies"
+                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+              >
                 <FiUsers className="mr-2" /> All Companies
               </NavLink>
-              <NavLink to="/client/settings" className="p-4 hover:bg-gray-200 flex items-center text-xl font-semibold" activeClassName="bg-gray-300">
+              <NavLink
+                to="/client/settings"
+                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+              >
                 <FiSettings className="mr-2" /> Settings
               </NavLink>
             </>
-          )
-
-          }
-          
+          )}
         </ul>
       </nav>
     </div>
