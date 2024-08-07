@@ -4,7 +4,7 @@ import { ProposalContext } from '../context/ProposalContext';
 
 const Proposals = () => {
   const { jobId } = useParams();
-  const { fetchProposalsForJobPosting, proposals } = useContext(ProposalContext);
+  const { fetchProposalsForJobPosting, proposals, updateProposalStatus } = useContext(ProposalContext);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +15,10 @@ const Proposals = () => {
 
     loadProposals();
   }, [jobId, fetchProposalsForJobPosting]);
+
+  const handleStatusChange = (proposalId, status) => {
+    updateProposalStatus(proposalId, status);
+  };
 
   const jobTitle = proposals.length > 0 ? proposals[0]?.job_posting?.title : "N/A";
 
@@ -36,6 +40,8 @@ const Proposals = () => {
         <h1 className="text-2xl font-bold mb-6 text-gray-900">
           Proposals for Job Posting: {jobTitle}
         </h1>
+
+        {/* Proposal cards */}
         {proposals.length === 0 ? (
           <div className="flex justify-center">
             <h3 className="text-gray-500">No proposals found.</h3>
@@ -56,11 +62,22 @@ const Proposals = () => {
                   <strong>Submitted:</strong> {new Date(proposal.created_at).toLocaleDateString()}
                 </p>
                 <div className="flex justify-end space-x-2">
-                  <button className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded-md">
+                  <button
+                    className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded-md"
+                    onClick={() => handleStatusChange(proposal.id, 'accepted')}
+                  >
                     Accept
                   </button>
-                  <button className='bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md'> Message</button>
-                  <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded-md">
+                  <button
+                    className='bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md'
+                    // onClick={() => handleStatusChange(proposal.id, 'contacted')}
+                  >
+                    Message
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded-md"
+                    onClick={() => handleStatusChange(proposal.id, 'denied')}
+                  >
                     Deny
                   </button>
                 </div>
