@@ -1,13 +1,13 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/SideBar";
+import AdminSidebar from "./admin/AdminSidebar";
+import AdminNavbar from "./admin/AdminNavbar";
 
 function LayoutAdmin() {
   return (
     <div className=" overflow-y-scroll no-scrollbar">
-      <Navbar  />
+      <AdminNavbar  />
       <Toaster
         position="top-right"
         reverseOrder={true}
@@ -18,7 +18,7 @@ function LayoutAdmin() {
           },
         }}
       />
-     <Sidebar className="mt-[10vh]"/>
+     <AdminSidebar className="mt-[10vh]"/>
 
       <div className="bg-blue-50 mt-[10vh] min-h-[90vh] md:ml-[20vw]"> 
         <Outlet />

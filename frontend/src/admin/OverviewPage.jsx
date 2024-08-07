@@ -1,45 +1,50 @@
-// src/admin/OverviewPage.jsx
-import React, { useEffect, useState } from 'react';
-import { fetchClientCount, fetchFreelancerCount, fetchJobCount } from './api';
+import React, { useContext, useEffect } from 'react';
+import { UserContext } from '../context/UserContext';
+import { JobContext } from '../context/JobContext';
 
-const OverviewPage = () => {
-  const [clientCount, setClientCount] = useState(0);
-  const [freelancerCount, setFreelancerCount] = useState(0);
-  const [jobCount, setJobCount] = useState(0);
+const Overview = () => {
+    const { users } = useContext(UserContext);
+    const { jobs, fetchJobs } = useContext(JobContext);
 
-  useEffect(() => {
-    fetchClientCount()
-      .then(count => setClientCount(count))
-      .catch(error => console.error('Failed to fetch client count:', error));
+    useEffect(() => {
+        fetchJobs();
+    }, [fetchJobs]);
 
-    fetchFreelancerCount()
-      .then(count => setFreelancerCount(count))
-      .catch(error => console.error('Failed to fetch freelancer count:', error));
+    const totalFreelancers = users.filter(user => user.is_freelancer).length;
+    const totalClients = users.filter(user => user.is_client).length;
+    const totalUsers = totalFreelancers + totalClients;
+    const totalJobPostings = jobs.length;
 
-    fetchJobCount()
-      .then(count => setJobCount(count))
-      .catch(error => console.error('Failed to fetch job count:', error));
-  }, []);
+    return (
+        <div className=" p-6 bg-gray-900 text-white  shadow-lg h-[90vh]">
+            <h2 className="text-2xl font-bold mb-4">Overview</h2>
+            <p className="text-gray-400 mb-6">Users Summary</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-gray-800 p-4 rounded-lg">
+                    <p className="text-2xl font-semibold">{totalFreelancers}</p>
+                    <p className="text-gray-400">Total Freelancers</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded-lg">
+                    <p className="text-2xl font-semibold">{totalClients}</p>
+                    <p className="text-gray-400">Total Clients</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded-lg">
+                    <p className="text-2xl font-semibold">{totalUsers}</p>
+                    <p className="text-gray-400">Total Users</p>
+                </div>
+                <div><p className="text-gray-400 mb-6">Job Posting Summary</p></div>
+                <div></div>
+                <div></div>
 
-  return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Overview</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <h3 className="text-2xl font-semibold text-gray-700">The Number of Clients</h3>
-          <p className="text-3xl font-bold text-gray-800">{clientCount}</p>
+                
+                <div className="bg-gray-800 p-4 rounded-lg">
+                    <p className="text-2xl font-semibold">{totalJobPostings}</p>
+                    <p className="text-gray-400">Total Job Postings</p>
+                </div>
+                
+            </div>
         </div>
-        <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <h3 className="text-2xl font-semibold text-gray-700">The Number of Freelancers</h3>
-          <p className="text-3xl font-bold text-gray-800">{freelancerCount}</p>
-        </div>
-        <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <h3 className="text-2xl font-semibold text-gray-700">Number of Jobs</h3>
-          <p className="text-3xl font-bold text-gray-800">{jobCount}</p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
-export default OverviewPage;
+export default Overview;

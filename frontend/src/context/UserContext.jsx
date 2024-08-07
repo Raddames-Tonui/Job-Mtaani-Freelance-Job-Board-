@@ -9,7 +9,34 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const nav = useNavigate();
     const [currentUser, setCurrentUser] = useState(null);
+    const [users, setUsers] = useState([]);
     const [authToken, setAuthToken] = useState(() => localStorage.getItem("access_token") || null);
+
+     // Fetch all users
+     const fetchAllUsers = () => {
+        fetch(`${server_url}/users`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+               
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            setUsers(data);
+        })
+        .catch((error) => {
+            toast.error("Network error: " + error.message);
+        });
+    };
+
+    useEffect(() => {
+        if (authToken) {
+            fetchAllUsers();
+        }
+    }, [authToken]);
+
+
 
     // REGISTER USER
     const registerUser = (username, email, password, firstname = '', lastname = '', role = '') => {
@@ -102,7 +129,7 @@ export const UserProvider = ({ children }) => {
                 toast.success('Logged in', { icon: '👏' });
 
                 if (res.is_admin) {
-                    nav("/admin");
+                    nav("/admin/overview");
                 } else if (res.is_client) {
                     nav("/client");
                 } else if (res.is_freelancer) {
@@ -210,7 +237,8 @@ export const UserProvider = ({ children }) => {
         updateUserProfile, 
         logoutUser,
         resetPassword,
-        authToken
+        authToken,
+        users
     };
 
     return (

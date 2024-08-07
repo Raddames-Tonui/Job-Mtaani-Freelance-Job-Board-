@@ -19,22 +19,22 @@ def seed_database():
         # Sample user data
         user_data = {
             "admins": {
-                "count": 6,
+                "count": 3,
                 "password": "admin",
                 "is_admin": True,
                 "is_freelancer": False,
                 "is_client": False
             },
             "freelancers": {
-                "count": 5,
-                "password": "freelancerpass",
+                "count": 20,
+                "password": "111",
                 "is_admin": False,
                 "is_freelancer": True,
                 "is_client": False
             },
             "clients": {
-                "count": 3,
-                "password": "clientpass",
+                "count": 10,
+                "password": "111",
                 "is_admin": False,
                 "is_freelancer": False,
                 "is_client": True

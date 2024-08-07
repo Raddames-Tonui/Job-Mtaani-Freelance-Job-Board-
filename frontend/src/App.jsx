@@ -35,6 +35,7 @@ import JobsPage from './admin/JobsPage';
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
+import Settings from "./admin/Settings";
 
 function App() {
   return (
@@ -81,6 +82,7 @@ function App() {
                 <Route path="clients" element={<ClientsPage />} />
                 <Route path="freelancers" element={<FreelancersPage />} />
                 <Route path="jobs" element={<JobsPage />} />
+                <Route path="settings" element={<Settings/>}/>
               </Route>
             </Routes>
           </ProposalProvider>
