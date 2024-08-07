@@ -2,6 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import toast from 'react-hot-toast';
+import { Icon } from '@iconify/react';
 
 const UpdateFreelancerProfile = () => {
     const { currentUser, updateUserProfile } = useContext(UserContext);
@@ -21,25 +22,21 @@ const UpdateFreelancerProfile = () => {
         }
     }, [currentUser]);
 
-    // Handle form input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
         updateUserProfile(formData)
             .then(() => {
-                toast.success('Profile updated successfully!');
-                // Clear form fields after successful submission
                 setFormData({
                     skills: '',
                     experience: '',
                     avatar: ''
                 });
-                
+                toast.success('Profile updated successfully');
             })
             .catch((error) => {
                 toast.error('Failed to update profile: ' + error.message);
@@ -47,12 +44,17 @@ const UpdateFreelancerProfile = () => {
     };
 
     return (
-        <div className="flex">
-            <div className="w-3/4 mt-[10vh] ml-[20vw]">
+        <div className="flex justify-center px-4 md:px-0">
+            <div className="w-full md:w-[60vw]">
                 <div className="flex items-center justify-center py-12 px-6 lg:px-8">
                     <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-2xl w-full py-8 rounded-md shadow-md border-2 border-gray-200">
-                        <h2 className="text-3xl font-bold text-blue-500 capitalize">
-                            Update Freelancer Profile
+                        {currentUser && currentUser.username ? (
+                            <h2 className="text-3xl font-bold text-blue-700 capitalize">
+                            {currentUser.username}
+                            </h2>
+                        ) : null}
+                        <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                            Update Your Profile
                         </h2>
                         <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
                             {/* Skills */}
@@ -67,7 +69,7 @@ const UpdateFreelancerProfile = () => {
                                         value={formData.skills}
                                         onChange={handleChange}
                                         required
-                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                         placeholder="List your skills"
                                     />
                                 </div>
@@ -84,8 +86,7 @@ const UpdateFreelancerProfile = () => {
                                         name="experience"
                                         value={formData.experience}
                                         onChange={handleChange}
-                                        required
-                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                         placeholder="Describe your experience"
                                     />
                                 </div>
@@ -103,8 +104,7 @@ const UpdateFreelancerProfile = () => {
                                         type="text"
                                         value={formData.avatar}
                                         onChange={handleChange}
-                                        required
-                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                         placeholder="Enter avatar URL"
                                     />
                                 </div>

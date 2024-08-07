@@ -200,6 +200,7 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     }, [authToken, nav]);
+    
 
     const contextData = {
         currentUser,

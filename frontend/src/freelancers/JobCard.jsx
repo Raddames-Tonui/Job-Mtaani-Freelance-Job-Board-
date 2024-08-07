@@ -1,5 +1,6 @@
 import React from "react";
 import { FaLocationDot } from "react-icons/fa6";
+import { FaArrowRight } from "react-icons/fa6";
 
 const JobCard = ({ job, actions, onClick, timeAgo }) => {
   return (
@@ -69,10 +70,9 @@ const JobCard = ({ job, actions, onClick, timeAgo }) => {
         {actions?.map((action, index) => (
           <button
             key={index}
-            className="bg-blue-500 hover:bg-blue-700 px-3 text-white py-1 rounded-md ml-2"
-            onClick={action.onClick}
+            className="bg-blue-500 hover:bg-blue-700 px-3 text-white py-1 rounded-md ml-2 flex items-center gap-2"             
           >
-            {action.text}
+            View More Details <span><FaArrowRight /></span>
           </button>
         ))}
       </div>

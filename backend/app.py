@@ -303,6 +303,7 @@ def get_user_job_postings():
     return jsonify(job_postings_list), 200
 
 
+
 # ================================ JOB POSTINGS ======================================
 
 # create a new job posting
@@ -428,6 +429,34 @@ def create_proposal(job_posting_id):
 
     return jsonify(proposal.to_dict()), 201
 
+# Current user proposals
+@app.route('/user/proposals', methods=['GET'])
+@jwt_required()
+def get_user_proposals():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    proposals = Proposal.query.filter_by(freelancer_id = current_user_id).all()
+    proposal_list = [proposal.to_dict() for proposal in proposals]
+
+    return jsonify(proposal_list), 200
+
+# Route to get proposals for a job posting
+@app.route('/job_postings/<int:job_posting_id>/proposals', methods=['GET'])
+def get_proposals_for_job_posting(job_posting_id):
+    job_posting = JobPosting.query.get(job_posting_id)
+    
+    if not job_posting:
+        abort(404, description="Job posting not found")
+    
+    proposals = Proposal.query.filter_by(job_posting_id=job_posting_id).all()
+    
+    return jsonify([proposal.to_dict() for proposal in proposals])
+
+
 # Route to get all proposals
 @app.route('/proposals', methods=['GET'])
 def get_proposals():
@@ -547,7 +576,7 @@ def get_message(message_id):
     return jsonify(message.to_dict()), 200
 
 # Route to update a message
-@app.route('/messages/<int:message_id>', methods=['PUT'])
+@app.route('/messages/<int:message_id>', methods=['PATCH'])
 def update_message(message_id):
     data = request.get_json()
     message = Usermessage.query.get_or_404(message_id)

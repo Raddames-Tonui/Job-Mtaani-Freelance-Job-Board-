@@ -7,29 +7,22 @@ const UserJobPostings = () => {
 
   useEffect(() => {
     fetchUserJobs();
-  }, []);
-
-  // const handleUpdate = (jobId) => {
-  //   console.log(`Update job with ID: ${jobId}`);
-  // };
+  }, [fetchUserJobs]);
 
   return (
     <div>
-      <h1 className="flex justify-center font-bold text-3xl pt-6 text-blue-500 my-5">
+      <h1 className="my-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
         My Job Postings
       </h1>
       {userJobs.length === 0 ? (
         <p>No job postings found.</p>
       ) : (
-        <div className="grid grid-cols-1  gap-2">
+        <div className="grid grid-cols-1 gap-2">
           {userJobs.map((job) => (
             <ClientJobCard
               key={job.id}
               job={job}
-              actions={[
-                // { text: "Update", onClick: () => handleUpdate(job.id) },
-                { text: "Delete", onClick: () => deleteJob(job.id) },
-              ]}
+              onDelete={() => deleteJob(job.id)}
             />
           ))}
         </div>

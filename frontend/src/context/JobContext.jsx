@@ -8,7 +8,7 @@ export const JobProvider = ({ children }) => {
     const [jobs, setJobs] = useState([]);
     const [userJobs, setUserJobs] = useState([]);
 
-    // FETCH JOBS
+    // FETCH JOBS 
     const fetchJobs = () => {
         fetch(`${server_url}/jobpostings`, {
             method: 'GET',
@@ -29,7 +29,7 @@ export const JobProvider = ({ children }) => {
         });
     };
 
-    // FETCH USER JOBS
+    // FETCH  JOBS posted by Client
     const fetchUserJobs = () => {
         return fetch(`${server_url}/user/job_postings`, {
             method: 'GET',
@@ -56,7 +56,7 @@ export const JobProvider = ({ children }) => {
         });
     };
 
-    // CREATE JOB
+    // CREATE JOB by client
     const createJob = (jobDetails) => {
         return fetch(`${server_url}/jobpostings`, {
             method: "POST",
@@ -163,6 +163,10 @@ export const JobProvider = ({ children }) => {
             toast.error("Failed to apply for job");
         });
     };
+
+
+
+
 
     const contextData = {
         jobs,

@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import { Icon } from '@iconify/react';
+
 
 const Navbar = () => {
   const { currentUser, logoutUser } = useContext(UserContext);
@@ -13,10 +15,29 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 w-full bg-blue-300  flex justify-between items-center px-6 h-[10vh] z-50">
       <div className="flex items-center space-x-2">
-        <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
-        {/* {currentUser && currentUser.username && (
-          <h2 className="text-xl font-semibold pl-3 text-gray-700 capitalize">Welcome {currentUser.firstname}</h2>
-        )} */}
+       
+        {!currentUser ? (
+                  <>
+                    <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                  
+                  </>
+                ) : (
+                  <>
+                    {currentUser.is_freelancer && (
+                      <>
+                        <Link to="/freelancer" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                      
+                      </>
+                    )}
+                    {currentUser.is_client && (
+                      <>
+                        <Link to="/client" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                      </>
+                    )}
+                  </>
+                )}
+        
+      
       </div>
 
       <nav className="hidden md:flex space-x-6 text-gray-700">
@@ -37,21 +58,35 @@ const Navbar = () => {
                 <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
               </>
             )}
-            {currentUser.is_client && (
+            {/* {currentUser.is_client && (
               <>
                 <NavLink to="/client/update-profile" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Update Profile</NavLink>
                 <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Create Jobs</NavLink>
                 <NavLink to="/client/proposals" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Proposals</NavLink>
                 <NavLink to="/client/freelancers" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Available Freelancers</NavLink>
               </>
-            )}
+            )} */}
           </>
         )}
       </nav>
 
       <div className="hidden md:flex items-center space-x-4">
         {currentUser ? (
+          <>
           <button onClick={logoutUser} className="bg-blue-600 text-white rounded-full py-2 px-4 hover:bg-blue-700 transition duration-300">Logout</button>
+          {currentUser?.avatar ? (
+            <img 
+              src={currentUser?.avatar} 
+              alt="Profile Picture" 
+              className="rounded-full w-12 h-12 ring-1 ring-[#3322ca] object-cover" 
+            />            
+          ):
+          (
+            <Icon icon="healthicons:ui-user-profile" className='w-12 h-12'/>
+          )            
+          }
+          
+            </>
         ) : (
           <>
             <NavLink to="/login" className="text-blue-600 hover:underline font-semibold transition duration-300">Login</NavLink>
