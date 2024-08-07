@@ -124,8 +124,12 @@ class Proposal(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+
+    job_posting = db.relationship('JobPosting', backref='proposals', lazy=True)
+    freelancer = db.relationship('User', backref='proposals', lazy=True)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -137,7 +141,9 @@ class Proposal(db.Model, SerializerMixin):
             "freelancer_id": self.freelancer_id,
             "job_posting_id": self.job_posting_id,
             "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "updated_at": self.updated_at,
+            "freelancer": self.freelancer.to_dict(),
+            "job_posting": self.job_posting.to_dict()            
         }
 
     def __repr__(self):
