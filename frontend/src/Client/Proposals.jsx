@@ -56,9 +56,10 @@ const Proposals = () => {
                   <strong>Submitted:</strong> {new Date(proposal.created_at).toLocaleDateString()}
                 </p>
                 <div className="flex justify-end space-x-2">
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md">
+                  <button className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded-md">
                     Accept
                   </button>
+                  <button className='bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md'> Message</button>
                   <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded-md">
                     Deny
                   </button>

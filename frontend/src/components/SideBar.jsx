@@ -1,9 +1,17 @@
 import React, { useContext } from 'react';
-import { FiHome, FiUser, FiFilePlus, FiBriefcase, FiBookmark, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
+import {  FiBriefcase, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
 import { UserContext } from '../context/UserContext';
 import { CgProfile } from "react-icons/cg";
 import { NavLink } from 'react-router-dom';
 import { FaHome } from "react-icons/fa";
+import { RiProgress3Fill } from "react-icons/ri";
+import { BiSolidAddToQueue } from "react-icons/bi";
+import { TiUserAdd } from "react-icons/ti";
+import { TbBriefcaseFilled } from "react-icons/tb";
+
+
+
+
 
 const Sidebar = () => {
   const { currentUser } = useContext(UserContext);
@@ -24,24 +32,30 @@ const Sidebar = () => {
       )}
       <nav className="mt-4">
         <ul>
-          <NavLink
+          
+
+        {/* CLIENT */}
+
+        {currentUser && currentUser.is_client && (
+            <>
+            <NavLink
             to="/client"
             end
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-          >
+          >       
             <FaHome className="mr-2" /> Overview
           </NavLink>
-          <NavLink
+            <NavLink
             to="/client/update-profile"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
-            <FiUser className="mr-2" /> Profile
+            <TiUserAdd className="mr-2" /> Profile
           </NavLink>
           <NavLink
             to="/client/create-job"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
-            <FiFilePlus className="mr-2" /> Post a Job
+            <BiSolidAddToQueue className='mr-2'/>  Post a Job           
           </NavLink>
           <NavLink
             to="/client/my-jobs"
@@ -50,10 +64,11 @@ const Sidebar = () => {
             <FiBriefcase className="mr-2" /> My Jobs
           </NavLink>
           <NavLink
-            to="/client/proposals"
+            to="/client/progress"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
-            <FiBookmark className="mr-2" /> Proposals
+            <RiProgress3Fill className="mr-2"  />
+          Progress
           </NavLink>
           <NavLink
             to="/client/plans-billing"
@@ -61,13 +76,39 @@ const Sidebar = () => {
           >
             <FiDollarSign className="mr-2" /> Plans & Billing
           </NavLink>
+              
+            </>
+          )}     
+          
+     
+
+          {/* ADMIN */}
           {currentUser && currentUser.is_admin && (
             <>
+             <NavLink
+            to="/admin"
+            end
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >       
+            <FaHome className="mr-2" /> Overview
+          </NavLink>
               <NavLink
                 to="/client/all-companies"
                 className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
               >
-                <FiUsers className="mr-2" /> All Companies
+                <FiUsers className="mr-2" /> All Clients
+              </NavLink>
+              <NavLink
+                to="/client/all-companies"
+                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+              >
+                <FiUsers className="mr-2" /> All Freelancers
+              </NavLink>
+              <NavLink
+                to="/client/settings"
+                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+              >
+                <TbBriefcaseFilled className="mr-2"/>Available Jobs                
               </NavLink>
               <NavLink
                 to="/client/settings"

@@ -124,6 +124,7 @@ class Proposal(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+    # status = db.Column(db.String(50), nullable=False)
 
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
@@ -138,6 +139,7 @@ class Proposal(db.Model, SerializerMixin):
         return {
             "id": self.id,
             "content": self.content,
+            # "status": self.status,
             "freelancer_id": self.freelancer_id,
             "job_posting_id": self.job_posting_id,
             "created_at": self.created_at,

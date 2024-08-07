@@ -313,7 +313,6 @@ def create_job_posting():
     data = request.get_json()
     if not data or not all(key in data for key in ('title', 'description')):
         abort(400, description="Invalid input")
-    # Convert expiration_date to a Python date object
 
     client_id = get_jwt_identity()
 

@@ -34,6 +34,11 @@ const Navbar = () => {
                         <Link to="/client" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
                       </>
                     )}
+                    {currentUser.is_admin && (
+                      <>
+                        <Link to="/admin" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                      </>
+                    )}
                   </>
                 )}
         
@@ -64,6 +69,12 @@ const Navbar = () => {
                 <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Post Job</NavLink>
                 {/* <NavLink to="/client/proposals" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Proposals</NavLink> */}
                 <NavLink to="/client/freelancers" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Available Freelancers</NavLink>
+              </>
+            )}
+            {currentUser.is_admin && (
+              <>
+              <NavLink to="/admin" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Dashboard</NavLink>
+
               </>
             )}
           </>
