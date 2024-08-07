@@ -16,10 +16,7 @@ import ResetPassword from "./Authentication/ResetPassword";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import TermsAndConditions from "./Authentication/TermsAndConditions";
 
-import FindJobs from "./freelancer/FindJobs";
-import AvailableJobs from "./freelancer/AvailableJobs";
-import UpdateFreelancerProfile from "./freelancer/UpdateFreelancerProfile";
-import AppliedJobs from "./freelancer/AppliedJobs";
+
 
 import LayoutClient from "./LayoutClient";
 import UpdateProfile from "./Client/UpdateProfile";
@@ -31,6 +28,11 @@ import ClientDashboard from "./Client/ClientDashboard";
 
 import LayoutAdmin from "./LayoutAdmin";
 import AdminDashboard from "./admin/AdminDashboard";
+
+import FindJobs from "./freelancers/FindJobs";
+import AppliedJobs from "./freelancers/AppliedJobs";
+import AvailableJobs from "./freelancers/AvailableJobs";
+import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
 
 
 function App() {
