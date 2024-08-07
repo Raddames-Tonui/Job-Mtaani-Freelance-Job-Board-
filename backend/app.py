@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import random
+import random, os
 from datetime import timedelta, datetime
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -10,8 +10,10 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, ge
 from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
+from werkzeug.utils import secure_filename  # for uploading files
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -41,6 +43,14 @@ mail = Mail(app)  # Initialize Flask-Mail
 # Serializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+
+# ================================== UPLOAD FOLDER =================================================
+UPLOAD_FOLDER = '/uploads/resume'
+ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # =================================== MAIL TRAP =====================================================
 
@@ -230,6 +240,8 @@ def create_user():
 def get_user(user_id):
     user = User.query.get_or_404(user_id)
     return jsonify(user.to_dict()), 200
+
+
 
 # Update a user
 @app.route('/users/<int:user_id>', methods=['PUT'])
@@ -429,34 +441,43 @@ def delete_job_posting(job_posting_id):
 
 
 # ================================ PROPOSALS ================================
-
 # Route to create a proposal
 @app.route('/proposals/<int:job_posting_id>/apply', methods=['POST'])
 @jwt_required()
 def create_proposal(job_posting_id):
-    data = request.get_json()
-    if not data or 'content' not in data:
-        abort(400, description="Invalid input")
+    if 'file' not in request.files:
+        abort(400, description="No file part")
 
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    if not user:
-        abort(404, description="User not found")
+    file = request.files['file']
+    if file.filename == '':
+        abort(400, description="No selected file")
 
-    job_posting = JobPosting.query.get(job_posting_id)
-    if not job_posting:
-        abort(404, description="Job posting not found")
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
 
-    proposal = Proposal(
-        content=data['content'],
-        freelancer_id=user_id,
-        job_posting_id=job_posting_id,
-    )
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user:
+            abort(404, description="User not found")
 
-    db.session.add(proposal)
-    db.session.commit()
+        job_posting = JobPosting.query.get(job_posting_id)
+        if not job_posting:
+            abort(404, description="Job posting not found")
 
-    return jsonify(proposal.to_dict()), 201
+        proposal = Proposal(
+            content=request.form['content'],
+            status='pending',
+            cover_letter=file_path,
+            freelancer_id=user_id,
+            job_posting_id=job_posting_id,
+        )
+
+        db.session.add(proposal)
+        db.session.commit()
+
+        return jsonify(proposal.to_dict()), 201
 
 # Current user proposals
 @app.route('/user/proposals', methods=['GET'])
@@ -468,10 +489,11 @@ def get_user_proposals():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    proposals = Proposal.query.filter_by(freelancer_id = current_user_id).all()
+    proposals = Proposal.query.filter_by(freelancer_id=current_user_id).all()
     proposal_list = [proposal.to_dict() for proposal in proposals]
 
     return jsonify(proposal_list), 200
+
 
 # Route to get proposals for a job posting
 @app.route('/job_postings/<int:job_posting_id>/proposals', methods=['GET'])
@@ -486,6 +508,7 @@ def get_proposals_for_job_posting(job_posting_id):
     return jsonify([proposal.to_dict() for proposal in proposals])
 
 
+
 # Route to get all proposals
 @app.route('/proposals', methods=['GET'])
 def get_proposals():
@@ -498,15 +521,14 @@ def get_proposal(proposal_id):
     proposal = Proposal.query.get_or_404(proposal_id)
     return jsonify(proposal.to_dict()), 200
 
+
 # Route to update a proposal
 @app.route('/proposals/<int:proposal_id>', methods=['PUT'])
 def update_proposal(proposal_id):
     data = request.get_json()
     proposal = Proposal.query.get_or_404(proposal_id)
 
-    proposal.content = data.get('content', proposal.content)
-    proposal.freelancer_id = data.get('freelancer_id', proposal.freelancer_id)
-    proposal.job_posting_id = data.get('job_posting_id', proposal.job_posting_id)
+    proposal.status = data.get('status', proposal.status)
 
     db.session.commit()
     return jsonify(proposal.to_dict()), 200

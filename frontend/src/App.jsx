@@ -55,14 +55,15 @@ function App() {
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="terms-and-conditions" element={<TermsAndConditions />} />
-                <Route path="login" element={<Login />} />
-                <Route path="signup" element={<SignUpForm />} />
-                <Route path="reset-password/:token" element={<ResetPassword />} />
-                <Route path="forgot-password" element={<ForgotPassword />} />
+                
                 <Route path="customer-support" element={<CustomerSupport />} />
                 <Route path="about" element={<About />} />
                 <Route path="*" element={<NoPage />} />
               </Route>
+                <Route path="login" element={<Login />} />
+                <Route path="signup" element={<SignUpForm />} />
+                <Route path="reset-password/:token" element={<ResetPassword />} />
+                <Route path="forgot-password" element={<ForgotPassword />} />
 
               {/* CLIENT ROUTES */}
               <Route path="/client" element={<LayoutClient />}>

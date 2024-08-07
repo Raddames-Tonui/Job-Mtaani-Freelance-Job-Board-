@@ -11,10 +11,10 @@ const ClientsPage = () => {
     }, [users]);
 
     return (
-        <div className="p-6 bg-gray-900 text-white  shadow-lg h-full">
+        <div className="p-6 bg-gray-900 text-white  shadow-lg h-[90vh] ">
             <h2 className="text-2xl font-bold mb-4">Clients</h2>
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-gray-800">
+                <table className="min-w-full bg-gray-800 overflow-scroll">
                     <thead>
                         <tr className="w-full bg-gray-700 text-gray-400 uppercase text-sm leading-normal">
                             <th className="py-3 px-6 text-left">User Name</th>

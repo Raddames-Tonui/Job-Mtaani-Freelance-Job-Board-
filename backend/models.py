@@ -62,6 +62,7 @@ class User(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<User(username='{self.username}')>"
 
+
 class JobPosting(db.Model, SerializerMixin):
     __tablename__ = "job_postings"
 
@@ -112,6 +113,7 @@ class JobPosting(db.Model, SerializerMixin):
             "location": self.location,
             "client_id": self.client_id,
             "client": self.client.to_dict(),
+
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
@@ -119,18 +121,21 @@ class JobPosting(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<JobPosting(title='{self.title}')>"
 
+    
+
 class Proposal(db.Model, SerializerMixin):
     __tablename__ = "proposals"
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    # status = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(50), nullable=False, server_default='pending')
+    cover_letter = db.Column(db.String(255), nullable=True)
 
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
 
-    job_posting = db.relationship('JobPosting', backref='proposals', lazy=True)
-    freelancer = db.relationship('User', backref='proposals', lazy=True)
+    job_posting = db.relationship('JobPosting', backref=db.backref('proposals', lazy=True, cascade="all, delete-orphan"))
+    freelancer = db.relationship('User', backref=db.backref('proposals', lazy=True, cascade="all, delete-orphan"))
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -139,17 +144,19 @@ class Proposal(db.Model, SerializerMixin):
         return {
             "id": self.id,
             "content": self.content,
-            # "status": self.status,
+            "status": self.status,
+            "cover_letter": self.cover_letter,
             "freelancer_id": self.freelancer_id,
             "job_posting_id": self.job_posting_id,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
-            "freelancer": self.freelancer.to_dict(),
-            "job_posting": self.job_posting.to_dict()            
+            "freelancer": self.freelancer.to_dict() if self.freelancer else None,
+            "job_posting": self.job_posting.to_dict() if self.job_posting else None
         }
 
     def __repr__(self):
-        return f"<Proposal(id='{self.id}')>"
+        return f"<Proposal(id='{self.id}', status='{self.status}')>"
+
 
 class Payment(db.Model, SerializerMixin):
     __tablename__ = "payments"

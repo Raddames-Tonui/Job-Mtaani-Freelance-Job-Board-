@@ -8,7 +8,8 @@ export const ProposalProvider = ({ children }) => {
   const [proposals, setProposals] = useState([]);
   const [authToken, setAuthToken] = useState(localStorage.getItem('access_token'));
 
-  // Function to fetch freelancer proposals
+
+  // FETCH PROPOSALS
   const fetchProposals = () => {
     fetch(`${server_url}/user/proposals`, {
       method: 'GET',
@@ -17,16 +18,23 @@ export const ProposalProvider = ({ children }) => {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(data => {
-      setProposals(data);
-    })
-    .catch(() => {
-      toast.error('Failed to fetch proposals');
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // console.log('Fetched proposals:', data);
+        setProposals(data);
+      })
+      .catch(error => {
+        console.error('Failed to fetch proposals:', error);
+        // toast.error('Failed to fetch proposals');
+      });
   };
 
-  // Function to fetch all proposals for a specific job posting
+  // FETCH PROPOSALS FOR JOB POSTING
   const fetchProposalsForJobPosting = (jobPostingId) => {
     fetch(`${server_url}/job_postings/${jobPostingId}/proposals`, {
       method: 'GET',
@@ -35,13 +43,50 @@ export const ProposalProvider = ({ children }) => {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(data => {
-      setProposals(data);
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Fetched proposals for job posting:', data); 
+        setProposals(data);
+      })
+      .catch(error => {
+        console.error('Failed to fetch proposals for job posting:', error);
+        toast.error('Failed to fetch proposals for job posting');
+      });
+  };
+
+  // UPDATE PROPOSAL STATUS
+  const updateProposalStatus = (proposalId, status) => {
+    fetch(`${server_url}/proposals/${proposalId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status })
     })
-    .catch(() => {
-      toast.error('Failed to fetch proposals for job posting');
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(updatedProposal => {
+        setProposals(prevProposals =>
+          prevProposals.map(proposal =>
+            proposal.id === proposalId ? updatedProposal : proposal
+          )
+        );
+        toast.success('Proposal status updated');
+      })
+      .catch(error => {
+        console.error('Failed to update proposal status:', error);
+        toast.error('Failed to update proposal status');
+      });
   };
 
   const refreshProposals = () => {
@@ -50,6 +95,7 @@ export const ProposalProvider = ({ children }) => {
 
   useEffect(() => {
     if (authToken) {
+      console.log('Auth Token available, fetching proposals...');
       fetchProposals();
     }
   }, [authToken]);
@@ -58,6 +104,7 @@ export const ProposalProvider = ({ children }) => {
     proposals,
     fetchProposals,
     fetchProposalsForJobPosting,
+    updateProposalStatus,
     refreshProposals,
     setAuthToken
   };
