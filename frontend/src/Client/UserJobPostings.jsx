@@ -7,11 +7,7 @@ const UserJobPostings = () => {
 
   useEffect(() => {
     fetchUserJobs();
-  }, []);
-
-  // const handleUpdate = (jobId) => {
-  //   console.log(`Update job with ID: ${jobId}`);
-  // };
+  }, [fetchUserJobs]);
 
   return (
     <div>
@@ -21,15 +17,12 @@ const UserJobPostings = () => {
       {userJobs.length === 0 ? (
         <p>No job postings found.</p>
       ) : (
-        <div className="grid grid-cols-1  gap-2">
+        <div className="grid grid-cols-1 gap-2">
           {userJobs.map((job) => (
             <ClientJobCard
               key={job.id}
               job={job}
-              actions={[
-                // { text: "Update", onClick: () => handleUpdate(job.id) },
-                { text: "Delete", onClick: () => deleteJob(job.id) },
-              ]}
+              onDelete={() => deleteJob(job.id)}
             />
           ))}
         </div>
