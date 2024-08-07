@@ -85,33 +85,33 @@ const Sidebar = () => {
           {/* ADMIN */}
           {currentUser && currentUser.is_admin && (
             <>
-             <NavLink
-            to="/admin"
-            end
-            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-          >       
-            <FaHome className="mr-2" /> Overview
-          </NavLink>
               <NavLink
-                to="/client/all-companies"
+                to="/admin/overview"
+                end
+                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+              >       
+                <FaHome className="mr-2" /> Overview
+              </NavLink>
+              <NavLink
+                to="/admin/clients"
                 className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
               >
                 <FiUsers className="mr-2" /> All Clients
               </NavLink>
               <NavLink
-                to="/client/all-companies"
+                to="/admin/freelancers"
                 className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
               >
                 <FiUsers className="mr-2" /> All Freelancers
               </NavLink>
               <NavLink
-                to="/client/settings"
+                to="/admin/jobs"
                 className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
               >
-                <TbBriefcaseFilled className="mr-2"/>Available Jobs                
+                <TbBriefcaseFilled className="mr-2"/>  Jobs                
               </NavLink>
               <NavLink
-                to="/client/settings"
+                to="/admin/settings"
                 className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
               >
                 <FiSettings className="mr-2" /> Settings

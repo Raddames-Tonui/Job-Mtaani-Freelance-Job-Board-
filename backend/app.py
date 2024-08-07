@@ -286,6 +286,25 @@ def patch_user(user_id):
     db.session.commit()
     return jsonify(user.to_dict()), 200
 
+# all clients
+@app.route('/clients', methods=['GET'])
+def get_clients():
+    clients = User.query.filter_by(is_client=True).all()
+    return jsonify([client.to_dict() for client in clients]), 200
+@app.route('/stats/clients', methods=['GET'])
+def get_client_count():
+    client_count = User.query.filter_by(role='client').count()
+    return jsonify({'count': client_count}), 200
+#freelancers
+@app.route('/freelancers', methods=['GET'])
+def get_freelancers():
+    freelancers = User.query.filter_by(is_freelancer=True).all()
+    return jsonify([freelancer.to_dict() for freelancer in freelancers]), 200
+
+@app.route('/stats/freelancers', methods=['GET'])
+def get_freelancer_count():
+    freelancer_count = User.query.filter_by(role='freelancer').count()
+    return jsonify({'count': freelancer_count}), 200
 
 # Current user job postings
 @app.route('/user/job_postings', methods=['GET'])
@@ -301,7 +320,6 @@ def get_user_job_postings():
     job_postings_list = [job_posting.to_dict() for job_posting in job_postings]
 
     return jsonify(job_postings_list), 200
-
 
 
 # ================================ JOB POSTINGS ======================================
@@ -353,6 +371,17 @@ def create_job_posting():
 def get_job_postings():
     job_postings = JobPosting.query.all()
     return jsonify([job_posting.to_dict() for job_posting in job_postings]), 200
+
+@app.route('/jobtitles', methods=['GET'])
+def get_job_titles():
+    job_postings = JobPosting.query.with_entities(JobPosting.title).all()
+    titles = [job.title for job in job_postings]
+    return jsonify(titles), 200
+
+@app.route('/stats/jobs', methods=['GET'])
+def get_job_count():
+    job_count = JobPosting.query.count()
+    return jsonify({'count': job_count}), 200
 
 # Route to get a single job posting by ID
 @app.route('/jobpostings/<int:job_posting_id>', methods=['GET'])

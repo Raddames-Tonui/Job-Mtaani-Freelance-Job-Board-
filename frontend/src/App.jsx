@@ -16,8 +16,6 @@ import ResetPassword from "./Authentication/ResetPassword";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import TermsAndConditions from "./Authentication/TermsAndConditions";
 
-
-
 import LayoutClient from "./LayoutClient";
 import UpdateProfile from "./Client/UpdateProfile";
 import Proposals from "./Client/Proposals";
@@ -27,14 +25,16 @@ import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
 import Progress from "./Client/Progress";
 
-
 import LayoutAdmin from "./LayoutAdmin";
 import AdminDashboard from "./admin/AdminDashboard";
+import OverviewPage from './admin/OverviewPage';
+import ClientsPage from './admin/ClientsPage';
+import FreelancersPage from './admin/FreelancersPage';
+import JobsPage from './admin/JobsPage';
 
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
-
 
 function App() {
   return (
@@ -77,6 +77,10 @@ function App() {
               {/* ADMIN ROUTES */}
               <Route path="/admin" element={<LayoutAdmin />}>
                 <Route index element={<AdminDashboard />} />
+                <Route path="overview" element={<OverviewPage />} />
+                <Route path="clients" element={<ClientsPage />} />
+                <Route path="freelancers" element={<FreelancersPage />} />
+                <Route path="jobs" element={<JobsPage />} />
               </Route>
             </Routes>
           </ProposalProvider>
