@@ -20,6 +20,7 @@ const JobCreation = () => {
     job_level: "Entry",
     description: "",
     responsibilities: "",
+    requirements: "",
     experience_level: "Junior",
     location: "",
   });
@@ -53,6 +54,7 @@ const JobCreation = () => {
           job_level: "Entry",
           description: "",
           responsibilities: "",
+          requirements: "",
           experience_level: "Junior",
           location: "",
         });
@@ -395,6 +397,22 @@ const JobCreation = () => {
                   onChange={handleChange}
                   className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                   placeholder="Add job responsibilities"
+                />
+              </div>
+            </div>
+            {/* Requirements */}
+            <div>
+              <label htmlFor="requirements" className="block text-sm font-medium leading-6 text-gray-900">
+                Requirements
+              </label>
+              <div className="mt-2">
+                <textarea
+                  id="requirements"
+                  name="requirements"
+                  value={jobDetails.requirements}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                  placeholder="Add job requirements"
                 />
               </div>
             </div>

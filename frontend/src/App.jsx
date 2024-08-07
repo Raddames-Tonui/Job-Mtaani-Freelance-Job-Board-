@@ -66,7 +66,7 @@ function App() {
               <Route path="update-profile" element={<UpdateProfile />} />
               <Route path="proposals" element={<Proposals />} />
               <Route path="my-jobs" element={<MyJobs />} />
-              <Route path="freelancers" element={<Freelancers />} />
+              <Route path="freelancers" element={<Freelancers />}/>
             </Route>
 
             {/* ADMIN ROUTES */}
