@@ -19,7 +19,7 @@ const AdminSidebar = () => {
           
               <li>
                 <NavLink
-                  to="/admin"
+                  to="/admin/overview"
                   className={({ isActive }) => `flex items-center p-4 text-lg ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-800'}`}
                 >
                   <FaHome className="mr-3 text-2xl" /> Overview

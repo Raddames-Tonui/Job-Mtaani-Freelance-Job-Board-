@@ -161,7 +161,7 @@ export const UserProvider = ({ children }) => {
                 toast.success('Logged in', { icon: '👏' });
 
                 if (res.is_admin) {
-                    nav("/admin");
+                    nav("/admin/overview");
                 } else if (res.is_client) {
                     nav("/client");
                 } else if (res.is_freelancer) {

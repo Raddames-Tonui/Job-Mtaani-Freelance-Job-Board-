@@ -15,7 +15,7 @@ const AdminNavbar = () => {
     <header className="fixed top-0 w-full bg-gray-900 flex justify-between items-center px-6 h-[10vh] z-50 border-b-2 border-b-white">
       <div className="flex items-center space-x-2">
     
-                <Link to="/admin" className="text-2xl font-bold text-white hover:text-blue-800 transition duration-300">JobQuest</Link>
+                <Link to="/admin/overview" className="text-2xl font-bold text-white hover:text-blue-800 transition duration-300">JobQuest</Link>
        
        
         <button onClick={toggleMenu} className="md:hidden text-gray-400 focus:outline-none">
@@ -26,7 +26,7 @@ const AdminNavbar = () => {
       </div>
 
       <nav className="hidden md:flex space-x-6 text-gray-400">
-            <NavLink to="/admin" className="hover:underline transition duration-300">Overview</NavLink>
+            <NavLink to="/admin/overview" className="hover:underline transition duration-300">Overview</NavLink>
             <NavLink to="/admin/clients" className="hover:underline transition duration-300">Clients</NavLink>
             <NavLink to="/admin/freelancers" className="hover:underline transition duration-300">Freelancers</NavLink>
             <NavLink to="/admin/jobs" className="hover:underline transition duration-300">Jobs</NavLink> 

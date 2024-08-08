@@ -80,7 +80,7 @@ function App() {
 
               {/* ADMIN ROUTES */}
               <Route path="/admin" element={<LayoutAdmin />}>
-                <Route index element={<OverviewPage />} />
+                <Route path="/admin/overview" element={<OverviewPage />} />
                 <Route path="clients" element={<ClientsPage />} />
                 <Route path="freelancers" element={<FreelancersPage />} />
                 <Route path="jobs" element={<JobsPage />} />
