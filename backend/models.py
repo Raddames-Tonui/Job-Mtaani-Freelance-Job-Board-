@@ -166,6 +166,7 @@ class Payment(db.Model, SerializerMixin):
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(20), nullable=False)  # e.g., 'pending', 'completed'
+    payment_intent_id = db.Column(db.String(255), nullable=False)  # Store Stripe PaymentIntent ID
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -177,6 +178,7 @@ class Payment(db.Model, SerializerMixin):
             "client_id": self.client_id,
             "freelancer_id": self.freelancer_id,
             "status": self.status,
+            "payment_intent_id": self.payment_intent_id,
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
@@ -291,3 +293,5 @@ class Rating(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<Rating(id='{self.id}', score='{self.score}')>"
+    
+    

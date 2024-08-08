@@ -34,6 +34,7 @@ import AdminDashboard from "./admin/AdminDashboard";
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
+import AccountPage from "./Account/AccountPage";
 
 
 function App() {
@@ -48,6 +49,9 @@ function App() {
                 <Route index element={<FindJobs />} />
                 <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
                 <Route path="applied-jobs" element={<AppliedJobs />} />
+                <Route path="wallet" element={<AccountPage />} />
+
+                
               </Route>
 
               {/* HOME ROUTES */}
@@ -73,6 +77,8 @@ function App() {
                 <Route path="my-jobs" element={<UserJobPostings />} />
                 <Route path="freelancers" element={<Freelancers />} />
                 <Route path="proposal/:jobId" element={<Proposals />} /> 
+                <Route path="wallet" element={<AccountPage />} />
+
               </Route>
 
               {/* ADMIN ROUTES */}

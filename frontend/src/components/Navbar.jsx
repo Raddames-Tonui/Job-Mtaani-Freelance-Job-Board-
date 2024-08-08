@@ -32,6 +32,7 @@ const Navbar = () => {
                     {currentUser.is_client && (
                       <>
                         <Link to="/client" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                        <Link to="wallet" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">wallet </Link>
                       </>
                     )}
                     {currentUser.is_admin && (
@@ -61,6 +62,7 @@ const Navbar = () => {
                 {/* <NavLink to="/freelancer/available-jobs" className="hover:underline font-semibold transition duration-300">Available Jobs</NavLink> */}
                 <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Update Profile</NavLink>
                 <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
+                <NavLink to="/freelancer/wallet" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">wallet </NavLink>
               </>
             )}
             {currentUser.is_client && (
@@ -69,6 +71,7 @@ const Navbar = () => {
                 <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Post Job</NavLink>
                 {/* <NavLink to="/client/proposals" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Proposals</NavLink> */}
                 <NavLink to="/client/freelancers" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Available Freelancers</NavLink>
+                <NavLink to="/client/wallet" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">wallet </NavLink>
               </>
             )}
             {currentUser.is_admin && (

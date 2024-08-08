@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import random, os
+import stripe
 from datetime import timedelta, datetime
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -42,6 +43,9 @@ mail = Mail(app)  # Initialize Flask-Mail
 
 # Serializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+
+stripe.api_key = 'pk_test_51MEGH2EAdhkm3Iy5evFHo5liA1qyMVyjVFguHJzKO80HDlT3DYbI4IUM9xMoylsysNGqAZsl0PU0jyM9OTLuTUaW00YWRK8juE'
 
 
 # ================================== UPLOAD FOLDER =================================================
@@ -783,8 +787,29 @@ def delete_rating(rating_id):
     db.session.commit()
     return jsonify({"message": "Rating deleted"}), 200
 
+# Payments
+@app.route('/create_payment_intent', methods=['POST'])
+def create_payment_intent():
+    data = request.json
+    try:
+        # Calculate payment amount
+        contract_id = data['contract_id']
+        contract = Contract.query.get(contract_id)
+        amount = contract.hours_worked * contract.job.hourly_rate
 
+        # Create a PaymentIntent with the order amount and currency
+        payment_intent = stripe.PaymentIntent.create(
+            amount=int(amount * 100),  # Stripe uses cents
+            currency='usd',
+            metadata={'contract_id': contract_id}
+        )
+        return jsonify({'clientSecret': payment_intent['client_secret']})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
 
 if __name__ == "__main__":
     app.run(debug=True, port=5555)
+    
+    # ########################## Payments #############################
+    
