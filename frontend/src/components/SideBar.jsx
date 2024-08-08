@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import {  FiBriefcase, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
+import {  FiBriefcase,  FiUsers } from 'react-icons/fi';
 import { UserContext } from '../context/UserContext';
 import { CgProfile } from "react-icons/cg";
 import { NavLink } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { FaHome } from "react-icons/fa";
 import { RiProgress3Fill } from "react-icons/ri";
 import { BiSolidAddToQueue } from "react-icons/bi";
 import { TiUserAdd } from "react-icons/ti";
-import { TbBriefcaseFilled } from "react-icons/tb";
 
 
 
