@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import server_url from '../../config.json';
-
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
 import { FaLocationDot } from "react-icons/fa6";
 import { GiTakeMyMoney, GiBrain } from "react-icons/gi";
 import { Icon } from '@iconify/react';
+import { JobContext } from '../context/JobContext';
 
-function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
+function JobDetails({ isOpen, onClose, job, timeAgo }) {
+  const { applyForJob } = useContext(JobContext);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState('');
-  const requirementsArray = job?.requirements
-    ? job.requirements.split('.').filter(req => req.trim() !== '')
-    : [];
 
   useEffect(() => {
     if (isOpen) {
@@ -45,37 +42,10 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    const formData = new FormData();
-    formData.append('file', resume);
-    formData.append('content', coverLetter);
-  
-    fetch(`${server_url}/proposals/${job.id}/apply`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-      },
-      body: formData,
-    })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(errorData => {
-            throw new Error(`Error: ${errorData.description}`);
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        handleApply(job.id);
-        closeModal();
-        alert('Proposal submitted successfully!');
-      })
-      .catch(error => {
-        console.error('Error submitting proposal:', error);
-        alert('Error submitting proposal.');
-      });
+    applyForJob(job.id, resume, coverLetter).then(() => {
+      closeModal();
+    });
   };
-  
 
   if (!isOpen && !isTransitioning) return null;
 
@@ -95,8 +65,7 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
           <hr className="my-2 border-1 border-gray-300" />
         </div>
 
-        {/* content section */}
-        <section className="md:grid md:grid-cols-3 mt-16 p-6 h-[calc(90vh-10vh)] overflow-y-scroll no-scrollbar ">
+        <section className="md:grid md:grid-cols-3 mt-16 p-6 h-[calc(90vh-10vh)] overflow-y-scroll no-scrollbar">
           <div className="col-span-2 md:border-r-2">
             <h2 className="text-xl font-bold mb-4">{job.title}</h2>
             <h2 className="flex gap-10 items-center text-md mb-3 text-gray-500">
@@ -107,10 +76,9 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
             </h2>
             <p>{job.description}</p>
             <hr className="my-4 border-1 border-gray-300" />
-
             <h2 className="underline font-semibold">Requirements</h2>
             <ul className="list-disc ml-6">
-              {requirementsArray.map((requirement, index) => (
+              {job.requirements.split('.').filter(req => req.trim() !== '').map((requirement, index) => (
                 <li key={index}>{requirement.trim()}</li>
               ))}
             </ul>
@@ -147,7 +115,6 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
               Apply now
             </button>
 
-            {/* About the client */}
             <div className="flex flex-col items-center md:mt-8 border-2 rounded-xl">
               <h2 className="font-bold text-xl pt-4 underline">About the client</h2>
               <div className="flex flex-col items-center py-2">
@@ -169,7 +136,6 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
         </section>
       </div>
 
-      {/* Modal Box for applying a job */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 w-[90vw] md:w-[50vw] shadow-lg">
@@ -178,32 +144,29 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
               <button onClick={closeModal} className="text-3xl">&times;</button>
             </div>
             <form onSubmit={handleSubmit}>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Choose Resume</label>
-                <input type="file" onChange={handleResumeChange} className="block w-full p-2 border border-gray-300 rounded-md mb-4" />
-                <label className="block text-sm font-medium text-gray-700 mb-2">Cover Letter</label>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">Resume</label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleResumeChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">Cover Letter</label>
                 <textarea
-                  className="block w-full p-2 border border-gray-300 rounded-md mb-4"
-                  rows="5"
                   value={coverLetter}
                   onChange={handleCoverLetterChange}
-                  placeholder="Write down your biography here. Let the employers know who you are..."
-                ></textarea>
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    onClick={closeModal}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Apply Now
-                  </button>
-                </div>
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Apply
+                </button>
               </div>
             </form>
           </div>
@@ -216,25 +179,8 @@ function JobDetails({ isOpen, onClose, job, timeAgo, handleApply }) {
 JobDetails.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  job: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    location: PropTypes.string,
-    description: PropTypes.string,
-    requirements: PropTypes.string,
-    salary_type: PropTypes.string,
-    max_salary: PropTypes.number,
-    job_level: PropTypes.string,
-    responsibilities: PropTypes.string,
-    client: PropTypes.shape({
-      avatar: PropTypes.string,
-      username: PropTypes.string,
-      firstname: PropTypes.string,
-      lastname: PropTypes.string,
-      about: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
+  job: PropTypes.object.isRequired,
   timeAgo: PropTypes.string.isRequired,
-  handleApply: PropTypes.func.isRequired,
 };
 
 export default JobDetails;

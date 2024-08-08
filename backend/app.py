@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-
-import random, os
-from datetime import timedelta, datetime
+import random
+import os
+from datetime import timedelta
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,10 +9,9 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, ge
 from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
-from werkzeug.utils import secure_filename  # for uploading files
+from werkzeug.utils import secure_filename  
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
-
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -43,14 +41,34 @@ mail = Mail(app)  # Initialize Flask-Mail
 # Serializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-
 # ================================== UPLOAD FOLDER =================================================
-UPLOAD_FOLDER = '/uploads/resume'
+UPLOAD_FOLDER = 'uploads/resume'  # Ensure this folder exists
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Ensure upload folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# ================================== ROUTES ========================================================
+@app.route('/upload', methods=['POST'])
+@jwt_required()
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"msg": "No file part in the request"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"msg": "No file selected for uploading"}), 400
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return jsonify({"msg": "File successfully uploaded", "filename": filename}), 200
+    else:
+        return jsonify({"msg": "Allowed file types are pdf, docx, txt"}), 400
+
 
 # =================================== MAIL TRAP =====================================================
 
@@ -467,7 +485,7 @@ def create_proposal(job_posting_id):
             abort(404, description="Job posting not found")
 
         proposal = Proposal(
-            content=request.form['content'],
+            content=request.form.get('content', ''),
             status='pending',
             cover_letter=file_path,
             freelancer_id=user_id,
@@ -478,6 +496,8 @@ def create_proposal(job_posting_id):
         db.session.commit()
 
         return jsonify(proposal.to_dict()), 201
+    else:
+        abort(400, description="Invalid file type")
 
 # Current user proposals
 @app.route('/user/proposals', methods=['GET'])

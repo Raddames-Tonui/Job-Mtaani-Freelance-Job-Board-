@@ -142,27 +142,30 @@ export const JobProvider = ({ children }) => {
         });
     };
 
-    // APPLY FOR JOB
-    const applyForJob = ({ content, job_posting_id }) => {
-        return fetch(`${server_url}/proposals/${job_posting_id}/apply`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            },
-            body: JSON.stringify({ content, job_posting_id })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to apply for job');
-            }
-            toast.success("Applied for job successfully");
-        })
-        .catch(error => {
-            console.error("Error applying for job:", error);
-            toast.error("Failed to apply for job");
-        });
-    };
+        // APPLY FOR JOB with FormData
+        const applyForJob = (jobId, resume, coverLetter) => {
+            const formData = new FormData();
+            formData.append('file', resume);
+            formData.append('content', coverLetter);
+
+            return fetch(`${server_url}/proposals/${jobId}/apply`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                },
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to apply for job');
+                }
+                toast.success("Applied for job successfully");
+            })
+            .catch(error => {
+                console.error("Error applying for job:", error);
+                toast.error("Failed to apply for job");
+            });
+        };
 
     const contextData = {
         jobs,
