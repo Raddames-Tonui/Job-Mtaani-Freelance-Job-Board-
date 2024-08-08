@@ -7,7 +7,7 @@ import { FaHome } from 'react-icons/fa';
 import { TbBriefcaseFilled } from 'react-icons/tb';
 
 const AdminSidebar = () => {
-  const { currentUser, logoutUser } = useContext(UserContext);
+  const { logoutUser } = useContext(UserContext);
 
   return (
     <div className="hidden md:block w-[20vw] border-r-2 h-full fixed top-0 left-0 bg-gray-900 text-gray-400">
@@ -19,7 +19,7 @@ const AdminSidebar = () => {
           
               <li>
                 <NavLink
-                  to="/admin/overview"
+                  to="/admin"
                   className={({ isActive }) => `flex items-center p-4 text-lg ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-800'}`}
                 >
                   <FaHome className="mr-3 text-2xl" /> Overview

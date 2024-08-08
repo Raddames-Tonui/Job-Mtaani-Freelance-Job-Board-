@@ -26,14 +26,10 @@ const AdminNavbar = () => {
       </div>
 
       <nav className="hidden md:flex space-x-6 text-gray-400">
-        {currentUser && currentUser.is_admin && (
-          <>
-            <NavLink to="/admin/overview" className="hover:underline transition duration-300">Overview</NavLink>
+            <NavLink to="/admin" className="hover:underline transition duration-300">Overview</NavLink>
             <NavLink to="/admin/clients" className="hover:underline transition duration-300">Clients</NavLink>
             <NavLink to="/admin/freelancers" className="hover:underline transition duration-300">Freelancers</NavLink>
-            <NavLink to="/admin/jobs" className="hover:underline transition duration-300">Jobs</NavLink>
-          </>
-        )}
+            <NavLink to="/admin/jobs" className="hover:underline transition duration-300">Jobs</NavLink> 
       </nav>
 
       <div className="hidden md:flex items-center space-x-4">

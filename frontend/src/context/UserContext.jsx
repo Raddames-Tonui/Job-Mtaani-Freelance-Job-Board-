@@ -36,27 +36,37 @@ export const UserProvider = ({ children }) => {
         }
     }, [authToken]);
 
-    // DELETE USER
-    const deleteUser = (id) => {
-        fetch(`${server_url}/users/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then((response) => response.json())
-        .then((res) => {
-            if (res.message) {
-                toast.success(res.message);
-                fetchAllUsers();
-            } else if (res.error) {
-                toast.error(res.error);
-            }
-        })
-        .catch((error) => {
-            toast.error("Network error: " + error.message);
-        });
-    }
+   // DELETE USER
+   const deleteUser = (id) => {
+    console.log(`Attempting to delete user with ID: ${id}`);
+    fetch(`${server_url}/users/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}` 
+        },
+    })
+    .then((response) => {
+        console.log(`Response status: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((res) => {
+        console.log('Delete response:', res);
+        if (res.message) {
+            toast.success(res.message);
+            fetchAllUsers();  
+        } else if (res.error) {
+            toast.error(res.error);
+        }
+    })
+    .catch((error) => {
+        console.error("Error deleting user:", error); 
+        toast.error("Network error: " + error.message);
+    });
+}
 
 
 
@@ -151,7 +161,7 @@ export const UserProvider = ({ children }) => {
                 toast.success('Logged in', { icon: '👏' });
 
                 if (res.is_admin) {
-                    nav("/admin/overview");
+                    nav("/admin");
                 } else if (res.is_client) {
                     nav("/client");
                 } else if (res.is_freelancer) {

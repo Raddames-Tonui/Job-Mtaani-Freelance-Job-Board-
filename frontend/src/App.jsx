@@ -26,16 +26,17 @@ import ClientDashboard from "./Client/ClientDashboard";
 import Progress from "./Client/Progress";
 
 import LayoutAdmin from "./LayoutAdmin";
-import AdminDashboard from "./admin/AdminDashboard";
 import OverviewPage from './admin/OverviewPage';
 import ClientsPage from './admin/ClientsPage';
 import FreelancersPage from './admin/FreelancersPage';
 import JobsPage from './admin/JobsPage';
+import Settings from "./admin/Settings";
+
 
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
-import Settings from "./admin/Settings";
+import FreelancerDashboard from "./freelancers/FreelancerDashboard";
 
 function App() {
   return (
@@ -46,7 +47,8 @@ function App() {
             <Routes>
               {/* FREELANCER ROUTES */}
               <Route path="/freelancer" element={<Layout />}>
-                <Route index element={<FindJobs />} />
+                <Route index element={<FreelancerDashboard />} />
+                <Route path="find-jobs" element={<FindJobs />} />
                 <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
                 <Route path="applied-jobs" element={<AppliedJobs />} />
               </Route>
@@ -78,8 +80,7 @@ function App() {
 
               {/* ADMIN ROUTES */}
               <Route path="/admin" element={<LayoutAdmin />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="overview" element={<OverviewPage />} />
+                <Route index element={<OverviewPage />} />
                 <Route path="clients" element={<ClientsPage />} />
                 <Route path="freelancers" element={<FreelancersPage />} />
                 <Route path="jobs" element={<JobsPage />} />
