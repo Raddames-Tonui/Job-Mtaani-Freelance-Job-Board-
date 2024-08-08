@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const ClientsPage = () => {
-    const { users } = useContext(UserContext);
+    const { users, deleteUser } = useContext(UserContext);
     const [clients, setClients] = useState([]);
 
     useEffect(() => {
@@ -11,7 +11,7 @@ const ClientsPage = () => {
     }, [users]);
 
     return (
-        <div className="p-6 bg-gray-900 text-white  shadow-lg h-[90vh] ">
+        <div className="p-6 bg-gray-900 text-white  shadow-lg h-full ">
             <h2 className="text-2xl font-bold mb-4">Clients</h2>
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-gray-800 overflow-scroll">
@@ -43,7 +43,8 @@ const ClientsPage = () => {
                                         <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                             <FaEdit />
                                         </button>
-                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                            onClick={() => deleteUser(client.id)}>
                                             <FaTrash />
                                         </button>
                                     </div>

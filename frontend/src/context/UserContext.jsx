@@ -36,6 +36,28 @@ export const UserProvider = ({ children }) => {
         }
     }, [authToken]);
 
+    // DELETE USER
+    const deleteUser = (id) => {
+        fetch(`${server_url}/users/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.message) {
+                toast.success(res.message);
+                fetchAllUsers();
+            } else if (res.error) {
+                toast.error(res.error);
+            }
+        })
+        .catch((error) => {
+            toast.error("Network error: " + error.message);
+        });
+    }
+
 
 
     // REGISTER USER
@@ -238,7 +260,8 @@ export const UserProvider = ({ children }) => {
         logoutUser,
         resetPassword,
         authToken,
-        users
+        users,
+        deleteUser
     };
 
     return (

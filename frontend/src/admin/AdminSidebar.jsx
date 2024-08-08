@@ -16,8 +16,7 @@ const AdminSidebar = () => {
       </div>
       <nav className="mt-4">
         <ul className="flex flex-col space-y-4">
-          {currentUser && currentUser.is_admin && (
-            <>
+          
               <li>
                 <NavLink
                   to="/admin/overview"
@@ -31,7 +30,7 @@ const AdminSidebar = () => {
                   to="/admin/clients"
                   className={({ isActive }) => `flex items-center p-4 text-lg ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-800'}`}
                 >
-                  <FiUsers className="mr-3 text-2xl" /> All Clients
+                  <FiUsers className="mr-3 text-2xl" /> Clients
                 </NavLink>
               </li>
               <li>
@@ -39,7 +38,7 @@ const AdminSidebar = () => {
                   to="/admin/freelancers"
                   className={({ isActive }) => `flex items-center p-4 text-lg ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-800'}`}
                 >
-                  <FiUsers className="mr-3 text-2xl" /> All Freelancers
+                  <FiUsers className="mr-3 text-2xl" /> Freelancers
                 </NavLink>
               </li>
               <li>
@@ -58,8 +57,7 @@ const AdminSidebar = () => {
                   <FiSettings className="mr-3 text-2xl" /> Settings
                 </NavLink>
               </li>
-            </>
-          )}
+          
           <li>
             <button
               onClick={logoutUser}

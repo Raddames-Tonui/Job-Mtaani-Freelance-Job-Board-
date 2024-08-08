@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const FreelancersPage = () => {
-    const { users } = useContext(UserContext);
+    const { users, deleteUser } = useContext(UserContext);
     const [freelancers, setFreelancers] = useState([]);
 
     useEffect(() => {
@@ -19,7 +19,6 @@ const FreelancersPage = () => {
                         <tr className="w-full bg-gray-700 text-gray-400 uppercase text-sm leading-normal">
                             <th className="py-3 px-6 text-left">Name</th>
                             <th className="py-3 px-6 text-left">Email</th>
-                            {/* <th className="py-3 px-6 text-left">Experience</th> */}
                             <th className="py-3 px-6 text-left">Username</th>
                             <th className="py-3 px-6 text-center">Actions</th>
                         </tr>
@@ -34,14 +33,14 @@ const FreelancersPage = () => {
                                     <span>{freelancer.firstname} {freelancer.lastname}</span>
                                 </td>
                                 <td className="py-3 px-6 text-left">{freelancer.email}</td>
-                                {/* <td className="py-3 px-6 text-left">{freelancer.experience || 'N/A'}</td> */}
                                 <td className="py-3 px-6 text-left">{freelancer.username || 'N/A'}</td>
                                 <td className="py-3 px-6 text-center">
                                     <div className="flex item-center justify-center">
                                         <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                             <FaEdit />
                                         </button>
-                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                        onClick={()=>deleteUser(freelancer.id)}>
                                             <FaTrash />
                                         </button>
                                     </div>

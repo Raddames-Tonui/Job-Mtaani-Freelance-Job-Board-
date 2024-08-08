@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-import { Icon } from '@iconify/react';
-import { FiBell, FiChevronDown } from 'react-icons/fi';
+import { FiBell} from 'react-icons/fi';
 
 const AdminNavbar = () => {
   const { currentUser, logoutUser } = useContext(UserContext);
@@ -30,8 +29,8 @@ const AdminNavbar = () => {
         {currentUser && currentUser.is_admin && (
           <>
             <NavLink to="/admin/overview" className="hover:underline transition duration-300">Overview</NavLink>
-            <NavLink to="/admin/clients" className="hover:underline transition duration-300">All Clients</NavLink>
-            <NavLink to="/admin/freelancers" className="hover:underline transition duration-300">All Freelancers</NavLink>
+            <NavLink to="/admin/clients" className="hover:underline transition duration-300">Clients</NavLink>
+            <NavLink to="/admin/freelancers" className="hover:underline transition duration-300">Freelancers</NavLink>
             <NavLink to="/admin/jobs" className="hover:underline transition duration-300">Jobs</NavLink>
           </>
         )}
@@ -41,6 +40,7 @@ const AdminNavbar = () => {
         {currentUser ? (
           <>
             <FiBell className="text-gray-400 w-6 h-6 mr-10" />
+            <button onClick={logoutUser} className="py-2 px-4 bg-white text-gray-900 rounded-full hover:bg-gray-100 font-bold transition duration-300">Logout</button>
             
           </>
         ) : (
@@ -58,8 +58,8 @@ const AdminNavbar = () => {
             {currentUser && currentUser.is_admin && (
               <>
                 <NavLink to="/admin/overview" className="hover:underline transition duration-300">Overview</NavLink>
-                <NavLink to="/admin/clients" className="hover:underline transition duration-300">All Clients</NavLink>
-                <NavLink to="/admin/freelancers" className="hover:underline transition duration-300">All Freelancers</NavLink>
+                <NavLink to="/admin/clients" className="hover:underline transition duration-300">Clients</NavLink>
+                <NavLink to="/admin/freelancers" className="hover:underline transition duration-300">Freelancers</NavLink>
                 <NavLink to="/admin/jobs" className="hover:underline transition duration-300">Jobs</NavLink>
               </>
             )}
