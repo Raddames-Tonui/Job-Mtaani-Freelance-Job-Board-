@@ -195,7 +195,7 @@ function SignUpForm() {
                 required
               >
                 <option value="" disabled>Select your role</option>
-                <option value="Admin">Admin</option>
+                {/* <option value="Admin">Admin</option> */}
                 <option value="Freelancer">Freelancer</option>
                 <option value="Client">Client</option>
               </select>
