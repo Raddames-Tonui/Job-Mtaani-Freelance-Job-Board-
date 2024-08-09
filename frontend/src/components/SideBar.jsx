@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import {  FiBriefcase, FiDollarSign, FiUsers, FiSettings } from 'react-icons/fi';
+import {  FiBriefcase,  FiUsers } from 'react-icons/fi';
 import { UserContext } from '../context/UserContext';
 import { CgProfile } from "react-icons/cg";
 import { NavLink } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { FaHome } from "react-icons/fa";
 import { RiProgress3Fill } from "react-icons/ri";
 import { BiSolidAddToQueue } from "react-icons/bi";
 import { TiUserAdd } from "react-icons/ti";
-import { TbBriefcaseFilled } from "react-icons/tb";
 
 
 
@@ -71,53 +70,16 @@ const Sidebar = () => {
           Progress
           </NavLink>
           <NavLink
-            to="/client/plans-billing"
+            to="/client/freelancers"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
-            <FiDollarSign className="mr-2" /> Plans & Billing
+             <FiUsers className="mr-3 text-2xl" /> Freelancers
           </NavLink>
               
             </>
           )}     
-          
-     
+               
 
-          {/* ADMIN */}
-          {currentUser && currentUser.is_admin && (
-            <>
-              <NavLink
-                to="/admin/overview"
-                end
-                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-              >       
-                <FaHome className="mr-2" /> Overview
-              </NavLink>
-              <NavLink
-                to="/admin/clients"
-                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-              >
-                <FiUsers className="mr-2" /> All Clients
-              </NavLink>
-              <NavLink
-                to="/admin/freelancers"
-                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-              >
-                <FiUsers className="mr-2" /> All Freelancers
-              </NavLink>
-              <NavLink
-                to="/admin/jobs"
-                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-              >
-                <TbBriefcaseFilled className="mr-2"/>  Jobs                
-              </NavLink>
-              <NavLink
-                to="/admin/settings"
-                className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-              >
-                <FiSettings className="mr-2" /> Settings
-              </NavLink>
-            </>
-          )}
         </ul>
       </nav>
     </div>

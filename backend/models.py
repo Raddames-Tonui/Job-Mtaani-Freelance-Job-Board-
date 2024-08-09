@@ -33,7 +33,7 @@ class User(db.Model, SerializerMixin):
     about = db.Column(db.Text)
     needs = db.Column(db.Text)
 
-    ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id')
+    ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id', cascade="all, delete-orphan")
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -272,7 +272,7 @@ class Rating(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     rater_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    score = db.Column(db.Integer, nullable=False)  # e.g., 1-5
+    score = db.Column(db.Integer, nullable=False)
     review = db.Column(db.Text)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())

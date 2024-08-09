@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { Icon } from '@iconify/react';
+import { FiBell} from 'react-icons/fi';
+
 
 const Navbar = () => {
   const { currentUser, logoutUser } = useContext(UserContext);
@@ -50,8 +52,9 @@ const Navbar = () => {
           <>
             {currentUser.is_freelancer && (
               <>
-                <NavLink to="/freelancer" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>
-                <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Update Profile</NavLink>
+                <NavLink to="/freelancer" className="hover:underline font-semibold transition duration-300">Overview</NavLink>
+                <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Profile</NavLink>
+                <NavLink to="/freelancer/find-jobs" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>                
                 <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
               </>
             )}
@@ -61,29 +64,23 @@ const Navbar = () => {
                 <NavLink to="/client/create-job" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Post Job</NavLink>
                 <NavLink to="/client/freelancers" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Available Freelancers</NavLink>
               </>
-            )}
-            {currentUser.is_admin && (
-              <>
-                <NavLink to="/admin" className="hover:underline font-semibold transition duration-300 whitespace-nowrap">Dashboard</NavLink>
-              </>
-            )}
+            )}          
           </>
         )}
       </nav>
 
-      <div className="hidden md:flex items-center space-x-4">
+      <div className="hidden md:flex items-center space-x-4 ">
         {currentUser ? (
           <>
-            <button onClick={logoutUser} className={`bg-blue-600 text-white rounded-full py-2 px-4 hover:bg-blue-700 transition duration-300 ${currentUser.is_admin ? 'bg-blue-700' : ''}`}>Logout</button>
-            {currentUser?.avatar ? (
+              <FiBell className="text-black w-6 h-6" />
+
+                   
               <img 
                 src={currentUser?.avatar} 
                 alt="Profile Picture" 
-                className={`rounded-full w-12 h-12 ring-1 ring-[#3322ca] object-cover ${currentUser.is_admin ? 'ring-2 ring-blue-700' : ''}`} 
-              />            
-            ) : (
-              <Icon icon="healthicons:ui-user-profile" className={`w-12 h-12 ${currentUser.is_admin ? 'text-blue-700' : ''}`}/>
-            )}
+                className={`rounded-full w-10 h-10 ring-1  object-cover `} 
+              />      
+              <button onClick={logoutUser} className={` font-bold rounded-full py-1 px-2 hover:bg-blue-700 transition duration-300 ${currentUser.is_admin ? 'bg-blue-700' : ''}`}>Logout</button>          
           </>
         ) : (
           <>

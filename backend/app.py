@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
-
-import random, os
-from datetime import timedelta, datetime
-from flask import Flask, jsonify, request, abort
+import random
+import os
+from datetime import timedelta
+from flask import Flask, jsonify, request, abort, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -10,10 +9,12 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, ge
 from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
-from werkzeug.utils import secure_filename  # for uploading files
+
+from werkzeug.utils import secure_filename  # For uploading files
+from flask import send_from_directory # For downloading files
+
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
-
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -43,14 +44,44 @@ mail = Mail(app)  # Initialize Flask-Mail
 # Serializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-
-# ================================== UPLOAD FOLDER =================================================
-UPLOAD_FOLDER = '/uploads/resume'
+# ================================== UPLOAD files/FOLDER ROUTES =================================================
+UPLOAD_FOLDER = 'uploads/resume'  #  folder to upload to
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Ensure upload folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+
+
+# upload file
+@app.route('/upload', methods=['POST'])
+@jwt_required()
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"msg": "No file part in the request"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"msg": "No file selected for uploading"}), 400
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return jsonify({"msg": "File successfully uploaded", "filename": filename}), 200
+    else:
+        return jsonify({"msg": "Allowed file types are pdf, docx, txt"}), 400
+
+#  fetch uploaded file
+@app.route('/files/<filename>', methods=['GET'])
+def get_file(filename):
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if os.path.exists(file_path):
+        return send_file(file_path)
+    else:
+        abort(404, description="File not found")
 
 # =================================== MAIL TRAP =====================================================
 
@@ -243,27 +274,6 @@ def get_user(user_id):
 
 
 
-# Update a user
-@app.route('/users/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    data = request.get_json()
-    user = User.query.get_or_404(user_id)
-
-    user.username = data.get('username', user.username)
-    user.email = data.get('email', user.email)
-    if 'password' in data:
-        user.password_hash = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user.is_admin = data.get('is_admin', user.is_admin)
-    user.is_freelancer = data.get('is_freelancer', user.is_freelancer)
-    user.is_client = data.get('is_client', user.is_client)
-    user.skills = data.get('skills', user.skills)
-    user.experience = data.get('experience', user.experience)
-    user.about = data.get('about', user.about) 
-    user.needs = data.get('needs', user.needs) 
-
-    db.session.commit()
-    return jsonify(user.to_dict()), 200
-
 # Delete a user
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -384,16 +394,6 @@ def get_job_postings():
     job_postings = JobPosting.query.all()
     return jsonify([job_posting.to_dict() for job_posting in job_postings]), 200
 
-@app.route('/jobtitles', methods=['GET'])
-def get_job_titles():
-    job_postings = JobPosting.query.with_entities(JobPosting.title).all()
-    titles = [job.title for job in job_postings]
-    return jsonify(titles), 200
-
-@app.route('/stats/jobs', methods=['GET'])
-def get_job_count():
-    job_count = JobPosting.query.count()
-    return jsonify({'count': job_count}), 200
 
 # Route to get a single job posting by ID
 @app.route('/jobpostings/<int:job_posting_id>', methods=['GET'])
@@ -467,7 +467,7 @@ def create_proposal(job_posting_id):
             abort(404, description="Job posting not found")
 
         proposal = Proposal(
-            content=request.form['content'],
+            content=request.form.get('content', ''),
             status='pending',
             cover_letter=file_path,
             freelancer_id=user_id,
@@ -478,6 +478,8 @@ def create_proposal(job_posting_id):
         db.session.commit()
 
         return jsonify(proposal.to_dict()), 201
+    else:
+        abort(400, description="Invalid file type")
 
 # Current user proposals
 @app.route('/user/proposals', methods=['GET'])

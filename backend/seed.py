@@ -20,7 +20,7 @@ def seed_database():
         user_data = {
             "admins": {
                 "count": 3,
-                "password": "admin",
+                "password": "111",
                 "is_admin": True,
                 "is_freelancer": False,
                 "is_client": False
@@ -87,7 +87,7 @@ def seed_database():
                 requirements=fake.text(),
                 location=fake.city(),
                 experience_level=random.choice(["Entry-level", "Mid-level", "Senior-level"]),
-                client_id=random.randint(1, 3)
+                client_id=random.randint(1, 4)
             )
             db.session.add(job_posting)
             db.session.commit()
