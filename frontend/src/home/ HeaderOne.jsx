@@ -52,36 +52,7 @@ function HeaderOne() {
                 </NavLink>
               </li>
             </ul>
-            <ul
-              className={`${
-                isMenuOpen ? "block" : "hidden"
-              } lg:flex p-0 m-0 list-none flex-col lg:flex-row lg:space-x-3`}
-            >
-              <li>
-                <NavLink
-                  to="#"
-                  className="p-1 hover:text-gray-300"
-                >
-                  <i className="fab fa-twitter text-white"></i>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="#"
-                  className="p-1 hover:text-gray-300"
-                >
-                  <i className="fab fa-facebook text-white"></i>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="#"
-                  className="p-1 hover:text-gray-300"
-                >
-                  <i className="fab fa-instagram text-white"></i>
-                </NavLink>
-              </li>
-            </ul>
+          
             <div
               className={`${
                 isMenuOpen ? "block" : "hidden"

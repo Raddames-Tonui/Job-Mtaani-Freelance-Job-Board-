@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
 import toast from 'react-hot-toast';
 import { ProjectContext } from '../context/ProjectContext';
+import { Link } from 'react-router-dom';
 
-const CreateProjectForm = () => {
+const ProjectForm = () => {
     const { acceptedFreelancers, createProject } = useContext(ProjectContext);
     const [formData, setFormData] = useState({
         title: '',
@@ -36,6 +37,10 @@ const CreateProjectForm = () => {
 
     return (
         <div className="mt-[10vh]">
+             <ul className='flex flex-row justify-center gap-5'>
+        <Link to="/client/projects"> My Projects</Link>
+        <Link to="/client/projects/create-project">Create Project </Link>
+    </ul>
             <div className="flex items-center justify-center py-12 px-6 lg:px-8">
                 <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-2xl w-full py-8 rounded-md shadow-md border-2 border-gray-200">
                     <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -154,4 +159,4 @@ const CreateProjectForm = () => {
     );
 };
 
-export default CreateProjectForm;
+export default ProjectForm;

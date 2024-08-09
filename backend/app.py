@@ -643,8 +643,19 @@ def create_project():
 
 # Route to get all projects
 @app.route('/projects', methods=['GET'])
+@jwt_required()
 def get_projects():
-    projects = Project.query.all()
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if user.is_admin:
+        projects = Project.query.all()
+    else:
+        projects = Project.query.filter(
+            (Project.client_id == current_user_id) | 
+            (Project.freelancer_id == current_user_id)
+        ).all()
+
     return jsonify([project.to_dict() for project in projects]), 200
 
 # Route to get a single project by ID

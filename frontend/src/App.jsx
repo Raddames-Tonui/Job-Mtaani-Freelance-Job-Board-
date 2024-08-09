@@ -25,7 +25,8 @@ import Freelancers from "./Client/Freelancers";
 import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
 import Progress from "./Client/Progress";
-import ClientProjects from "./Client/CreateProjectForm";
+import ProjectForm from "./Client/ProjectForm";
+import Projects from "./Client/Projects";
 
 import LayoutAdmin from "./Layout/LayoutAdmin";
 import OverviewPage from "./admin/OverviewPage";
@@ -41,6 +42,9 @@ import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
 import FreelancerDashboard from "./freelancers/FreelancerDashboard";
 import FreelancerProjects from "./freelancers/FreelancerProjects";
 
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -53,34 +57,23 @@ function App() {
                 <Route path="/freelancer" element={<LayoutFreelancer />}>
                   <Route index element={<FreelancerDashboard />} />
                   <Route path="find-jobs" element={<FindJobs />} />
-                  <Route
-                    path="updateprofile"
-                    element={<UpdateFreelancerProfile />}
-                  />
+                  <Route  path="updateprofile"  element={<UpdateFreelancerProfile />} />
                   <Route path="applied-jobs" element={<AppliedJobs />} />
                   <Route path="projects" element={<FreelancerProjects />} />
                 </Route>
                 <Route index element={<Home />} />
                 {/* HOME ROUTES */}
-                <Route path="/" element={<Layout />}>
+                <Route path="/" element={<Layout />}>   
                   <Route path="login" element={<Login />} />
                   <Route path="signup" element={<SignUpForm />} />
-                  <Route
-                    path="reset-password/:token"
-                    element={<ResetPassword />}
-                  />
-                  <Route path="forgot-password" element={<ForgotPassword />} />
-                  <Route
-                    path="terms-and-conditions"
-                    element={<TermsAndConditions />}
-                  />
-                  <Route
-                    path="customer-support"
-                    element={<CustomerSupport />}
-                  />
+                  <Route path="reset-password/:token" element={<ResetPassword />} />
+                  <Route path="forgot-password" element={<ForgotPassword />} />              
+                  <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+                  <Route path="customer-support" element={<CustomerSupport />} />
                   <Route path="about" element={<About />} />
                   <Route path="*" element={<NoPage />} />
                 </Route>
+                  
 
                 {/* CLIENT ROUTES */}
                 <Route path="/client" element={<LayoutClient />}>
@@ -89,9 +82,10 @@ function App() {
                   <Route path="update-profile" element={<UpdateProfile />} />
                   <Route path="progress" element={<Progress />} />
                   <Route path="my-jobs" element={<UserJobPostings />} />
-                  <Route path="freelancers" element={<Freelancers />} />
-                  <Route path="projects" element={<ClientProjects />} />
+                  <Route path="freelancers" element={<Freelancers />} />                  
                   <Route path="proposal/:jobId" element={<Proposals />} />
+                  <Route path="projects" element={<Projects/>}/>
+                  <Route path="projects/create-project" element={<ProjectForm />} />
                 </Route>
 
                 {/* ADMIN ROUTES */}

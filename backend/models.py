@@ -247,7 +247,7 @@ class Project(db.Model, SerializerMixin):
     description = db.Column(db.Text, nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    status = db.Column(db.String(20), nullable=False)  # e.g., 'ongoing', 'completed'
+    status = db.Column(db.String(20), nullable=False)  #  'ongoing', 'completed'
     deadline = db.Column(db.String(50), nullable=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())

@@ -70,10 +70,10 @@ function SignUpForm() {
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="flex flex-col md:flex-row justify-center w-3/4 bg-white shadow-lg rounded-lg overflow-hidden">
       
-        <div className="md:w-1/2 p-8">
-          <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+        <div className="md:w-1/2 p-4 pl-6">
+          <Link to="/" className="text-2xl  font-bold text-blue-600 hover:text-blue-800 transition duration-300">Sign up</Link>
 
-          <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
+          <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
             <div className="flex gap-4">
               <input
                 id="firstname"
@@ -143,7 +143,7 @@ function SignUpForm() {
               className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
             >
               <option value="" disabled>Select your role</option>
-              <option value="Admin">Admin</option>
+              {/* <option value="Admin">Admin</option> */}
               <option value="Freelancer">Freelancer</option>
               <option value="Client">Client</option>
             </select>
@@ -190,7 +190,7 @@ function SignUpForm() {
         <div className="hidden md:block bg-cover bg-center text-white p-8" style={{ backgroundImage: `url(${backgroundImage})` }}>
           <div className="h-full flex flex-col justify-center items-center bg-black bg-opacity-50 p-6">
             <h3 className="text-3xl font-bold">Your journey starts here.</h3>
-            <p className="mt-4 text-lg">Join us today and connect with top employers to find your dream job.</p>
+            <p className="mt-4 text-lg text-center">Join us today and connect with top employers to find your dream job.</p>
           </div>
         </div>
       </div>
