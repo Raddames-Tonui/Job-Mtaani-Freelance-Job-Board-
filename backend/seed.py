@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from app import app, db
-from models import User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
+from models import User, JobPosting, Proposal, Payment, Usermessage, Project,  Rating , Milestone
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 from datetime import datetime

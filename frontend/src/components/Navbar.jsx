@@ -56,6 +56,7 @@ const Navbar = () => {
                 <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Profile</NavLink>
                 <NavLink to="/freelancer/find-jobs" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>                
                 <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>
+                <NavLink to="/freelancer/projects" className="hover:underline font-semibold transition duration-300">Projects</NavLink>
               </>
             )}
             {currentUser.is_client && (
@@ -74,13 +75,16 @@ const Navbar = () => {
           <>
               <FiBell className="text-black w-6 h-6" />
 
+              {currentUser?.avatar ? (
+                  <img 
+                    src={currentUser.avatar} 
+                    alt="Profile Picture" 
+                    className="rounded-full w-10 h-10 ring-1 object-cover" 
+                  />  
+                ) : null}
+                  
                    
-              <img 
-                src={currentUser?.avatar} 
-                alt="Profile Picture" 
-                className={`rounded-full w-10 h-10 ring-1  object-cover `} 
-              />      
-              <button onClick={logoutUser} className={` font-bold rounded-full py-1 px-2 hover:bg-blue-700 transition duration-300 ${currentUser.is_admin ? 'bg-blue-700' : ''}`}>Logout</button>          
+              <button onClick={logoutUser} className={` font-bold rounded-full bg-blue-600 py-2 px-3 hover:bg-blue-700 transition duration-300 ${currentUser.is_admin ? 'bg-blue-700' : ''}`}>Logout</button>          
           </>
         ) : (
           <>

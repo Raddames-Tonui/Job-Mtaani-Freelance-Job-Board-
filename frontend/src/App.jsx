@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import { JobProvider } from "./context/JobContext";
 import { ProposalProvider } from "./context/ProposalContext";
+import { ProjectProvider } from "./context/ProjectContext";
+
 
 import Layout from "./Layout";
 import Home from "./home/Home";
@@ -24,6 +26,8 @@ import Freelancers from "./Client/Freelancers";
 import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
 import Progress from "./Client/Progress";
+import ClientProjects from "./Client/CreateProjectForm";
+
 
 import LayoutAdmin from "./LayoutAdmin";
 import OverviewPage from './admin/OverviewPage';
@@ -37,6 +41,7 @@ import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
 import FreelancerDashboard from "./freelancers/FreelancerDashboard";
+import FreelancerProjects from "./freelancers/FreelancerProjects";
 
 function App() {
   return (
@@ -44,49 +49,52 @@ function App() {
       <UserProvider>
         <JobProvider>
           <ProposalProvider>
-            <Routes>
-              {/* FREELANCER ROUTES */}
-              <Route path="/freelancer" element={<Layout />}>
-                <Route index element={<FreelancerDashboard />} />
-                <Route path="find-jobs" element={<FindJobs />} />
-                <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
-                <Route path="applied-jobs" element={<AppliedJobs />} />
-              </Route>
+            <ProjectProvider>
+                  <Routes>
+                    {/* FREELANCER ROUTES */}
+                    <Route path="/freelancer" element={<Layout />}>
+                      <Route index element={<FreelancerDashboard />} />
+                      <Route path="find-jobs" element={<FindJobs />} />
+                      <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
+                      <Route path="applied-jobs" element={<AppliedJobs />} />
+                      <Route path="projects" element={<FreelancerProjects />} />
+                    </Route>
+                    <Route index element={<Home />} />
+                    {/* HOME ROUTES */}
+                    <Route path="/" element={<Layout />}>
+                    
+                      <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+                      <Route path="customer-support" element={<CustomerSupport />} />
+                      <Route path="about" element={<About />} />
+                      <Route path="*" element={<NoPage />} />
+                    </Route>
+                      <Route path="login" element={<Login />} />
+                      <Route path="signup" element={<SignUpForm />} />
+                      <Route path="reset-password/:token" element={<ResetPassword />} />
+                      <Route path="forgot-password" element={<ForgotPassword />} />
 
-              {/* HOME ROUTES */}
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="terms-and-conditions" element={<TermsAndConditions />} />
-                
-                <Route path="customer-support" element={<CustomerSupport />} />
-                <Route path="about" element={<About />} />
-                <Route path="*" element={<NoPage />} />
-              </Route>
-                <Route path="login" element={<Login />} />
-                <Route path="signup" element={<SignUpForm />} />
-                <Route path="reset-password/:token" element={<ResetPassword />} />
-                <Route path="forgot-password" element={<ForgotPassword />} />
+                    {/* CLIENT ROUTES */}
+                    <Route path="/client" element={<LayoutClient />}>
+                      <Route index element={<ClientDashboard />} />
+                      <Route path="create-job" element={<JobCreation />} />
+                      <Route path="update-profile" element={<UpdateProfile />} />
+                      <Route path="progress" element={<Progress />} />
+                      <Route path="my-jobs" element={<UserJobPostings />} />
+                      <Route path="freelancers" element={<Freelancers />} />
+                      <Route path="projects" element={<ClientProjects />} />
+                      <Route path="proposal/:jobId" element={<Proposals />} /> 
+                    </Route>
 
-              {/* CLIENT ROUTES */}
-              <Route path="/client" element={<LayoutClient />}>
-                <Route index element={<ClientDashboard />} />
-                <Route path="create-job" element={<JobCreation />} />
-                <Route path="update-profile" element={<UpdateProfile />} />
-                <Route path="progress" element={<Progress />} />
-                <Route path="my-jobs" element={<UserJobPostings />} />
-                <Route path="freelancers" element={<Freelancers />} />
-                <Route path="proposal/:jobId" element={<Proposals />} /> 
-              </Route>
-
-              {/* ADMIN ROUTES */}
-              <Route path="/admin" element={<LayoutAdmin />}>
-                <Route path="/admin/overview" element={<OverviewPage />} />
-                <Route path="clients" element={<ClientsPage />} />
-                <Route path="freelancers" element={<FreelancersPage />} />
-                <Route path="jobs" element={<JobsPage />} />
-                <Route path="settings" element={<Settings/>}/>
-              </Route>
-            </Routes>
+                    {/* ADMIN ROUTES */}
+                    <Route path="/admin" element={<LayoutAdmin />}>
+                      <Route path="/admin/overview" element={<OverviewPage />} />
+                      <Route path="clients" element={<ClientsPage />} />
+                      <Route path="freelancers" element={<FreelancersPage />} />
+                      <Route path="jobs" element={<JobsPage />} />
+                      <Route path="settings" element={<Settings/>}/>
+                    </Route>
+                  </Routes>
+            </ProjectProvider>
           </ProposalProvider>
         </JobProvider>
       </UserProvider>

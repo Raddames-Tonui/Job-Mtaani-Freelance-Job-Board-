@@ -133,9 +133,11 @@ class Proposal(db.Model, SerializerMixin):
 
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     job_posting = db.relationship('JobPosting', backref=db.backref('proposals', lazy=True, cascade="all, delete-orphan"))
-    freelancer = db.relationship('User', backref=db.backref('proposals', lazy=True, cascade="all, delete-orphan"))
+    freelancer = db.relationship('User', foreign_keys=[freelancer_id], backref=db.backref('proposals', lazy=True, cascade="all, delete-orphan"))
+    client = db.relationship('User', foreign_keys=[client_id])
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -148,15 +150,44 @@ class Proposal(db.Model, SerializerMixin):
             "cover_letter": self.cover_letter,
             "freelancer_id": self.freelancer_id,
             "job_posting_id": self.job_posting_id,
+            "client_id": self.client_id,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "freelancer": self.freelancer.to_dict() if self.freelancer else None,
-            "job_posting": self.job_posting.to_dict() if self.job_posting else None
+            "job_posting": self.job_posting.to_dict() if self.job_posting else None,
+            "client": self.client.to_dict() if self.client else None
         }
 
     def __repr__(self):
         return f"<Proposal(id='{self.id}', status='{self.status}')>"
 
+class AcceptedFreelancer(db.Model, SerializerMixin):
+    __tablename__ = "accepted_freelancers"
+
+    id = db.Column(db.Integer, primary_key=True)
+    freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+
+    freelancer = db.relationship('User', foreign_keys=[freelancer_id], backref=db.backref('accepted_projects', lazy=True))
+    client = db.relationship('User', foreign_keys=[client_id])
+    job_posting = db.relationship('JobPosting', backref=db.backref('accepted_freelancers', lazy=True))
+
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "freelancer_id": self.freelancer_id,
+            "client_id": self.client_id,
+            "job_posting_id": self.job_posting_id,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
+    def __repr__(self):
+        return f"<AcceptedFreelancer(freelancer_id='{self.freelancer_id}', client_id='{self.client_id}', job_posting_id='{self.job_posting_id}')>"
 
 class Payment(db.Model, SerializerMixin):
     __tablename__ = "payments"
@@ -207,6 +238,7 @@ class Usermessage(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<Usermessage(id='{self.id}')>"
+    
 class Project(db.Model, SerializerMixin):
     __tablename__ = "projects"
 
@@ -216,10 +248,11 @@ class Project(db.Model, SerializerMixin):
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(20), nullable=False)  # e.g., 'ongoing', 'completed'
-    deadline = db.Column(db.DateTime, nullable=False)
+    deadline = db.Column(db.String(50), nullable=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
     milestones = db.relationship('Milestone', backref='project', lazy=True)
 
     def to_dict(self):

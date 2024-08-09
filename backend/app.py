@@ -2,6 +2,7 @@ import random
 import os
 from datetime import timedelta
 from flask import Flask, jsonify, request, abort, send_file
+from sqlalchemy.exc import IntegrityError
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -14,7 +15,7 @@ from werkzeug.utils import secure_filename  # For uploading files
 from flask import send_from_directory # For downloading files
 
 
-from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating
+from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating,  AcceptedFreelancer
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -164,7 +165,6 @@ def reset_password(token):
 
 
 
-
 # ===================== AUTHENTICATION ======================
 @app.route('/')
 def index():
@@ -230,12 +230,13 @@ def get_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users]), 200
 
+
 # Create a new user
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
     if not data or not all(key in data for key in ('username', 'email', 'password')):
-        abort(400, description="Invalid input")
+        return jsonify({"error": "Invalid input"}), 400
 
     is_admin = data.get('is_admin', False)
     is_freelancer = data.get('is_freelancer', False)
@@ -263,8 +264,14 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         return jsonify(user.to_dict()), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "User with this email or username already exists"}), 400
     except ValueError as e:
-        abort(400, description=str(e))
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "An unexpected error occurred"}), 500
+
 
 # Get a single user
 @app.route('/users/<int:user_id>', methods=['GET'])
@@ -457,8 +464,8 @@ def create_proposal(job_posting_id):
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        user_id = get_jwt_identity()
-        user = User.query.get(user_id)
+        freelancer_id = get_jwt_identity()
+        user = User.query.get(freelancer_id)
         if not user:
             abort(404, description="User not found")
 
@@ -466,20 +473,22 @@ def create_proposal(job_posting_id):
         if not job_posting:
             abort(404, description="Job posting not found")
 
+        client_id = job_posting.client_id
+        
         proposal = Proposal(
             content=request.form.get('content', ''),
             status='pending',
             cover_letter=file_path,
-            freelancer_id=user_id,
+            freelancer_id=freelancer_id,
             job_posting_id=job_posting_id,
+            client_id=client_id 
         )
 
         db.session.add(proposal)
         db.session.commit()
 
         return jsonify(proposal.to_dict()), 201
-    else:
-        abort(400, description="Invalid file type")
+
 
 # Current user proposals
 @app.route('/user/proposals', methods=['GET'])
@@ -510,7 +519,6 @@ def get_proposals_for_job_posting(job_posting_id):
     return jsonify([proposal.to_dict() for proposal in proposals])
 
 
-
 # Route to get all proposals
 @app.route('/proposals', methods=['GET'])
 def get_proposals():
@@ -523,17 +531,31 @@ def get_proposal(proposal_id):
     proposal = Proposal.query.get_or_404(proposal_id)
     return jsonify(proposal.to_dict()), 200
 
-
 # Route to update a proposal
 @app.route('/proposals/<int:proposal_id>', methods=['PUT'])
 def update_proposal(proposal_id):
     data = request.get_json()
     proposal = Proposal.query.get_or_404(proposal_id)
-
-    proposal.status = data.get('status', proposal.status)
-
+    proposal.status = data.get('status', proposal.status)    
+    # If the proposal is accepted, add to AcceptedFreelancer
+    if proposal.status == 'accepted':
+        existing_entry = AcceptedFreelancer.query.filter_by(
+            freelancer_id=proposal.freelancer_id,
+            client_id=proposal.client_id,
+            job_posting_id=proposal.job_posting_id
+        ).first()
+        
+        if not existing_entry:
+            accepted_freelancer = AcceptedFreelancer(
+                freelancer_id=proposal.freelancer_id,
+                client_id=proposal.client_id,
+                job_posting_id=proposal.job_posting_id
+            )
+            db.session.add(accepted_freelancer)
+    
     db.session.commit()
     return jsonify(proposal.to_dict()), 200
+
 
 # Route to delete a proposal
 @app.route('/proposals/<int:proposal_id>', methods=['DELETE'])
@@ -542,6 +564,172 @@ def delete_proposal(proposal_id):
     db.session.delete(proposal)
     db.session.commit()
     return jsonify({"message": "Proposal deleted"}), 200
+
+
+# Route to accept a proposal
+@app.route('/proposals/<int:proposal_id>/accept', methods=['POST'])
+def accept_proposal(proposal_id):
+    proposal = Proposal.query.get_or_404(proposal_id)
+    
+    if proposal.status != 'accepted':
+        proposal.status = 'accepted'
+        
+        # Create the accepted freelancer entry
+        accepted_freelancer = AcceptedFreelancer(
+            freelancer_id=proposal.freelancer_id,
+            client_id=proposal.client_id,
+            job_posting_id=proposal.job_posting_id
+        )
+        db.session.add(accepted_freelancer)
+        db.session.commit()
+        
+        return jsonify(accepted_freelancer.to_dict()), 200
+    else:
+        return jsonify({"message": "Proposal is already accepted"}), 400
+
+
+# Route to get all accepted freelancers for the current user
+@app.route('/freelancers/accepted', methods=['GET'])
+@jwt_required()
+def get_accepted_freelancers():
+    client_id = get_jwt_identity()
+    accepted_freelancers = AcceptedFreelancer.query.filter_by(client_id=client_id).all()
+
+    freelancers = [
+        {
+            "id": af.freelancer.id,
+            "username": af.freelancer.username
+        }
+        for af in accepted_freelancers
+    ]
+    
+    return jsonify(freelancers), 200
+
+# ================================ PROJECTS ================================
+# Create a new project
+@app.route('/projects', methods=['POST'])
+@jwt_required()
+def create_project():
+    data = request.get_json()
+
+    if not data or not all(key in data for key in ('title', 'description', 'freelancer_id', 'status', 'deadline')):
+        abort(400, description="Invalid input")
+
+   
+    allowed_statuses = ['ongoing', 'completed'] 
+    if data['status'] not in allowed_statuses:
+        abort(400, description="Invalid status")
+
+    client_id = get_jwt_identity()
+    
+    project = Project(
+        title=data['title'],
+        description=data['description'],
+        client_id=client_id,
+        freelancer_id=data['freelancer_id'],
+        status=data['status'],
+        deadline=data['deadline']
+    )
+
+    try:
+        db.session.add(project)
+        db.session.commit()
+        return jsonify(project.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        abort(500, description=str(e))
+
+
+# Route to get all projects
+@app.route('/projects', methods=['GET'])
+def get_projects():
+    projects = Project.query.all()
+    return jsonify([project.to_dict() for project in projects]), 200
+
+# Route to get a single project by ID
+@app.route('/projects/<int:project_id>', methods=['GET'])
+def get_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    return jsonify(project.to_dict()), 200
+
+# Route to update a project
+@app.route('/projects/<int:project_id>', methods=['PUT'])
+def update_project(project_id):
+    data = request.get_json()
+    project = Project.query.get_or_404(project_id)
+
+    project.title = data.get('title', project.title)
+    project.description = data.get('description', project.description)
+    project.client_id = data.get('client_id', project.client_id)
+    project.freelancer_id = data.get('freelancer_id', project.freelancer_id)
+    project.status = data.get('status', project.status)
+    project.deadline = data.get('deadline', project.deadline)
+
+    db.session.commit()
+    return jsonify(project.to_dict()), 200
+
+# Route to delete a project
+@app.route('/projects/<int:project_id>', methods=['DELETE'])
+def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    db.session.delete(project)
+    db.session.commit()
+    return jsonify({"message": "Project deleted"}), 200
+
+
+# ================================ MILESTONES ================================
+
+# Route to create a milestone
+@app.route('/milestones', methods=['POST'])
+def create_milestone():
+    data = request.get_json()
+    if not data or not all(key in data for key in ('project_id', 'title', 'description', 'due_date')):
+        abort(400, description="Invalid input")
+
+    milestone = Milestone(
+        project_id=data['project_id'],
+        title=data['title'],
+        description=data['description'],
+        due_date=data['due_date'],
+        completed=data.get('completed', False)
+    )
+    db.session.add(milestone)
+    db.session.commit()
+    return jsonify(milestone.to_dict()), 201
+
+# Route to get all milestones
+@app.route('/milestones', methods=['GET'])
+def get_milestones():
+    milestones = Milestone.query.all()
+    return jsonify([milestone.to_dict() for milestone in milestones]), 200
+
+# Route to get a single milestone by ID
+@app.route('/milestones/<int:milestone_id>', methods=['GET'])
+def get_milestone(milestone_id):
+    milestone = Milestone.query.get_or_404(milestone_id)
+    return jsonify(milestone.to_dict()), 200
+
+# Route to update a milestone
+@app.route('/milestones/<int:milestone_id>', methods=['PUT'])
+def update_milestone(milestone_id):
+    data = request.get_json()
+    milestone = Milestone.query.get_or_404(milestone_id)
+
+    milestone.title = data.get('title', milestone.title)
+    milestone.description = data.get('description', milestone.description)
+    milestone.due_date = data.get('due_date', milestone.due_date)
+    milestone.completed = data.get('completed', milestone.completed)
+
+    db.session.commit()
+    return jsonify(milestone.to_dict()), 200
+
+# Route to delete a milestone
+@app.route('/milestones/<int:milestone_id>', methods=['DELETE'])
+def delete_milestone(milestone_id):
+    milestone = Milestone.query.get_or_404(milestone_id)
+    db.session.delete(milestone)
+    db.session.commit()
+    return jsonify({"message": "Milestone deleted"}), 200
 
 
 # ================================ PAYMENTS ================================
@@ -647,118 +835,6 @@ def delete_message(message_id):
     db.session.commit()
     return jsonify({"message": "Usermessage deleted"}), 200
 
-
-# ================================ PROJECTS ================================
-
-# Route to create a project
-@app.route('/projects', methods=['POST'])
-def create_project():
-    data = request.get_json()
-    if not data or not all(key in data for key in ('title', 'description', 'client_id', 'freelancer_id', 'status', 'deadline')):
-        abort(400, description="Invalid input")
-
-    project = Project(
-        title=data['title'],
-        description=data['description'],
-        client_id=data['client_id'],
-        freelancer_id=data['freelancer_id'],
-        status=data['status'],
-        deadline=data['deadline']
-    )
-    db.session.add(project)
-    db.session.commit()
-    return jsonify(project.to_dict()), 201
-
-# Route to get all projects
-@app.route('/projects', methods=['GET'])
-def get_projects():
-    projects = Project.query.all()
-    return jsonify([project.to_dict() for project in projects]), 200
-
-# Route to get a single project by ID
-@app.route('/projects/<int:project_id>', methods=['GET'])
-def get_project(project_id):
-    project = Project.query.get_or_404(project_id)
-    return jsonify(project.to_dict()), 200
-
-# Route to update a project
-@app.route('/projects/<int:project_id>', methods=['PUT'])
-def update_project(project_id):
-    data = request.get_json()
-    project = Project.query.get_or_404(project_id)
-
-    project.title = data.get('title', project.title)
-    project.description = data.get('description', project.description)
-    project.client_id = data.get('client_id', project.client_id)
-    project.freelancer_id = data.get('freelancer_id', project.freelancer_id)
-    project.status = data.get('status', project.status)
-    project.deadline = data.get('deadline', project.deadline)
-
-    db.session.commit()
-    return jsonify(project.to_dict()), 200
-
-# Route to delete a project
-@app.route('/projects/<int:project_id>', methods=['DELETE'])
-def delete_project(project_id):
-    project = Project.query.get_or_404(project_id)
-    db.session.delete(project)
-    db.session.commit()
-    return jsonify({"message": "Project deleted"}), 200
-
-
-# ================================ MILESTONES ================================
-
-# Route to create a milestone
-@app.route('/milestones', methods=['POST'])
-def create_milestone():
-    data = request.get_json()
-    if not data or not all(key in data for key in ('project_id', 'title', 'description', 'due_date')):
-        abort(400, description="Invalid input")
-
-    milestone = Milestone(
-        project_id=data['project_id'],
-        title=data['title'],
-        description=data['description'],
-        due_date=data['due_date'],
-        completed=data.get('completed', False)
-    )
-    db.session.add(milestone)
-    db.session.commit()
-    return jsonify(milestone.to_dict()), 201
-
-# Route to get all milestones
-@app.route('/milestones', methods=['GET'])
-def get_milestones():
-    milestones = Milestone.query.all()
-    return jsonify([milestone.to_dict() for milestone in milestones]), 200
-
-# Route to get a single milestone by ID
-@app.route('/milestones/<int:milestone_id>', methods=['GET'])
-def get_milestone(milestone_id):
-    milestone = Milestone.query.get_or_404(milestone_id)
-    return jsonify(milestone.to_dict()), 200
-
-# Route to update a milestone
-@app.route('/milestones/<int:milestone_id>', methods=['PUT'])
-def update_milestone(milestone_id):
-    data = request.get_json()
-    milestone = Milestone.query.get_or_404(milestone_id)
-
-    milestone.title = data.get('title', milestone.title)
-    milestone.description = data.get('description', milestone.description)
-    milestone.due_date = data.get('due_date', milestone.due_date)
-    milestone.completed = data.get('completed', milestone.completed)
-
-    db.session.commit()
-    return jsonify(milestone.to_dict()), 200
-
-# Route to delete a milestone
-@app.route('/milestones/<int:milestone_id>', methods=['DELETE'])
-def delete_milestone(milestone_id):
-    milestone = Milestone.query.get_or_404(milestone_id)
-    db.session.delete(milestone)
-    db.session.commit()
-    return jsonify({"message": "Milestone deleted"}), 200
 
 
 # ================================ RATINGS ================================

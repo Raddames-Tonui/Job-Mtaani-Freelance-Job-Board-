@@ -8,8 +8,7 @@ export const ProposalProvider = ({ children }) => {
   const [proposals, setProposals] = useState([]);
   const [authToken, setAuthToken] = useState(localStorage.getItem('access_token'));
 
-
-  // FETCH PROPOSALS
+  // Fetch all proposals
   const fetchProposals = () => {
     fetch(`${server_url}/user/proposals`, {
       method: 'GET',
@@ -25,16 +24,14 @@ export const ProposalProvider = ({ children }) => {
         return response.json();
       })
       .then(data => {
-        // console.log('Fetched proposals:', data);
         setProposals(data);
       })
       .catch(error => {
         console.error('Failed to fetch proposals:', error);
-        // toast.error('Failed to fetch proposals');
       });
   };
 
-  // FETCH PROPOSALS FOR JOB POSTING
+  // Fetch proposals for a specific job posting
   const fetchProposalsForJobPosting = (jobPostingId) => {
     fetch(`${server_url}/job_postings/${jobPostingId}/proposals`, {
       method: 'GET',
@@ -50,7 +47,6 @@ export const ProposalProvider = ({ children }) => {
         return response.json();
       })
       .then(data => {
-        console.log('Fetched proposals for job posting:', data); 
         setProposals(data);
       })
       .catch(error => {
@@ -59,34 +55,60 @@ export const ProposalProvider = ({ children }) => {
       });
   };
 
-  // UPDATE PROPOSAL STATUS
+  // Update proposal status and handle acceptance
   const updateProposalStatus = (proposalId, status) => {
-    fetch(`${server_url}/proposals/${proposalId}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ status })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
+    if (status === 'accepted') {
+      // Call the route to accept the proposal
+      fetch(`${server_url}/proposals/${proposalId}/accept`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
         }
-        return response.json();
       })
-      .then(updatedProposal => {
-        setProposals(prevProposals =>
-          prevProposals.map(proposal =>
-            proposal.id === proposalId ? updatedProposal : proposal
-          )
-        );
-        toast.success('Proposal status updated');
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(updatedAcceptedFreelancer => {
+          // Update local state or UI as needed
+          toast.success('Proposal accepted and freelancer entry created');
+        })
+        .catch(error => {
+          console.error('Failed to accept proposal:', error);
+          toast.error('Failed to accept proposal');
+        });
+    } else {
+      // Update proposal status normally
+      fetch(`${server_url}/proposals/${proposalId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status })
       })
-      .catch(error => {
-        console.error('Failed to update proposal status:', error);
-        toast.error('Failed to update proposal status');
-      });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(updatedProposal => {
+          setProposals(prevProposals =>
+            prevProposals.map(proposal =>
+              proposal.id === proposalId ? updatedProposal : proposal
+            )
+          );
+          toast.success('Proposal status updated');
+        })
+        .catch(error => {
+          console.error('Failed to update proposal status:', error);
+          toast.error('Failed to update proposal status');
+        });
+    }
   };
 
   const refreshProposals = () => {
@@ -95,7 +117,6 @@ export const ProposalProvider = ({ children }) => {
 
   useEffect(() => {
     if (authToken) {
-      console.log('Auth Token available, fetching proposals...');
       fetchProposals();
     }
   }, [authToken]);

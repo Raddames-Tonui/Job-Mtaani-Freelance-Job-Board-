@@ -63,12 +63,13 @@ const Sidebar = () => {
             <FiBriefcase className="mr-2" /> My Jobs
           </NavLink>
           <NavLink
-            to="/client/progress"
+            to="/client/projects"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
             <RiProgress3Fill className="mr-2"  />
-          Progress
+          Projects
           </NavLink>
+          
           <NavLink
             to="/client/freelancers"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
