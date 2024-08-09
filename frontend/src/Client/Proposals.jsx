@@ -1,23 +1,31 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ProposalContext } from '../context/ProposalContext';
+import { server_url } from '../../config.json';
 
 const Proposals = () => {
-  const { jobId } = useParams();
+  const { jobId } = useParams(); // Get the job posting ID from the URL parameters
   const { fetchProposalsForJobPosting, proposals, updateProposalStatus } = useContext(ProposalContext);
   const [loading, setLoading] = useState(true);
 
+  // Load proposals when the component mounts or jobId changes
   useEffect(() => {
     const loadProposals = async () => {
-      await fetchProposalsForJobPosting(jobId);
-      setLoading(false);
+      await fetchProposalsForJobPosting(jobId); // Fetch proposals for the current job posting
+      setLoading(false); // Set loading to false after proposals are fetched
     };
 
     loadProposals();
   }, [jobId, fetchProposalsForJobPosting]);
 
+  // Function to handle status change of a proposal
   const handleStatusChange = (proposalId, status) => {
-    updateProposalStatus(proposalId, status);
+    updateProposalStatus(proposalId, status); // Update the proposal status
+  };
+
+  // Function to handle file download
+  const handleDownload = (filePath) => {
+    window.open(`${server_url}/files/${encodeURIComponent(filePath)}`, '_blank'); // Open a new tab to download the file
   };
 
   const jobTitle = proposals.length > 0 ? proposals[0]?.job_posting?.title : "N/A";
@@ -41,7 +49,7 @@ const Proposals = () => {
           Proposals for Job Posting: {jobTitle}
         </h1>
 
-        {/* Proposal cards */}
+        {/* Display proposal cards */}
         {proposals.length === 0 ? (
           <div className="flex justify-center">
             <h3 className="text-gray-500">No proposals found.</h3>
@@ -62,18 +70,21 @@ const Proposals = () => {
                   <strong>Submitted:</strong> {new Date(proposal.created_at).toLocaleDateString()}
                 </p>
                 <div className="flex justify-end space-x-2">
+          
                   <button
                     className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded-md"
                     onClick={() => handleStatusChange(proposal.id, 'accepted')}
                   >
                     Accept
                   </button>
+ 
                   <button
                     className='bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md'
-                    // onClick={() => handleStatusChange(proposal.id, 'contacted')}
+                    onClick={() => handleDownload(proposal.cover_letter)}
                   >
-                    Message
+                    Download File
                   </button>
+              
                   <button
                     className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded-md"
                     onClick={() => handleStatusChange(proposal.id, 'denied')}

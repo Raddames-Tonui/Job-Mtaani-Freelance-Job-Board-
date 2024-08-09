@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import { JobProvider } from "./context/JobContext";
 import { ProposalProvider } from "./context/ProposalContext";
+import { ProjectProvider } from "./context/ProjectContext";
 
-import Layout from "./Layout";
+import Layout from "./Layout/Layout";
 import Home from "./home/Home";
 import NoPage from "./pages/NoPage";
 import About from "./pages/About";
@@ -16,7 +17,7 @@ import ResetPassword from "./Authentication/ResetPassword";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import TermsAndConditions from "./Authentication/TermsAndConditions";
 
-import LayoutClient from "./LayoutClient";
+import LayoutClient from "./Layout/LayoutClient";
 import UpdateProfile from "./Client/UpdateProfile";
 import Proposals from "./Client/Proposals";
 import JobCreation from "./Client/JobCreation";
@@ -24,18 +25,25 @@ import Freelancers from "./Client/Freelancers";
 import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
 import Progress from "./Client/Progress";
+import ProjectForm from "./Client/ProjectForm";
+import Projects from "./Client/Projects";
 
-import LayoutAdmin from "./LayoutAdmin";
-import AdminDashboard from "./admin/AdminDashboard";
-import OverviewPage from './admin/OverviewPage';
-import ClientsPage from './admin/ClientsPage';
-import FreelancersPage from './admin/FreelancersPage';
-import JobsPage from './admin/JobsPage';
+import LayoutAdmin from "./Layout/LayoutAdmin";
+import OverviewPage from "./admin/OverviewPage";
+import ClientsPage from "./admin/ClientsPage";
+import FreelancersPage from "./admin/FreelancersPage";
+import JobsPage from "./admin/JobsPage";
+import Settings from "./admin/Settings";
 
+import LayoutFreelancer from "./Layout/LayoutFreelancer";
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
-import Settings from "./admin/Settings";
+import FreelancerDashboard from "./freelancers/FreelancerDashboard";
+import FreelancerProjects from "./freelancers/FreelancerProjects";
+
+
+
 
 function App() {
   return (
@@ -43,49 +51,53 @@ function App() {
       <UserProvider>
         <JobProvider>
           <ProposalProvider>
-            <Routes>
-              {/* FREELANCER ROUTES */}
-              <Route path="/freelancer" element={<Layout />}>
-                <Route index element={<FindJobs />} />
-                <Route path="updateprofile" element={<UpdateFreelancerProfile />} />
-                <Route path="applied-jobs" element={<AppliedJobs />} />
-              </Route>
-
-              {/* HOME ROUTES */}
-              <Route path="/" element={<Layout />}>
+            <ProjectProvider>
+              <Routes>
+                {/* FREELANCER ROUTES */}
+                <Route path="/freelancer" element={<LayoutFreelancer />}>
+                  <Route index element={<FreelancerDashboard />} />
+                  <Route path="find-jobs" element={<FindJobs />} />
+                  <Route  path="updateprofile"  element={<UpdateFreelancerProfile />} />
+                  <Route path="applied-jobs" element={<AppliedJobs />} />
+                  <Route path="projects" element={<FreelancerProjects />} />
+                </Route>
                 <Route index element={<Home />} />
-                <Route path="terms-and-conditions" element={<TermsAndConditions />} />
-                
-                <Route path="customer-support" element={<CustomerSupport />} />
-                <Route path="about" element={<About />} />
-                <Route path="*" element={<NoPage />} />
-              </Route>
-                <Route path="login" element={<Login />} />
-                <Route path="signup" element={<SignUpForm />} />
-                <Route path="reset-password/:token" element={<ResetPassword />} />
-                <Route path="forgot-password" element={<ForgotPassword />} />
+                {/* HOME ROUTES */}
+                <Route path="/" element={<Layout />}>   
+                  <Route path="login" element={<Login />} />
+                  <Route path="signup" element={<SignUpForm />} />
+                  <Route path="reset-password/:token" element={<ResetPassword />} />
+                  <Route path="forgot-password" element={<ForgotPassword />} />              
+                  <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+                  <Route path="customer-support" element={<CustomerSupport />} />
+                  <Route path="about" element={<About />} />
+                  <Route path="*" element={<NoPage />} />
+                </Route>
+                  
 
-              {/* CLIENT ROUTES */}
-              <Route path="/client" element={<LayoutClient />}>
-                <Route index element={<ClientDashboard />} />
-                <Route path="create-job" element={<JobCreation />} />
-                <Route path="update-profile" element={<UpdateProfile />} />
-                <Route path="progress" element={<Progress />} />
-                <Route path="my-jobs" element={<UserJobPostings />} />
-                <Route path="freelancers" element={<Freelancers />} />
-                <Route path="proposal/:jobId" element={<Proposals />} /> 
-              </Route>
+                {/* CLIENT ROUTES */}
+                <Route path="/client" element={<LayoutClient />}>
+                  <Route index element={<ClientDashboard />} />
+                  <Route path="create-job" element={<JobCreation />} />
+                  <Route path="update-profile" element={<UpdateProfile />} />
+                  <Route path="progress" element={<Progress />} />
+                  <Route path="my-jobs" element={<UserJobPostings />} />
+                  <Route path="freelancers" element={<Freelancers />} />                  
+                  <Route path="proposal/:jobId" element={<Proposals />} />
+                  <Route path="projects" element={<Projects/>}/>
+                  <Route path="projects/create-project" element={<ProjectForm />} />
+                </Route>
 
-              {/* ADMIN ROUTES */}
-              <Route path="/admin" element={<LayoutAdmin />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="overview" element={<OverviewPage />} />
-                <Route path="clients" element={<ClientsPage />} />
-                <Route path="freelancers" element={<FreelancersPage />} />
-                <Route path="jobs" element={<JobsPage />} />
-                <Route path="settings" element={<Settings/>}/>
-              </Route>
-            </Routes>
+                {/* ADMIN ROUTES */}
+                <Route path="/admin" element={<LayoutAdmin />}>
+                  <Route path="/admin/overview" element={<OverviewPage />} />
+                  <Route path="clients" element={<ClientsPage />} />
+                  <Route path="freelancers" element={<FreelancersPage />} />
+                  <Route path="jobs" element={<JobsPage />} />
+                  <Route path="settings" element={<Settings />} />
+                </Route>
+              </Routes>
+            </ProjectProvider>
           </ProposalProvider>
         </JobProvider>
       </UserProvider>

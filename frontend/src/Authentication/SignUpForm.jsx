@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 import { toast } from 'react-hot-toast';
+import backgroundImage from '../assets/womanonlaptop.webp';
 
 function SignUpForm() {
   const { registerUser } = useContext(UserContext);
@@ -66,184 +67,134 @@ function SignUpForm() {
   }
 
   return (
-    <section className="flex items-center justify-center py-6 px-6 lg:px-8">
-      <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-md w-full py-6 rounded-md shadow-md border-2 border-gray-200">
-        <Link to="/" className="text-3xl font-bold text-blue-600 w-auto">JobQuest</Link>
+    <div className="h-screen flex items-center justify-center bg-gray-100">
+      <div className="flex flex-col md:flex-row justify-center w-3/4 bg-white shadow-lg rounded-lg overflow-hidden">
+      
+        <div className="md:w-1/2 p-4 pl-6">
+          <Link to="/" className="text-2xl  font-bold text-blue-600 hover:text-blue-800 transition duration-300">Sign up</Link>
 
-        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Create your account
-        </h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-2 w-full">
-          {/* First Name and Last Name */}
-          <div className="flex gap-4 mt-4">
-            <div className="flex-1">
-              <label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900">
-                First Name
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  id="firstname"
-                  placeholder="First Name"
-                  value={formData.firstname || ""}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="flex-1">
-              <label htmlFor="lastname" className="block text-sm font-medium leading-6 text-gray-900">
-                Last Name
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  id="lastname"
-                  placeholder="Last Name"
-                  value={formData.lastname || ""}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Username */}
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-              Username
-            </label>
-            <div className="mt-2">
+          <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
+            <div className="flex gap-4">
               <input
+                id="firstname"
                 type="text"
-                id="username"
-                placeholder="Enter your username"
-                value={formData.username || ""}
+                value={formData.firstname || ""}
                 onChange={handleChange}
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                 required
+                className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+                placeholder="First Name"
               />
-            </div>
-          </div>
-
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-              Email
-            </label>
-            <div className="mt-2">
               <input
-                type="email"
-                id="email"
-                placeholder="name@example.com"
-                value={formData.email || ""}
+                id="lastname"
+                type="text"
+                value={formData.lastname || ""}
                 onChange={handleChange}
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                 required
+                className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+                placeholder="Last Name"
               />
             </div>
-          </div>
 
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-              Password
-            </label>
-            <div className="mt-2">
-              <input
-                type="password"
-                id="password"
-                placeholder="Password"
-                value={formData.password || ""}
-                onChange={handleChange}
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label htmlFor="repeatPassword" className="block text-sm font-medium leading-6 text-gray-900">
-              Confirm Password
-            </label>
-            <div className="mt-2">
-              <input
-                type="password"
-                id="repeatPassword"
-                placeholder="Confirm Password"
-                value={formData.repeatPassword || ""}
-                onChange={handleChange}
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Role Selection */}
-          <div className="mt-4">
-            <label htmlFor="role" className="block text-sm font-medium leading-6 text-gray-900">
-              Role
-            </label>
-            <div className="mt-2">
-              <select
-                id="role"
-                value={formData.role || ""}
-                onChange={handleChange}
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-                required
-              >
-                <option value="" disabled>Select your role</option>
-                <option value="Admin">Admin</option>
-                <option value="Freelancer">Freelancer</option>
-                <option value="Client">Client</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Terms and Conditions */}
-          <div className="mt-4 flex items-center">
             <input
-              type="checkbox"
-              id="termsAccepted"
-              checked={formData.termsAccepted}
+              id="username"
+              type="text"
+              value={formData.username || ""}
               onChange={handleChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               required
+              className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+              placeholder="Username"
             />
-            <label htmlFor="termsAccepted" className="ml-2 text-sm text-gray-600">
-              I accept the{" "}
-              <Link
-                to="/terms-and-conditions"
-                className="text-blue-500 hover:text-blue-700 transition duration-300"
-              >
-                terms and conditions
-              </Link>
-            </label>
-          </div>
 
-          <div className="mt-4">
+            <input
+              id="email"
+              type="email"
+              value={formData.email || ""}
+              onChange={handleChange}
+              required
+              className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+              placeholder="Email"
+            />
+
+            <input
+              id="password"
+              type="password"
+              value={formData.password || ""}
+              onChange={handleChange}
+              required
+              className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+              placeholder="Password"
+            />
+
+            <input
+              id="repeatPassword"
+              type="password"
+              value={formData.repeatPassword || ""}
+              onChange={handleChange}
+              required
+              className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+              placeholder="Confirm Password"
+            />
+
+            <select
+              id="role"
+              value={formData.role || ""}
+              onChange={handleChange}
+              required
+              className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
+            >
+              <option value="" disabled>Select your role</option>
+              {/* <option value="Admin">Admin</option> */}
+              <option value="Freelancer">Freelancer</option>
+              <option value="Client">Client</option>
+            </select>
+
+            <div className="flex items-center">
+              <input
+                id="termsAccepted"
+                type="checkbox"
+                checked={formData.termsAccepted}
+                onChange={handleChange}
+                required
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="termsAccepted" className="ml-2 text-sm text-gray-600">
+                I accept the{" "}
+                <Link
+                  to="/terms-and-conditions"
+                  className="text-blue-600 hover:text-blue-800 transition"
+                >
+                  terms and conditions
+                </Link>
+              </label>
+            </div>
+
             <button
               type="submit"
-              className="relative w-full h-10 rounded-md text-md font-bold border-none overflow-hidden z-10 bg-gradient-to-r from-[#448bf5] to-[#47c1f9] hover:bg-gradient-to-r hover:from-[#3b73c7] hover:to-[#229aca] ring-1 ring-gray-600 transition-all duration-500"
+              className="w-full py-2 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md transition duration-300"
             >
               Sign Up
             </button>
-          </div>
-        </form>
+          </form>
 
-        <p className="text-center mt-6 text-gray-600 text-md">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-blue-500 hover:text-blue-700 transition duration-300"
-          >
-            Login
-          </Link>
-        </p>
+          <p className="text-center mt-6 text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 hover:text-blue-800 transition"
+            >
+              Login
+            </Link>
+          </p>
+        </div>
+
+        <div className="hidden md:block bg-cover bg-center text-white p-8" style={{ backgroundImage: `url(${backgroundImage})` }}>
+          <div className="h-full flex flex-col justify-center items-center bg-black bg-opacity-50 p-6">
+            <h3 className="text-3xl font-bold">Your journey starts here.</h3>
+            <p className="mt-4 text-lg text-center">Join us today and connect with top employers to find your dream job.</p>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 

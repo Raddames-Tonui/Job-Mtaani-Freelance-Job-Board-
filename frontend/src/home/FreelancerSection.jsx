@@ -1,5 +1,5 @@
 import React from 'react';
-import womanprop from '../assets/womanprop.png';
+import womanprop from '../assets/woman-prop.png';
 
 const FreelancerSection = () => {
   return (

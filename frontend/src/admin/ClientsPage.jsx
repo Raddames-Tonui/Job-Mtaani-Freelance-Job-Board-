@@ -11,12 +11,12 @@ const ClientsPage = () => {
     }, [users]);
 
     return (
-        <div className="p-6 bg-gray-900 text-white  shadow-lg h-full ">
+        <div className="p-6 bg-gray-900 text-white shadow-lg h-[90vh] flex flex-col">
             <h2 className="text-2xl font-bold mb-4">Clients</h2>
-            <div className="overflow-x-auto">
-                <table className="min-w-full bg-gray-800 overflow-scroll">
-                    <thead>
-                        <tr className="w-full bg-gray-700 text-gray-400 uppercase text-sm leading-normal">
+            <div className="flex-grow overflow-auto">
+                <table className="min-w-full bg-gray-800">
+                    <thead className="sticky top-0 bg-gray-700 text-gray-400 uppercase text-sm leading-normal">
+                        <tr>
                             <th className="py-3 px-6 text-left">User Name</th>
                             <th className="py-3 px-6 text-left">FirstName</th>
                             <th className="py-3 px-6 text-left">Last Name</th>                            
@@ -32,7 +32,7 @@ const ClientsPage = () => {
                                     <span className="w-8 h-8 bg-green-500 text-white flex justify-center items-center rounded-full mr-3">
                                         {client.firstname.charAt(0)}
                                     </span>
-                                    <span>{client.username} </span>
+                                    <span>{client.username}</span>
                                 </td>
                                 <td className="py-3 px-6 text-left">{client.firstname}</td>
                                 <td className="py-3 px-6 text-left">{client.lastname || 'N/A'}</td>
@@ -43,8 +43,10 @@ const ClientsPage = () => {
                                         <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                             <FaEdit />
                                         </button>
-                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
-                                            onClick={() => deleteUser(client.id)}>
+                                        <button
+                                            className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                            onClick={() => deleteUser(client.id)}
+                                        >
                                             <FaTrash />
                                         </button>
                                     </div>
@@ -54,15 +56,8 @@ const ClientsPage = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="mt-4 flex justify-between">
-                <span>Showing 1-{clients.length} out of {clients.length} data</span>
-                <div className="flex space-x-2">
-                    <button className="bg-gray-700 px-3 py-1 rounded-lg">Previous</button>
-                    <button className="bg-green-500 px-3 py-1 rounded-lg">1</button>
-                    <button className="bg-gray-700 px-3 py-1 rounded-lg">2</button>
-                    <button className="bg-gray-700 px-3 py-1 rounded-lg">3</button>
-                    <button className="bg-gray-700 px-3 py-1 rounded-lg">Next</button>
-                </div>
+            <div className="mt-2 flex justify-between">
+                <h1>@jobquest 2024</h1>
             </div>
         </div>
     );

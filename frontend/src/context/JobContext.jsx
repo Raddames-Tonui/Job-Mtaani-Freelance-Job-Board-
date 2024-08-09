@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import { server_url } from "../../config.json";
-import { toast } from "react-hot-toast";
+import Swal from 'sweetalert2';
+import { toast } from 'react-hot-toast';
 
 export const JobContext = createContext();
 
@@ -88,28 +89,50 @@ export const JobProvider = ({ children }) => {
         });
     };
 
-    // DELETE JOB
-    const deleteJob = (jobId) => {
-        return fetch(`${server_url}/jobpostings/${jobId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete job');
+    const deleteJob = async (jobId) => {
+        try {
+            const result = await Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            });
+    
+            if (result.isConfirmed) {
+                const response = await fetch(`${server_url}/jobpostings/${jobId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    },
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to delete job');
+                }
+    
+                setUserJobs(prevJobs => prevJobs.filter(job => job.id !== jobId));
+                Swal.fire(
+                    'Deleted!',
+                    'Your job has been deleted.',
+                    'success'
+                );
+                toast.success("Job deleted successfully");
             }
-            setUserJobs(prevJobs => prevJobs.filter(job => job.id !== jobId));
-            toast.success("Job deleted successfully");
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("Error deleting job:", error);
+            Swal.fire(
+                'Error!',
+                'Failed to delete the job.',
+                'error'
+            );
             toast.error("Failed to delete job");
-        });
+        }
     };
-
+    
     // UPDATE JOB
     const updateJob = (jobId, jobDetails) => {
         return fetch(`${server_url}/jobpostings/${jobId}`, {
@@ -142,15 +165,18 @@ export const JobProvider = ({ children }) => {
         });
     };
 
-    // APPLY FOR JOB
-    const applyForJob = ({ content, job_posting_id }) => {
-        return fetch(`${server_url}/proposals/${job_posting_id}/apply`, {
+    // APPLY FOR JOB with FormData
+    const applyForJob = (jobId, resume, coverLetter) => {
+        const formData = new FormData();
+        formData.append('file', resume);
+        formData.append('content', coverLetter);
+
+        return fetch(`${server_url}/proposals/${jobId}/apply`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
             },
-            body: JSON.stringify({ content, job_posting_id })
+            body: formData,
         })
         .then(response => {
             if (!response.ok) {

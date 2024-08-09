@@ -17,8 +17,7 @@ export const UserProvider = ({ children }) => {
         fetch(`${server_url}/users`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-               
+                "Content-Type": "application/json",               
             }
         })
         .then((response) => response.json())
@@ -44,8 +43,14 @@ export const UserProvider = ({ children }) => {
                 "Content-Type": "application/json",
             },
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message); });
+            }
+            return response.json();
+        })
         .then((res) => {
+            console.log('Delete response:', res);
             if (res.message) {
                 toast.success(res.message);
                 fetchAllUsers();
@@ -54,10 +59,11 @@ export const UserProvider = ({ children }) => {
             }
         })
         .catch((error) => {
+            console.error('Delete error:', error);
             toast.error("Network error: " + error.message);
         });
     }
-
+    
 
 
     // REGISTER USER

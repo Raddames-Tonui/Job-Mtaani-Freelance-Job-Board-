@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaCheckCircle, FaDollarSign, FaShieldAlt } from 'react-icons/fa';
-import womanonlaptop from '../assets/womanonlaptop.jpg';
+import womanonlaptop from '../assets/womanonlaptop.webp';
 
 const TalentSection = () => {
   return (

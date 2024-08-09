@@ -7,7 +7,7 @@ import { FaHome } from 'react-icons/fa';
 import { TbBriefcaseFilled } from 'react-icons/tb';
 
 const AdminSidebar = () => {
-  const { currentUser, logoutUser } = useContext(UserContext);
+  const { logoutUser } = useContext(UserContext);
 
   return (
     <div className="hidden md:block w-[20vw] border-r-2 h-full fixed top-0 left-0 bg-gray-900 text-gray-400">

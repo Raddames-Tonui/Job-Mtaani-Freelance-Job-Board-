@@ -59,6 +59,7 @@ const AppliedJobs = () => {
 
           return (
             <div key={proposal.id} className={`border rounded-lg shadow-md p-4 ${cardColor}`}>
+               <p className='flex justify-end text  capitalize'><strong>Status: </strong> {proposal.status}</p>
               <h2 className="text-xl font-bold capitalize">{proposal.job_posting?.title || 'Title Not Available'}</h2>
               <p className="text-gray-800"><strong>Role:</strong> {proposal.job_posting?.role || 'Role Not Available'}</p>
               <h3 className="text-lg font-semibold mt-4 mb-1 underline">Client Details</h3>
@@ -70,7 +71,7 @@ const AppliedJobs = () => {
               <p><strong>Email:</strong> {proposal.freelancer?.email || 'Email Not Available'}</p>
               <p><strong>Skills:</strong> {proposal.freelancer?.skills || 'Skills Not Available'}</p>
               <p><strong>Experience:</strong> {proposal.freelancer?.experience || 'Experience Not Available'}</p>
-              <p><strong>Submitted:</strong> {proposal.status}</p>
+             
             </div>
           );
         })}
