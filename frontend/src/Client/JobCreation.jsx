@@ -38,7 +38,6 @@ const JobCreation = () => {
     createJob(jobDetails)
       .then(newJob => {
         console.log('Job created:', newJob);
-        // Clear the form after successful job creation
         setJobDetails({
           title: "",
           tags: "",

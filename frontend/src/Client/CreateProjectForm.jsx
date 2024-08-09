@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import toast from 'react-hot-toast';
 import { ProjectContext } from '../context/ProjectContext';
 
 const CreateProjectForm = () => {
-    const { acceptedFreelancers } = useContext(ProjectContext);
+    const { acceptedFreelancers, createProject } = useContext(ProjectContext);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -20,21 +20,14 @@ const CreateProjectForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${server_url}/projects`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${authToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+            await createProject(formData);
+            setFormData({
+                title: '',
+                description: '',
+                freelancer_id: '',
+                status: 'ongoing',
+                deadline: ''
             });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            toast.success('Project created successfully!');
         } catch (error) {
             console.error('Failed to create project:', error);
             toast.error('Failed to create project');
@@ -126,7 +119,6 @@ const CreateProjectForm = () => {
                                 >
                                     <option value="ongoing">Ongoing</option>
                                     <option value="completed">Completed</option>
-                                   
                                 </select>
                             </div>
                         </div>
