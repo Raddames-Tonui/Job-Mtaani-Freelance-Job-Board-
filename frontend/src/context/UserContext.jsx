@@ -12,12 +12,12 @@ export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [authToken, setAuthToken] = useState(() => localStorage.getItem("access_token") || null);
 
-    // Fetch all users
-    const fetchAllUsers = () => {
+     // Fetch all users
+     const fetchAllUsers = () => {
         fetch(`${server_url}/users`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json",               
             }
         })
         .then((response) => response.json())
@@ -37,18 +37,15 @@ export const UserProvider = ({ children }) => {
 
     // DELETE USER
     const deleteUser = (id) => {
-        console.log(`Attempting to delete user with ID: ${id}`);
         fetch(`${server_url}/users/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${authToken}`
             },
         })
         .then((response) => {
-            console.log(`Response status: ${response.status}`);
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json().then(err => { throw new Error(err.message); });
             }
             return response.json();
         })
@@ -62,17 +59,19 @@ export const UserProvider = ({ children }) => {
             }
         })
         .catch((error) => {
-            console.error("Error deleting user:", error);
+            console.error('Delete error:', error);
             toast.error("Network error: " + error.message);
         });
-    };
+    }
+    
+
 
     // REGISTER USER
     const registerUser = (username, email, password, firstname = '', lastname = '', role = '') => {
         let is_admin = false;
         let is_freelancer = false;
         let is_client = false;
-    
+        // Set flags based on role
         switch (role) {
             case 'Admin':
                 is_admin = true;
@@ -86,7 +85,7 @@ export const UserProvider = ({ children }) => {
             default:
                 break;
         }
-    
+
         fetch(`${server_url}/users`, {
             method: "POST",
             headers: {
@@ -100,20 +99,16 @@ export const UserProvider = ({ children }) => {
         })
         .then((response) => response.json())
         .then((res) => {
-            if (res.ok) {
+            if (res.username) {
                 toast.success('Registration successful!');
                 nav("/login");
             } else if (res.error) {
-                toast.error(res.error);
+                toast.error("User with this email or username already exists");
             } else {
-                toast.error("An unknown error occurred.");
+                toast.error("An error occurred");
             }
         })
-        .catch((error) => {
-            toast.error("Network error: " + error.message);
-        });
     };
-    
 
     // UPDATE USER PROFILE
     const updateUserProfile = (profileData) => {
@@ -128,14 +123,14 @@ export const UserProvider = ({ children }) => {
         .then((response) => response.json())
         .then(({ success, error }) => {
             if (success) {
-                setCurrentUser((prev) => ({ ...prev, ...profileData }));
-                return success;
+                setCurrentUser((prev) => ({ ...prev, ...profileData })); 
+                return success; 
             } else if (error) {
-                throw new Error(error);
+                throw new Error(error); 
             }
         })
         .catch((error) => {
-            throw new Error("Network error: " + error.message);
+            throw new Error("Network error: " + error.message); 
         });
 
         toast.promise(updatePromise, {
@@ -182,7 +177,7 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     };
-
+    
     // LOG OUT USER
     const logoutUser = () => {
         fetch(`${server_url}/logout`, {
@@ -260,13 +255,14 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     }, [authToken, nav]);
+    
 
     const contextData = {
         currentUser,
         setCurrentUser,
         registerUser,
         loginUser,
-        updateUserProfile,
+        updateUserProfile, 
         logoutUser,
         resetPassword,
         authToken,

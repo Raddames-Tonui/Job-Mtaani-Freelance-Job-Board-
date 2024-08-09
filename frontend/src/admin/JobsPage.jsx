@@ -1,32 +1,21 @@
-// src/admin/JobsPage.jsx
-import React, { useEffect, useState } from 'react';
-import { fetchJobTitles } from './api';
+import React, { useContext, useEffect } from 'react';
+import { JobContext } from '../context/JobContext';
 
 const JobsPage = () => {
-  const [jobTitles, setJobTitles] = useState([]);
+  const { jobs, fetchJobs } = useContext(JobContext);
 
   useEffect(() => {
-    function loadJobTitles() {
-      fetchJobTitles()
-        .then(data => {
-          console.log("Fetched job titles:", data); // Log the fetched data
-          setJobTitles(data);
-        })
-        .catch(error => {
-          console.error("Failed to fetch job titles:", error);
-        });
-    }
-    loadJobTitles();
-  }, []);
+    fetchJobs();
+  }, [fetchJobs]);
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Job Titles</h2>
-      {jobTitles.length > 0 ? (
+      {jobs.length > 0 ? (
         <ul className="list-disc pl-5">
-          {jobTitles.map((title, index) => (
+          {jobs.map((job, index) => (
             <li key={index} className="mb-2">
-              <span className="font-semibold">{title}</span>
+              <span className="font-semibold">{job.title}</span>
             </li>
           ))}
         </ul>

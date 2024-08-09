@@ -32,7 +32,7 @@ const ClientsPage = () => {
                                     <span className="w-8 h-8 bg-green-500 text-white flex justify-center items-center rounded-full mr-3">
                                         {client.firstname.charAt(0)}
                                     </span>
-                                    <span>{client.username} </span>
+                                    <span>{client.username}</span>
                                 </td>
                                 <td className="py-3 px-6 text-left">{client.firstname}</td>
                                 <td className="py-3 px-6 text-left">{client.lastname || 'N/A'}</td>
@@ -43,8 +43,10 @@ const ClientsPage = () => {
                                         <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                             <FaEdit />
                                         </button>
-                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
-                                            onClick={() => deleteUser(client.id)}>
+                                        <button
+                                            className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                            onClick={() => deleteUser(client.id)}
+                                        >
                                             <FaTrash />
                                         </button>
                                     </div>
@@ -55,10 +57,7 @@ const ClientsPage = () => {
                 </table>
             </div>
             <div className="mt-2 flex justify-between">
-            <h1>@jobquest 2024</h1>                
-             <div className="flex space-x-2">
-                                      
-                </div>
+                <h1>@jobquest 2024</h1>
             </div>
         </div>
     );

@@ -1,8 +1,6 @@
-import random
-import os
+import random,os
 from datetime import timedelta
 from flask import Flask, jsonify, request, abort, send_file
-from sqlalchemy.exc import IntegrityError
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -11,8 +9,10 @@ from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
 
+from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename  # For uploading files
 from flask import send_from_directory # For downloading files
+
 
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating,  AcceptedFreelancer
@@ -448,47 +448,48 @@ def delete_job_posting(job_posting_id):
 
 
 # ================================ PROPOSALS ================================
+
 # Route to create a proposal
 @app.route('/proposals/<int:job_posting_id>/apply', methods=['POST'])
 @jwt_required()
 def create_proposal(job_posting_id):
+    # Validate the file
     if 'file' not in request.files:
-        abort(400, description="No file part")
+        return jsonify({"error": "No file part"}), 400
 
     file = request.files['file']
     if file.filename == '':
-        abort(400, description="No selected file")
+        return jsonify({"error": "No selected file"}), 400
 
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
+    if not allowed_file(file.filename):
+        return jsonify({"error": "Invalid file type"}), 400
 
-        freelancer_id = get_jwt_identity()
-        user = User.query.get(freelancer_id)
-        if not user:
-            abort(404, description="User not found")
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
 
-        job_posting = JobPosting.query.get(job_posting_id)
-        if not job_posting:
-            abort(404, description="Job posting not found")
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
-        client_id = job_posting.client_id
-        
-        proposal = Proposal(
-            content=request.form.get('content', ''),
-            status='pending',
-            cover_letter=file_path,
-            freelancer_id=freelancer_id,
-            job_posting_id=job_posting_id,
-            client_id=client_id 
-        )
+    job_posting = JobPosting.query.get(job_posting_id)
+    if not job_posting:
+        return jsonify({"error": "Job posting not found"}), 404
 
-        db.session.add(proposal)
-        db.session.commit()
+    proposal = Proposal(
+        content=request.form.get('content', ''),
+        status='pending',
+        cover_letter=file_path,
+        freelancer_id=user_id,
+        job_posting_id=job_posting_id,
+        client_id=job_posting.client_id
+    )
 
-        return jsonify(proposal.to_dict()), 201
+    db.session.add(proposal)
+    db.session.commit()
 
+    return jsonify(proposal.to_dict()), 201
 
 # Current user proposals
 @app.route('/user/proposals', methods=['GET'])
