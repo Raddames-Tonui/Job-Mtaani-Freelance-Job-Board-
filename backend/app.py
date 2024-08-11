@@ -531,15 +531,15 @@ def get_proposals():
 def get_proposal(proposal_id):
     proposal = Proposal.query.get_or_404(proposal_id)
     return jsonify(proposal.to_dict()), 200
-
-# Route to update a proposal
 @app.route('/proposals/<int:proposal_id>', methods=['PUT'])
 def update_proposal(proposal_id):
     data = request.get_json()
     proposal = Proposal.query.get_or_404(proposal_id)
-    proposal.status = data.get('status', proposal.status)    
-    # If the proposal is accepted, add to AcceptedFreelancer
-    if proposal.status == 'accepted':
+    old_status = proposal.status
+    proposal.status = data.get('status', proposal.status)
+    
+    # Handle status changes
+    if proposal.status == 'accepted' and old_status != 'accepted':
         existing_entry = AcceptedFreelancer.query.filter_by(
             freelancer_id=proposal.freelancer_id,
             client_id=proposal.client_id,
@@ -553,6 +553,16 @@ def update_proposal(proposal_id):
                 job_posting_id=proposal.job_posting_id
             )
             db.session.add(accepted_freelancer)
+    
+    elif proposal.status == 'denied' and old_status == 'accepted':
+        accepted_freelancer = AcceptedFreelancer.query.filter_by(
+            freelancer_id=proposal.freelancer_id,
+            client_id=proposal.client_id,
+            job_posting_id=proposal.job_posting_id
+        ).first()
+        
+        if accepted_freelancer:
+            db.session.delete(accepted_freelancer)
     
     db.session.commit()
     return jsonify(proposal.to_dict()), 200
@@ -617,7 +627,7 @@ def create_project():
         abort(400, description="Invalid input")
 
    
-    allowed_statuses = ['ongoing', 'completed'] 
+    allowed_statuses = ['started','ongoing', 'completed'] 
     if data['status'] not in allowed_statuses:
         abort(400, description="Invalid status")
 

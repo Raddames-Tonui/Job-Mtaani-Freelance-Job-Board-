@@ -7,7 +7,7 @@ function Projects() {
     const { projects, fetchProjects } = useContext(ProjectContext);
 
     useEffect(() => {
-        fetchProjects(); // Fetch projects when the component loads
+        fetchProjects(); 
     }, [fetchProjects]);
 
     return (
@@ -15,12 +15,12 @@ function Projects() {
             <h2 className="text-2xl font-bold mb-4">Projects </h2>
             <div className="flex justify-between mb-6">
                 <div className="flex items-center gap-4">
-                    <input
+                    {/* <input
                         type="text"
                         placeholder="Search for..."
                         className="p-2 rounded bg-gray-800 text-white"
                     />
-                   
+                    */}
                     <Link to="/client/projects/create-project">
                         <button className="bg-purple-500 text-white py-2 px-4 rounded">Create Project</button>
                     </Link>

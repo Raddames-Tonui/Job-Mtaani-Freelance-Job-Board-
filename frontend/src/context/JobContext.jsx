@@ -89,6 +89,7 @@ export const JobProvider = ({ children }) => {
         });
     };
 
+    // DELETE JOB
     const deleteJob = async (jobId) => {
         try {
             const result = await Swal.fire({

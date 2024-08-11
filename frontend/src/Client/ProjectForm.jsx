@@ -9,7 +9,7 @@ const ProjectForm = () => {
         title: '',
         description: '',
         freelancer_id: '',
-        status: 'ongoing',
+        status: 'started',
         deadline: ''
     });
 
@@ -26,7 +26,7 @@ const ProjectForm = () => {
                 title: '',
                 description: '',
                 freelancer_id: '',
-                status: 'ongoing',
+                status: 'started',
                 deadline: ''
             });
         } catch (error) {
@@ -122,8 +122,8 @@ const ProjectForm = () => {
                                     required
                                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                                 >
-                                    <option value="ongoing">Ongoing</option>
-                                    <option value="completed">Completed</option>
+                                    <option value="ongoing">Started</option>
+                                    {/* <option value="completed">Completed</option> */}
                                 </select>
                             </div>
                         </div>

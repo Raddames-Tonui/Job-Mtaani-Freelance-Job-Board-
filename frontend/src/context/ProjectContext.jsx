@@ -27,7 +27,7 @@ export const ProjectProvider = ({ children }) => {
       .then(data => setProjects(data))
       .catch(error => {
         console.error('Failed to fetch projects:', error);
-        toast.error('Failed to fetch projects');
+       
       });
   };
 
@@ -52,7 +52,7 @@ export const ProjectProvider = ({ children }) => {
       })
       .catch(error => {
         console.error('Failed to fetch accepted freelancers:', error);
-        toast.error('Failed to fetch accepted freelancers');
+      
         return [];
       });
   };

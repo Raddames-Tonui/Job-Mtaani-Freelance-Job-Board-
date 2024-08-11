@@ -73,8 +73,7 @@ export const ProposalProvider = ({ children }) => {
           return response.json();
         })
         .then(updatedAcceptedFreelancer => {
-          // Update local state or UI as needed
-          toast.success('Proposal accepted and freelancer entry created');
+          toast.success('Proposal accepted.');
         })
         .catch(error => {
           console.error('Failed to accept proposal:', error);
@@ -115,6 +114,11 @@ export const ProposalProvider = ({ children }) => {
     fetchProposals();
   };
 
+  // Function to get the resume URL
+  const getResumeUrl = (resumeFilename) => {
+    return `${server_url}/files/${encodeURIComponent(resumeFilename)}`;
+  };
+
   useEffect(() => {
     if (authToken) {
       fetchProposals();
@@ -127,7 +131,8 @@ export const ProposalProvider = ({ children }) => {
     fetchProposalsForJobPosting,
     updateProposalStatus,
     refreshProposals,
-    setAuthToken
+    setAuthToken,
+    getResumeUrl 
   };
 
   return (
