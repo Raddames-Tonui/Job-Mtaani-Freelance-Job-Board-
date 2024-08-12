@@ -18,23 +18,23 @@ const Navbar = () => {
       <div className="flex items-center space-x-2">
         {!currentUser ? (
           <>
-            <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+            <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">Job Mtaani</Link>
           </>
         ) : (
           <>
             {currentUser.is_freelancer && (
               <>
-                <Link to="/freelancer" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                <Link to="/freelancer" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">Job Mtaani</Link>
               </>
             )}
             {currentUser.is_client && (
               <>
-                <Link to="/client" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                <Link to="/client" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">Job Mtaani</Link>
               </>
             )}
             {currentUser.is_admin && (
               <>
-                <Link to="/admin" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">JobQuest</Link>
+                <Link to="/admin" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">Job Mtaani</Link>
               </>
             )}
           </>
@@ -52,7 +52,7 @@ const Navbar = () => {
           <>
             {currentUser.is_freelancer && (
               <>
-                <NavLink to="/freelancer" className="hover:underline font-semibold transition duration-300">Overview</NavLink>
+                {/* <NavLink to="/freelancer" className="hover:underline font-semibold transition duration-300">Overview</NavLink> */}
                 <NavLink to="/freelancer/updateprofile" className="hover:underline font-semibold transition duration-300">Profile</NavLink>
                 <NavLink to="/freelancer/find-jobs" className="hover:underline font-semibold transition duration-300">Find Jobs</NavLink>                
                 <NavLink to="/freelancer/applied-jobs" className="hover:underline font-semibold transition duration-300">Applied Jobs</NavLink>

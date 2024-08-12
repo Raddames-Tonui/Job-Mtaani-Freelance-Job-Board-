@@ -38,7 +38,6 @@ import LayoutFreelancer from "./Layout/LayoutFreelancer";
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
-import FreelancerDashboard from "./freelancers/FreelancerDashboard";
 import FreelancerProjects from "./freelancers/FreelancerProjects";
 
 
@@ -52,7 +51,7 @@ function App() {
               <Routes>
                 {/* FREELANCER ROUTES */}
                 <Route path="/freelancer" element={<LayoutFreelancer />}>
-                  <Route index element={<FreelancerDashboard />} />
+                  {/* <Route index element={<FreelancerDashboard />} /> */}
                   <Route path="find-jobs" element={<FindJobs />} />
                   <Route  path="updateprofile"  element={<UpdateFreelancerProfile />} />
                   <Route path="applied-jobs" element={<AppliedJobs />} />

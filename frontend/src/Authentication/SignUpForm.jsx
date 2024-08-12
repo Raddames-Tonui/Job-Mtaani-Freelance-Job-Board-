@@ -71,7 +71,8 @@ function SignUpForm() {
       <div className="flex flex-col md:flex-row justify-center w-3/4 bg-white shadow-lg rounded-lg overflow-hidden">
       
         <div className="md:w-1/2 p-4 pl-6">
-          <Link to="/" className="text-2xl  font-bold text-blue-600 hover:text-blue-800 transition duration-300">Sign up</Link>
+          <Link to="/" className="text-2xl  font-bold text-blue-600 hover:text-blue-800 transition duration-300 flex justify-center">Job Mtaani</Link>
+          <h2 className="text-2xl font-bold ">Sign up</h2>
 
           <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
             <div className="flex gap-4">

@@ -130,7 +130,7 @@ def forgot_password():
             Reset Password
         </a>
         <p>If you did not request a password reset, please ignore this email.</p>
-        <p>Thank you,<br>The JobQuest Team</p>
+        <p>Thank you,<br>The Job Mtaani Team</p>
     </body>
     </html>
     """

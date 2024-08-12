@@ -14,7 +14,7 @@ function HeaderOne() {
               to="/"
               className="text-white  py-2 mr-2 font-bold text-3xl"
             >
-              JobQuest
+              Job Mtaani
             </NavLink>
             <button
               className="block lg:hidden ml-auto border border-white text-white py-2 px-4"
@@ -85,7 +85,7 @@ function HeaderOne() {
         <div className="container mx-auto">
           <div className="flex flex-col justify-center md:w-7/12 lg:w-6/12">
             <h1 className="text-white mb-3 text-3xl md:text-3xl">
-              Welcome to JobQuest
+              Welcome to Job Mtaani
             </h1>
             <p className="text-white opacity-80 pr-6 mr-6">
               Your gateway to endless career opportunities. Explore, apply, and

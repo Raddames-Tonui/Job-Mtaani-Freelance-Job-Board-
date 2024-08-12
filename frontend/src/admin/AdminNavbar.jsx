@@ -15,7 +15,7 @@ const AdminNavbar = () => {
     <header className="fixed top-0 w-full bg-gray-900 flex justify-between items-center px-6 h-[10vh] z-50 border-b-2 border-b-white">
       <div className="flex items-center space-x-2">
     
-                <Link to="/admin/overview" className="text-2xl font-bold text-white hover:text-blue-800 transition duration-300">JobQuest</Link>
+                <Link to="/admin/overview" className="text-2xl font-bold text-white hover:text-blue-800 transition duration-300">Job Mtaani</Link>
        
        
         <button onClick={toggleMenu} className="md:hidden text-gray-400 focus:outline-none">

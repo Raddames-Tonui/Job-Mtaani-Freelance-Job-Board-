@@ -6,13 +6,12 @@ function NavbarHome() {
   const location = useLocation();
 
   // List of paths where the Navbar should not be displayed
-  const noNavbarPaths = ['/login', '/signup'];
+  const noNavbarPaths = ['/login', '/signup', '/reset-password/:token', '/forgot-password'];
   
-  // Determine whether to display the Navbar
   const shouldDisplayNavbar = !noNavbarPaths.includes(location.pathname);
 
   if (!shouldDisplayNavbar) {
-    return null; // Return null to render nothing
+    return null; 
   }
 
   return (
@@ -23,7 +22,7 @@ function NavbarHome() {
             to="/"
             className="text-white py-2 mr-2 font-bold text-3xl"
           >
-            JobQuest
+            Job Mtaani
           </NavLink>
           <button
             className="block lg:hidden ml-auto border border-white text-white py-2 px-4"

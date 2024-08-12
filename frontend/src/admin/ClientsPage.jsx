@@ -57,7 +57,7 @@ const ClientsPage = () => {
                 </table>
             </div>
             <div className="mt-2 flex justify-between">
-                <h1>@jobquest 2024</h1>
+                <h1>@Job Mtaani 2024</h1>
             </div>
         </div>
     );
