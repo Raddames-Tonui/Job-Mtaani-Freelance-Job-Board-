@@ -747,6 +747,17 @@ def delete_project(project_id):
     db.session.commit()
     return jsonify({"message": "Project deleted"}), 200
 
+@app.route('/freelancer/projects', methods=['GET'])
+@jwt_required()
+def get_freelancer_projects():
+    print("Entering /freelancer/projects route")  # Debug log
+    current_user_id = get_jwt_identity()
+    print(f"Current User ID: {current_user_id}")  # Debug log
+    projects = Project.query.filter_by(freelancer_id=current_user_id).all()
+    print(f"Projects Found: {projects}")  # Debug log
+    return jsonify([project.to_dict() for project in projects]), 200
+
+
 
 # ================================ MILESTONES ================================
 

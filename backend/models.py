@@ -277,6 +277,13 @@ class Project(db.Model, SerializerMixin):
                 "lastname": self.freelancer.lastname,
                 "username": self.freelancer.username
             } if self.freelancer else None,  # Including freelancer details if available
+
+            "client": {
+                "firstname": self.client.firstname,
+                "lastname": self.client.lastname,
+                "username": self.client.username
+            } if self.client else None,  # Including client details if available
+
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
