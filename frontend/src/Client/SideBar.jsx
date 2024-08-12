@@ -1,12 +1,16 @@
 import React, { useContext } from 'react';
-import {  FiBriefcase,  FiUsers } from 'react-icons/fi';
-import { UserContext } from '../context/UserContext';
-import { CgProfile } from "react-icons/cg";
 import { NavLink } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+
+import {  FiUsers } from 'react-icons/fi';
+import { CgProfile } from "react-icons/cg";
 import { FaHome } from "react-icons/fa";
 import { RiProgress3Fill } from "react-icons/ri";
 import { BiSolidAddToQueue } from "react-icons/bi";
 import { TiUserAdd } from "react-icons/ti";
+import { FaBriefcase } from "react-icons/fa6";
+import { MdPeopleAlt } from "react-icons/md";
+
 
 
 
@@ -60,10 +64,10 @@ const Sidebar = () => {
             to="/client/my-jobs"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
-            <FiBriefcase className="mr-2" /> My Jobs
+            <FaBriefcase  className="mr-2" /> My Jobs
           </NavLink>
           <NavLink
-            to="/client/projects"
+            to="/client/my-projects"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
             <RiProgress3Fill className="mr-2"  />
@@ -74,7 +78,7 @@ const Sidebar = () => {
             to="/client/freelancers"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
-             <FiUsers className="mr-3 text-2xl" /> Freelancers
+             <MdPeopleAlt  className="mr-3 text-2xl" /> Freelancers
           </NavLink>
               
             </>

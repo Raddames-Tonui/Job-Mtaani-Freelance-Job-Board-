@@ -24,7 +24,6 @@ import JobCreation from "./Client/JobCreation";
 import Freelancers from "./Client/Freelancers";
 import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
-import Progress from "./Client/Progress";
 import ProjectForm from "./Client/ProjectForm";
 import Projects from "./Client/Projects";
 
@@ -41,8 +40,6 @@ import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
 import FreelancerDashboard from "./freelancers/FreelancerDashboard";
 import FreelancerProjects from "./freelancers/FreelancerProjects";
-
-
 
 
 function App() {
@@ -80,11 +77,10 @@ function App() {
                   <Route index element={<ClientDashboard />} />
                   <Route path="create-job" element={<JobCreation />} />
                   <Route path="update-profile" element={<UpdateProfile />} />
-                  <Route path="progress" element={<Progress />} />
                   <Route path="my-jobs" element={<UserJobPostings />} />
                   <Route path="freelancers" element={<Freelancers />} />                  
                   <Route path="proposal/:jobId" element={<Proposals />} />
-                  <Route path="projects" element={<Projects/>}/>
+                  <Route path="my-projects" element={<Projects/>}/>
                   <Route path="projects/create-project" element={<ProjectForm />} />
                 </Route>
 

@@ -27,13 +27,17 @@ class User(db.Model, SerializerMixin):
     is_freelancer = db.Column(db.Boolean, default=False)
     is_client = db.Column(db.Boolean, default=False)
     # Freelancer
-    skills = db.Column(db.Text)
-    experience = db.Column(db.Text)
+    skills = db.Column(db.String(200))
+    experience = db.Column(db.String(10))
+    education = db.Column(db.String(10))
+    location = db.Column(db.String(100))
     # Client
     about = db.Column(db.Text)
     needs = db.Column(db.Text)
 
     ratings = db.relationship('Rating', backref='user', lazy=True, foreign_keys='Rating.user_id', cascade="all, delete-orphan")
+    projects_for_client = db.relationship('Project', foreign_keys='Project.client_id', backref='client', cascade="all, delete-orphan")
+    projects_for_freelancer = db.relationship('Project', foreign_keys='Project.freelancer_id', backref='freelancer')
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -56,7 +60,11 @@ class User(db.Model, SerializerMixin):
             "is_freelancer": self.is_freelancer,
             "is_client": self.is_client,
             "skills": self.skills,
-            "experience": self.experience
+            "experience": self.experience,
+            "education": self.education,
+            "location": self.location,
+            "about": self.about,
+            "needs": self.needs
         }
 
     def __repr__(self):
@@ -247,7 +255,7 @@ class Project(db.Model, SerializerMixin):
     description = db.Column(db.Text, nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    status = db.Column(db.String(20), nullable=False)  #  'ongoing', 'completed'
+    status = db.Column(db.String(20), nullable=False)  # 'ongoing', 'completed'
     deadline = db.Column(db.String(50), nullable=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -256,6 +264,23 @@ class Project(db.Model, SerializerMixin):
     milestones = db.relationship('Milestone', backref='project', lazy=True)
 
     def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "client_id": self.client_id,
+            "freelancer_id": self.freelancer_id,
+            "status": self.status,
+            "deadline": self.deadline,
+            "freelancer": {
+                "firstname": self.freelancer.firstname,
+                "lastname": self.freelancer.lastname,
+                "username": self.freelancer.username
+            } if self.freelancer else None,  # Including freelancer details if available
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
         return {
             "id": self.id,
             "title": self.title,

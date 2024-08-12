@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from app import app, db
-from models import User, JobPosting, Proposal, Payment, Usermessage, Project,  Rating , Milestone
+from models import User, JobPosting, Proposal, Payment, Usermessage, Project, Rating, Milestone
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 from datetime import datetime
@@ -54,7 +54,9 @@ def seed_database():
                     is_freelancer=data["is_freelancer"],
                     is_client=data["is_client"],
                     skills=fake.text() if data["is_freelancer"] else None,
-                    experience=fake.text() if data["is_freelancer"] else None,
+                    experience=random.choice(["0-1 years", "1-3 years", "3-5 years", "5+ years"]) if data["is_freelancer"] else None,
+                    education=random.choice(["High School", "Diploma", "Bachelor", "Master", "PhD"]) if data["is_freelancer"] else None,
+                    location=fake.city() if data["is_freelancer"] else None,
                     about=fake.text() if data["is_client"] else None,
                     needs=fake.text() if data["is_client"] else None,
                     avatar=fake.image_url()
@@ -66,18 +68,17 @@ def seed_database():
                     db.session.rollback()
                     print(f"User with email {user.email} already exists")
 
-
         # Sample job postings
         for _ in range(5):
             job_posting = JobPosting(
                 title=fake.job(),
-                tags=', '.join(fake.words(nb=3, ext_word_list=None, unique=True)),  # Convert list to comma-separated string
+                tags=', '.join(fake.words(nb=3, ext_word_list=None, unique=True)), 
                 role=fake.job(),
                 min_salary=fake.pydecimal(left_digits=6, right_digits=2, positive=True),
                 max_salary=fake.pydecimal(left_digits=6, right_digits=2, positive=True),
                 salary_type=random.choice(["hourly", "monthly", "contract"]),
-                education=fake.job(),
-                experience=fake.job(),
+                education=random.choice(["High School", "Diploma", "Bachelor", "Master", "PhD"]),
+                experience=random.choice(["0-1 years", "1-3 years", "3-5 years", "5+ years"]),
                 job_type=random.choice(["full-time", "part-time", "contract", "internship"]),
                 vacancies=random.randint(1, 10),
                 expiration_date=fake.date_between(start_date='today', end_date='+30d'),
@@ -87,7 +88,7 @@ def seed_database():
                 requirements=fake.text(),
                 location=fake.city(),
                 experience_level=random.choice(["Entry-level", "Mid-level", "Senior-level"]),
-                client_id=random.randint(1, 4)
+                client_id=random.randint(1, 10)
             )
             db.session.add(job_posting)
             db.session.commit()
@@ -96,8 +97,8 @@ def seed_database():
         for _ in range(5):
             payment = Payment(
                 amount=float(random.randint(100, 1000)),
-                client_id=random.randint(1, 3),
-                freelancer_id=random.randint(1, 11),
+                client_id=random.randint(1, 10),
+                freelancer_id=random.randint(1, 20),
                 status=random.choice(["pending", "completed"])
             )
             db.session.add(payment)
@@ -106,8 +107,8 @@ def seed_database():
         # Sample messages
         for _ in range(10):
             message = Usermessage(
-                sender_id=random.randint(1, 11),
-                receiver_id=random.randint(1, 11),
+                sender_id=random.randint(1, 20),
+                receiver_id=random.randint(1, 20),
                 content=fake.text()
             )
             db.session.add(message)
@@ -118,8 +119,8 @@ def seed_database():
             project = Project(
                 title=fake.catch_phrase(),
                 description=fake.text(),
-                client_id=random.randint(1, 3),
-                freelancer_id=random.randint(1, 11),
+                client_id=random.randint(1, 10),
+                freelancer_id=random.randint(1, 20),
                 status=random.choice(["ongoing", "completed"]),
                 deadline=fake.date_this_year()
             )
@@ -141,8 +142,8 @@ def seed_database():
         # Sample ratings
         for _ in range(5):
             rating = Rating(
-                user_id=random.randint(1, 11),
-                rater_id=random.randint(1, 11),
+                user_id=random.randint(1, 20),
+                rater_id=random.randint(1, 20),
                 score=random.randint(1, 5),
                 review=fake.text()
             )

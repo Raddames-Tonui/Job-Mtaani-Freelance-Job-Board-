@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import toast from 'react-hot-toast';
 import { ProjectContext } from '../context/ProjectContext';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const ProjectForm = () => {
     const { acceptedFreelancers, createProject } = useContext(ProjectContext);
@@ -37,11 +37,28 @@ const ProjectForm = () => {
 
     return (
         <div className="mt-[10vh]">
-             <ul className='flex flex-row justify-center gap-5'>
-        <Link to="/client/projects"> My Projects</Link>
-        <Link to="/client/projects/create-project">Create Project </Link>
-    </ul>
-            <div className="flex items-center justify-center py-12 px-6 lg:px-8">
+            <h2 className="text-2xl font-bold mb-4">Projects</h2>
+            <div className="flex justify-between mb-6">
+                <div className="flex items-center gap-4">
+                    <NavLink 
+                            to="/client/my-projects"
+                            className={({ isActive }) => 
+                                `py-2 px-4 rounded text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
+                            }
+                        >
+                            My Projects
+                        </NavLink>
+                        <NavLink
+                            to="/client/projects/create-project"
+                            className={({ isActive }) => 
+                                `py-2 px-4 rounded text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
+                            }
+                        >
+                            Create Project
+                    </NavLink>
+                </div>
+            </div>
+            <div className="flex items-center justify-center py-5 px-6 lg:px-8">
                 <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-2xl w-full py-8 rounded-md shadow-md border-2 border-gray-200">
                     <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Create a New Project
@@ -122,7 +139,7 @@ const ProjectForm = () => {
                                     required
                                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                                 >
-                                    <option value="ongoing">Started</option>
+                                    <option value="started">Started</option>
                                     {/* <option value="completed">Completed</option> */}
                                 </select>
                             </div>

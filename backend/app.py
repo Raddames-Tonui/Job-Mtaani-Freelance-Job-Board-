@@ -288,7 +288,6 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
-
 # Partially update a user
 @app.route('/users/<int:user_id>', methods=['PATCH'])
 def patch_user(user_id):
@@ -305,6 +304,10 @@ def patch_user(user_id):
         user.skills = data['skills']
     if 'experience' in data:
         user.experience = data['experience']
+    if 'education' in data:
+        user.education = data['education']
+    if 'location' in data:
+        user.location = data['location']
     if 'about' in data:
         user.about = data['about']
     if 'needs' in data:
@@ -615,6 +618,52 @@ def get_accepted_freelancers():
     ]
     
     return jsonify(freelancers), 200
+# Route to add an accepted freelancer
+@app.route('/accepted-freelancers', methods=['POST'])
+@jwt_required()
+def add_accepted_freelancer():
+    data = request.json
+    client_id = get_jwt_identity()
+    
+    # Retrieve data from request
+    freelancer_id = data.get('freelancer_id')
+    job_posting_id = data.get('job_posting_id')
+
+    if not freelancer_id:
+        return jsonify({"error": "Freelancer ID is required"}), 400
+
+    try:
+        new_accepted_freelancer = AcceptedFreelancer(
+            freelancer_id=freelancer_id,
+            client_id=client_id,
+            job_posting_id=job_posting_id
+        )
+        db.session.add(new_accepted_freelancer)
+        db.session.commit()
+        return jsonify(new_accepted_freelancer.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+# Route to delete an accepted freelancer
+@app.route('/accepted-freelancers/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_accepted_freelancer(id):
+    client_id = get_jwt_identity()
+    
+    try:
+        accepted_freelancer = AcceptedFreelancer.query.get(id)
+        if not accepted_freelancer or accepted_freelancer.client_id != client_id:
+            return jsonify({"error": "AcceptedFreelancer not found or unauthorized"}), 404
+        
+        db.session.delete(accepted_freelancer)
+        db.session.commit()
+        return jsonify({"message": "Deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+
 
 # ================================ PROJECTS ================================
 # Create a new project

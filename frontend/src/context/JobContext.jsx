@@ -124,7 +124,6 @@ export const JobProvider = ({ children }) => {
                 toast.success("Job deleted successfully");
             }
         } catch (error) {
-            console.error("Error deleting job:", error);
             Swal.fire(
                 'Error!',
                 'Failed to delete the job.',

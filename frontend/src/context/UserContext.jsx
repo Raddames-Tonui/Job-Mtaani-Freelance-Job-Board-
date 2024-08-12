@@ -1,4 +1,3 @@
-// UserContext.js
 import { useState, createContext, useEffect } from "react";
 import toast from 'react-hot-toast';
 import { server_url } from "../../config.json";
@@ -12,12 +11,13 @@ export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [authToken, setAuthToken] = useState(() => localStorage.getItem("access_token") || null);
 
-     // Fetch all users
-     const fetchAllUsers = () => {
+// ============================================ USER DETAILS ===============================================
+    // Fetch all users
+    const fetchAllUsers = () => {
         fetch(`${server_url}/users`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",               
+                "Content-Type": "application/json",
             }
         })
         .then((response) => response.json())
@@ -63,8 +63,6 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     }
-    
-
 
     // REGISTER USER
     const registerUser = (username, email, password, firstname = '', lastname = '', role = '') => {
@@ -112,7 +110,7 @@ export const UserProvider = ({ children }) => {
 
     // UPDATE USER PROFILE
     const updateUserProfile = (profileData) => {
-        const updatePromise = fetch(`${server_url}/users/${currentUser.id}`, {
+        fetch(`${server_url}/users/${currentUser.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -131,14 +129,17 @@ export const UserProvider = ({ children }) => {
         })
         .catch((error) => {
             throw new Error("Network error: " + error.message); 
-        });
-
-        toast.promise(updatePromise, {
-            loading: 'Saving...',
-            success: <b>Profile updated!</b>,
-            error: (error) => <b>{error.message || 'Could not update profile.'}</b>,
+        })
+        .finally(() => {
+            toast.promise(Promise.resolve(), {
+                loading: 'Saving...',
+                success: <b>Profile updated!</b>,
+                error: (error) => <b>{error.message || 'Could not update profile.'}</b>,
+            });
         });
     };
+
+// ============================================= AUTHENTICATION =============================================
 
     // LOGIN USER
     const loginUser = (identifier, password) => {
@@ -177,6 +178,35 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     };
+
+
+        // FETCH CURRENT USER
+        useEffect(() => {
+            if (!authToken) return;
+    
+            fetch(`${server_url}/current_user`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`
+                }
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.email) {
+                    setCurrentUser(data);
+                } else {
+                    setCurrentUser(null);
+                    localStorage.removeItem("access_token");
+                    setAuthToken(null);
+                    nav("/login");
+                }
+            })
+            .catch((error) => {
+                toast.error("Network error: " + error.message);
+            });
+        }, [authToken, nav]);
+
     
     // LOG OUT USER
     const logoutUser = () => {
@@ -203,7 +233,7 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     };
-
+// =========================================PASSWORD ===================================
     // RESET PASSWORD
     const resetPassword = (token, newPassword) => {
         fetch(`${server_url}/reset-password/${token}`, {
@@ -229,33 +259,60 @@ export const UserProvider = ({ children }) => {
         });
     };
 
-    // FETCH CURRENT USER
-    useEffect(() => {
-        if (!authToken) return;
 
-        fetch(`${server_url}/current_user`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${authToken}`
+
+// =================================== ACCEPTED FREELANCER ==================================
+        // Function to add an accepted freelancer
+        const addAcceptedFreelancer = (freelancerId, jobPostingId = null) => {
+            const body = {
+                freelancer_id: freelancerId,
+            };
+
+            if (jobPostingId) {
+                body.job_posting_id = jobPostingId;
             }
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.email) {
-                setCurrentUser(data);
-            } else {
-                setCurrentUser(null);
-                localStorage.removeItem("access_token");
-                setAuthToken(null);
-                nav("/login");
-            }
-        })
-        .catch((error) => {
-            toast.error("Network error: " + error.message);
-        });
-    }, [authToken, nav]);
-    
+
+            fetch(`${server_url}/accepted-freelancers`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(body),
+            })
+            .then(response => response.json())
+            .then(data => {
+                toast.success('Freelancer added successfully!');
+                return data;
+            })
+            .catch(err => {
+                toast.error(`Error: ${err.message}`);
+            });
+        };
+
+        // Function to delete an accepted freelancer
+        const deleteAcceptedFreelancer = (id) => {
+            fetch(`${server_url}/accepted-freelancers/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                toast.success('Freelancer removed successfully!');
+                return data;
+            })
+            .catch(err => {
+                toast.error(`Error: ${err.message}`);
+            });
+        };
+
 
     const contextData = {
         currentUser,
@@ -267,7 +324,9 @@ export const UserProvider = ({ children }) => {
         resetPassword,
         authToken,
         users,
-        deleteUser
+        deleteUser,
+        addAcceptedFreelancer,
+        deleteAcceptedFreelancer
     };
 
     return (
