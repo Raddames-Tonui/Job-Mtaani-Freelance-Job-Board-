@@ -113,7 +113,7 @@ const ProjectForm = () => {
                                     value={formData.freelancer_id}
                                     onChange={handleChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                                    className="capitalize block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                                 >
                                     <option value="">Select Freelancer</option>
                                     {acceptedFreelancers.map((freelancer) => (

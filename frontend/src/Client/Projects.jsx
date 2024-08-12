@@ -50,7 +50,7 @@ function Projects() {
                         {projects && projects.map((project) => (
                             <tr key={project.id} className="border-b border-gray-300 hover:bg-gray-200">
                                 <td className="py-3 px-6 text-left">{project.title}</td>
-                                <td className="py-3 px-6 text-left">{project.freelancer.firstname}  {project.freelancer.lastname}</td>
+                                <td className="py-3 px-6 text-left capitalize">{project.freelancer.firstname}  {project.freelancer.lastname}</td>
                                 <td className="py-3 px-6 text-left">
                                     <span className={`py-1 px-3 rounded-full text-sm ${project.status === 'completed' ? 'bg-green-600 text-white' : project.status === 'ongoing' ? 'bg-yellow-500 text-white' : 'bg-red-600 text-white'}`}>
                                         {project.status}
