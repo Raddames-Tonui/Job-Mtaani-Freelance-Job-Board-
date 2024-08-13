@@ -15,7 +15,7 @@ function NavbarHome() {
   }
 
   return (
-    <nav className="absolute top-2 w-full px-4 sm:px-6 lg:px-8">
+    <nav className="absolute top-2 w-full px-4 sm:px-6 lg:px-8 bg">
       <div className="container mx-auto">
         <div className="flex flex-row items-center justify-between">
           <NavLink

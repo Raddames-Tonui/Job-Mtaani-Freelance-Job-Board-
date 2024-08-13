@@ -58,9 +58,10 @@ function App() {
                   <Route path="applied-jobs" element={<AppliedJobs />} />
                   <Route path="projects" element={<FreelancerProjects />} />
                 </Route>
-                <Route index element={<Home />} />
+                
                 {/* HOME ROUTES */}
                 <Route path="/" element={<Layout />}>   
+                  <Route index element={<Home />} />
                   <Route path="login" element={<Login />} />
                   <Route path="signup" element={<SignUpForm />} />
                   <Route path="reset-password/:token" element={<ResetPassword />} />

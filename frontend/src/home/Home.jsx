@@ -3,7 +3,7 @@ import FreelancerSection from "./FreelancerSection";
 import ServicesSection from "./ServiceSection";
 
 import Footer from "../components/Footer";
-import JobFinder from "./JobFinder";
+// import JobFinder from "./JobFinder";
 import AdvertiseJob from "./AdvertiseJob";
 import TalentSection from "./TalentSection";
 import MessageComponent from "../components/MessageComponent";
