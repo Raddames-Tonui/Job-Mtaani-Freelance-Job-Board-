@@ -9,19 +9,22 @@ function FreelancerProjects() {
     const { projects, fetchProjects } = useContext(ProjectContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProjectId, setSelectedProjectId] = useState(null);
+    const [reviewType, setReviewType] = useState(''); // 'client' or 'freelancer'
     
     useEffect(() => {
         fetchProjects();
     }, [fetchProjects]);
 
-    const handleReviewClick = (projectId) => {
+    const handleReviewClick = (projectId, type) => {
         setSelectedProjectId(projectId);
+        setReviewType(type);
         setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedProjectId(null);
+        setReviewType('');
     };
 
     return (
@@ -75,8 +78,8 @@ function FreelancerProjects() {
                                             
                                         </div>
                                     </td>
-                                    <td className="py-3 px-6 text-center cursor-pointer text-blue-500 hover:text-blue-600" onClick={() => handleReviewClick(project.id)}>
-                                        Review
+                                    <td className="py-3 px-6 text-center cursor-pointer text-blue-500 hover:text-blue-600" onClick={() => handleReviewClick(project.id, 'client')}>
+                                        Review Client
                                     </td>
                                 </tr>
                             ))}
@@ -86,11 +89,14 @@ function FreelancerProjects() {
             </div>
 
             {/* Review Modal */}
-            <ReviewModal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                projectId={selectedProjectId}
-            />
+            {isModalOpen && (
+                <ReviewModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    projectId={selectedProjectId}
+                    reviewType={reviewType}
+                />
+            )}
         </div>
     );
 }

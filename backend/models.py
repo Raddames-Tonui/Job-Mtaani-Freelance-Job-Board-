@@ -259,21 +259,23 @@ class Project(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(20), nullable=False)  # 'ongoing', 'completed'
     deadline = db.Column(db.String(50), nullable=False)
+
+    client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    milestones = db.relationship('Milestone', backref='project', lazy=True)
 
     def to_dict(self):
         return {
             "id": self.id,
             "title": self.title,
             "description": self.description,
+            "client_id": self.client_id,
+            "freelancer_id": self.freelancer_id,
             "client": {
                 "firstname": self.client.firstname,
                 "lastname": self.client.lastname
@@ -292,42 +294,15 @@ class Project(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<Project(title='{self.title}', status='{self.status}')>"
 
-class Milestone(db.Model, SerializerMixin):
-    __tablename__ = "milestones"
-
-    id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
-    title = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    due_date = db.Column(db.DateTime, nullable=False)
-    completed = db.Column(db.Boolean, default=False)
-
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "project_id": self.project_id,
-            "title": self.title,
-            "description": self.description,
-            "due_date": self.due_date,
-            "completed": self.completed,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
-        }
-
-    def __repr__(self):
-        return f"<Milestone(title='{self.title}', completed='{self.completed}')>"
-
 class Rating(db.Model, SerializerMixin):
     __tablename__ = "ratings"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    rater_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
+    rater_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  
     score = db.Column(db.Integer, nullable=False)
     review = db.Column(db.Text)
+    review_type = db.Column(db.String(50), nullable=False)  # e.g., 'client' or 'freelancer'
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -339,9 +314,10 @@ class Rating(db.Model, SerializerMixin):
             "rater_id": self.rater_id,
             "score": self.score,
             "review": self.review,
+            "review_type": self.review_type,  
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
 
     def __repr__(self):
-        return f"<Rating(id='{self.id}', score='{self.score}')>"
+        return f"<Rating(id='{self.id}', score='{self.score}', review_type='{self.review_type}')>"

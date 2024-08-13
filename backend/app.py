@@ -16,7 +16,7 @@ from flask import send_from_directory # For downloading files
 
 
 
-from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Milestone, Rating,  AcceptedFreelancer
+from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Rating,  AcceptedFreelancer
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -289,6 +289,8 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
+
+
 # Partially update a user
 @app.route('/users/<int:user_id>', methods=['PATCH'])
 def patch_user(user_id):
@@ -324,10 +326,13 @@ def patch_user(user_id):
 def get_clients():
     clients = User.query.filter_by(is_client=True).all()
     return jsonify([client.to_dict() for client in clients]), 200
+
 @app.route('/stats/clients', methods=['GET'])
 def get_client_count():
     client_count = User.query.filter_by(role='client').count()
     return jsonify({'count': client_count}), 200
+
+
 #freelancers
 @app.route('/freelancers', methods=['GET'])
 def get_freelancers():
@@ -338,6 +343,8 @@ def get_freelancers():
 def get_freelancer_count():
     freelancer_count = User.query.filter_by(role='freelancer').count()
     return jsonify({'count': freelancer_count}), 200
+
+
 
 # Current user job postings
 @app.route('/user/job_postings', methods=['GET'])
@@ -656,15 +663,23 @@ def add_accepted_freelancer():
         return jsonify({"error": str(e)}), 400
 
 # Route to delete an accepted freelancer
-@app.route('/accepted-freelancers/<int:accepted_freelancer_id>', methods=['DELETE'])
+@app.route('/accepted-freelancers/<int:freelancer_id>', methods=['DELETE'])
 @jwt_required()
-def delete_accepted_freelancer(accepted_freelancer_id):
-    accepted_freelancer = AcceptedFreelancer.query.get_or_404(accepted_freelancer_id)
+def delete_accepted_freelancer(freelancer_id):
+    current_user_id = get_jwt_identity()
+    
+    # Find the accepted freelancer record
+    accepted_freelancer = AcceptedFreelancer.query.filter_by(
+        freelancer_id=freelancer_id, client_id=current_user_id
+    ).first()
+
+    if not accepted_freelancer:
+        return jsonify({"message": "Accepted freelancer not found or unauthorized"}), 404
+
     db.session.delete(accepted_freelancer)
     db.session.commit()
+
     return jsonify({"message": "Accepted freelancer deleted"}), 200
-
-
 
 
 # ================================ PROJECTS ================================
@@ -758,62 +773,6 @@ def get_freelancer_projects():
     
     projects = Project.query.filter_by(freelancer_id=freelancer_id).all()
     return jsonify([project.to_dict() for project in projects])
-
-
-
-# ================================ MILESTONES ================================
-
-# Route to create a milestone
-@app.route('/milestones', methods=['POST'])
-def create_milestone():
-    data = request.get_json()
-    if not data or not all(key in data for key in ('project_id', 'title', 'description', 'due_date')):
-        abort(400, description="Invalid input")
-
-    milestone = Milestone(
-        project_id=data['project_id'],
-        title=data['title'],
-        description=data['description'],
-        due_date=data['due_date'],
-        completed=data.get('completed', False)
-    )
-    db.session.add(milestone)
-    db.session.commit()
-    return jsonify(milestone.to_dict()), 201
-
-# Route to get all milestones
-@app.route('/milestones', methods=['GET'])
-def get_milestones():
-    milestones = Milestone.query.all()
-    return jsonify([milestone.to_dict() for milestone in milestones]), 200
-
-# Route to get a single milestone by ID
-@app.route('/milestones/<int:milestone_id>', methods=['GET'])
-def get_milestone(milestone_id):
-    milestone = Milestone.query.get_or_404(milestone_id)
-    return jsonify(milestone.to_dict()), 200
-
-# Route to update a milestone
-@app.route('/milestones/<int:milestone_id>', methods=['PUT'])
-def update_milestone(milestone_id):
-    data = request.get_json()
-    milestone = Milestone.query.get_or_404(milestone_id)
-
-    milestone.title = data.get('title', milestone.title)
-    milestone.description = data.get('description', milestone.description)
-    milestone.due_date = data.get('due_date', milestone.due_date)
-    milestone.completed = data.get('completed', milestone.completed)
-
-    db.session.commit()
-    return jsonify(milestone.to_dict()), 200
-
-# Route to delete a milestone
-@app.route('/milestones/<int:milestone_id>', methods=['DELETE'])
-def delete_milestone(milestone_id):
-    milestone = Milestone.query.get_or_404(milestone_id)
-    db.session.delete(milestone)
-    db.session.commit()
-    return jsonify({"message": "Milestone deleted"}), 200
 
 
 # ================================ PAYMENTS ================================
@@ -928,21 +887,31 @@ def delete_message(message_id):
 @jwt_required()
 def create_rating():
     data = request.get_json()
-    if not data or not all(key in data for key in ('score')):
+    
+    if not data or not all(key in data for key in ('score', 'user_id', 'review_type')):
         abort(400, description="Invalid input")
 
-    current_user = get_jwt_identity()  
-    rater_id = current_user['id']  
+    rater_id = get_jwt_identity() 
+
+
+    if data['review_type'] not in ['client', 'freelancer']:
+        abort(400, description="Invalid review_type")
 
     rating = Rating(
-        user_id=data['user_id'], 
-        rater_id=rater_id,         
-        score=data['score'],
-        review=data.get('review')
+        user_id=data['user_id'],  
+        rater_id=rater_id,        
+        score=data['score'],      
+        review=data.get('review'),
+        review_type=data['review_type'] 
     )
+    
     db.session.add(rating)
     db.session.commit()
+    
     return jsonify(rating.to_dict()), 201
+
+
+
 # Route to get all ratings
 @app.route('/ratings', methods=['GET'])
 def get_ratings():

@@ -3,11 +3,14 @@ import { NavLink } from 'react-router-dom';
 import { ProjectContext } from '../context/ProjectContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import ProjectUpdateModal from './ProjectUpdateModal';
+import ReviewModal from '../components/ReviewModal';
 
 function Projects() {
     const { projects, fetchProjects, updateProject, deleteProject } = useContext(ProjectContext);
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedProject, setSelectedProject] = useState(null);
+    const [isReviewModalOpen, setReviewModalOpen] = useState(false);
+    const [selectedFreelancerId, setSelectedFreelancerId] = useState(null);
 
     useEffect(() => {
         fetchProjects();
@@ -32,6 +35,16 @@ function Projects() {
         if (window.confirm('Are you sure you want to delete this project?')) {
             deleteProject(projectId);
         }
+    };
+
+    const handleReviewOpen = (freelancerId) => {
+        setSelectedFreelancerId(freelancerId);
+        setReviewModalOpen(true);
+    };
+
+    const handleCloseReviewModal = () => {
+        setReviewModalOpen(false);
+        setSelectedFreelancerId(null);
     };
 
     return (
@@ -67,6 +80,7 @@ function Projects() {
                                 <th className="py-3 px-6 text-left">Milestone</th>
                                 <th className="py-3 px-6 text-left">Deadline</th>
                                 <th className="py-3 px-6 text-center">Actions</th>
+                                <th className="py-3 px-6 text-center">Review</th>
                             </tr>
                         </thead>
                         <tbody className="text-gray-900 text-sm font-light">
@@ -96,6 +110,9 @@ function Projects() {
                                             </button>
                                         </div>
                                     </td>
+                                    <td className="py-3 px-6 text-center cursor-pointer text-blue-500 hover:text-blue-600" onClick={() => handleReviewOpen(project.freelancer_id)}>
+                                        Review
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -109,6 +126,15 @@ function Projects() {
                     onClose={handleCloseModal}
                     project={selectedProject}
                     onUpdate={handleUpdateProject}
+                    onReviewOpen={handleReviewOpen} 
+                />
+            )}
+
+            {selectedFreelancerId && (
+                <ReviewModal
+                    isOpen={isReviewModalOpen}
+                    onClose={handleCloseReviewModal}
+                    userId={selectedFreelancerId}
                 />
             )}
         </div>

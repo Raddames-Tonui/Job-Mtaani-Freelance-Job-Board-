@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 from app import app, db
-from models import User, JobPosting, Proposal, Payment, Usermessage, Project, Rating, Milestone
+from models import User, JobPosting,  Payment, Usermessage, Project, Rating
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from faker import Faker
 import random
-
 fake = Faker()
 
 def seed_database():
@@ -26,7 +25,7 @@ def seed_database():
                 "is_client": False
             },
             "freelancers": {
-                "count": 20,
+                "count": 15,
                 "password": "111",
                 "is_admin": False,
                 "is_freelancer": True,
@@ -44,6 +43,7 @@ def seed_database():
         # Create and add users
         for role, data in user_data.items():
             for _ in range(data["count"]):
+                skills = ', '.join(fake.words(nb=3, ext_word_list=None, unique=True))  # Convert list to comma-separated string
                 user = User(
                     username=fake.user_name(),
                     firstname=fake.first_name(),
@@ -53,7 +53,7 @@ def seed_database():
                     is_admin=data["is_admin"],
                     is_freelancer=data["is_freelancer"],
                     is_client=data["is_client"],
-                    skills=fake.text() if data["is_freelancer"] else None,
+                    skills=skills,
                     experience=random.choice(["0-1 years", "1-3 years", "3-5 years", "5+ years"]) if data["is_freelancer"] else None,
                     education=random.choice(["High School", "Diploma", "Bachelor", "Master", "PhD"]) if data["is_freelancer"] else None,
                     location=fake.city() if data["is_freelancer"] else None,
@@ -127,25 +127,14 @@ def seed_database():
             db.session.add(project)
             db.session.commit()
 
-        # Sample milestones
-        for _ in range(5):
-            milestone = Milestone(
-                project_id=random.randint(1, 5),
-                title=fake.bs(),
-                description=fake.text(),
-                due_date=fake.date_this_year(),
-                completed=random.choice([True, False])
-            )
-            db.session.add(milestone)
-            db.session.commit()
-
         # Sample ratings
         for _ in range(5):
             rating = Rating(
                 user_id=random.randint(1, 20),
                 rater_id=random.randint(1, 20),
                 score=random.randint(1, 5),
-                review=fake.text()
+                review=fake.text(),
+                review_type=random.choice(["client", "freelancer"])  # Added review_type for clarity
             )
             db.session.add(rating)
             db.session.commit()

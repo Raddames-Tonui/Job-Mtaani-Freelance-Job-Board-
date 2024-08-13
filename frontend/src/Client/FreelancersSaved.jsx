@@ -1,64 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { server_url } from '../../config.json';
 import { NavLink } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { UserContext } from '../context/UserContext';
 
 const FreelancersSaved = () => {
   const [freelancers, setFreelancers] = useState([]);
   const [authToken, setAuthToken] = useState(localStorage.getItem("access_token"));
 
+  const { users } = useContext(UserContext);
+
   useEffect(() => {
-    const fetchFreelancers = async () => {
-      if (!authToken) return;
-
-      try {
-        const response = await fetch(`${server_url}/freelancers/accepted`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${authToken}`
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFreelancers(data);
-        } else {
-          const errorData = await response.json();
-          toast.error(`Error: ${errorData.message || "Failed to fetch freelancers"}`);
-        }
-      } catch (error) {
-        toast.error("Network error: " + error.message);
-      }
-    };
-
-    fetchFreelancers();
-  }, [authToken]);
-
-  const handleRemove = async (id) => {
     if (!authToken) return;
 
-    try {
-      const response = await fetch(`${server_url}/accepted-freelancers/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`
-        }
-      });
+    fetch(`${server_url}/freelancers/accepted`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return response.json().then(errorData => {
+          throw new Error(errorData.message || "Failed to fetch freelancers");
+        });
+      }
+    })
+    .then(data => {
+      setFreelancers(data);
+    })
+    .catch(error => {
+      toast.error("Network error: " + error.message);
+    });
+  }, [authToken]);
 
+  const handleRemove = (id) => {
+    if (!authToken) return;
+  
+    fetch(`${server_url}/accepted-freelancers/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      }
+    })
+    .then(response => {
       if (response.ok) {
         const updatedFreelancers = freelancers.filter(freelancer => freelancer.id !== id);
         setFreelancers(updatedFreelancers);
         toast.success("Freelancer removed successfully");
       } else {
-        const errorData = await response.json();
-        toast.error(`Error: ${errorData.message || "Failed to remove freelancer"}`);
+        return response.json().then(errorData => {
+          toast.error(`Error: ${errorData.message || "Failed to remove freelancer"}`);
+        });
       }
-    } catch (error) {
+    })
+    .catch(error => {
       toast.error("Network error: " + error.message);
-    }
+    });
   };
+  
 
   return (
     <div className="p-4 md:p-6 min-h-screen bg-gray-100">

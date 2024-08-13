@@ -1,5 +1,3 @@
-// ProjectUpdateModal.js
-
 import React, { useState, useEffect, useContext } from 'react';
 import { ProjectContext } from '../context/ProjectContext';
 
@@ -19,13 +17,13 @@ const stateColors = {
   cancelled: "bg-red-300"
 };
 
-const ProjectUpdateModal = ({ isOpen, onClose, project }) => {
+const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     status: '',
     deadline: '',
-    milestoneState: '' // Add this field to track milestone state
+    milestoneState: '' 
   });
 
   const { updateProject } = useContext(ProjectContext);
@@ -37,7 +35,7 @@ const ProjectUpdateModal = ({ isOpen, onClose, project }) => {
         description: project.description || '',
         status: project.status || '',
         deadline: project.deadline || '',
-        milestoneState: project.milestoneState || '' // Initialize milestone state
+        milestoneState: project.milestoneState || '' 
       });
     }
   }, [project]);
@@ -50,6 +48,12 @@ const ProjectUpdateModal = ({ isOpen, onClose, project }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     updateProject(project.id, formData);
+
+    // Check if status is completed and open review modal
+    if (formData.status === 'completed') {
+      onReviewOpen(project.client_id);
+    }
+
     onClose();
   };
 

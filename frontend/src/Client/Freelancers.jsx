@@ -1,34 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { server_url } from '../../config.json';
 import { NavLink } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { MdBookmarkAdd } from "react-icons/md";
-
+import { UserContext } from '../context/UserContext'; 
 
 const Freelancers = () => {
-  const [freelancers, setFreelancers] = useState([]);
   const [acceptedFreelancers, setAcceptedFreelancers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [authToken, setAuthToken] = useState(localStorage.getItem("access_token"));
+  const { users } = useContext(UserContext);
+  const [freelancers, setFreelancers] = useState([]);
+
+  const authToken = localStorage.getItem("access_token");
 
   useEffect(() => {
-    if (!authToken) return;
-
-    // Fetch freelancers
-    fetch(`${server_url}/users?is_freelancer=true`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${authToken}`
-      }
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      setFreelancers(data);
-    })
-    .catch((error) => {
-      toast.error("Network error: " + error.message);
-    });
+    setFreelancers(users.filter(user => user.is_freelancer));
 
     // Fetch accepted freelancers
     fetch(`${server_url}/freelancers/accepted`, {
@@ -45,7 +31,7 @@ const Freelancers = () => {
     .catch((error) => {
       toast.error("Network error: " + error.message);
     });
-  }, [authToken]);
+  }, [users, authToken]);
 
   const handleChoose = (id) => {
     fetch(`${server_url}/accepted-freelancers`, {
@@ -73,29 +59,7 @@ const Freelancers = () => {
     });
   };
 
-  const handleRemove = (id) => {
-    fetch(`${server_url}/accepted-freelancers/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${authToken}`
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        toast.success('Freelancer removed successfully!');
-        setFreelancers(freelancers.map(freelancer =>
-          freelancer.id === id ? { ...freelancer, status: 'not-accepted' } : freelancer
-        ));
-        setAcceptedFreelancers(acceptedFreelancers.filter(freelancer => freelancer.id !== id));
-      }
-    })
-    .catch(err => {
-      toast.error(`Error: ${err.message}`);
-    });
-  };
+
 
   const filteredFreelancers = freelancers.filter(freelancer => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -174,12 +138,7 @@ const Freelancers = () => {
                 >
                   Save Freelancer <span className='ml-2 text-xl'><MdBookmarkAdd /> </span>
                 </button>
-                {/* <button
-                  onClick={() => handleRemove(freelancer.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
-                >
-                  Decline
-                </button> */}
+                
               </div>
             </div>
           ))}
