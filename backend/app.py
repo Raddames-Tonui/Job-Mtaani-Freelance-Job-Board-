@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import random, os
+import requests
+from requests.auth import HTTPBasicAuth
+import base64
 import stripe
 from datetime import timedelta, datetime
 from flask import Flask, jsonify, request, abort
@@ -46,6 +49,8 @@ s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 
 stripe.api_key = 'pk_test_51MEGH2EAdhkm3Iy5evFHo5liA1qyMVyjVFguHJzKO80HDlT3DYbI4IUM9xMoylsysNGqAZsl0PU0jyM9OTLuTUaW00YWRK8juE'
+
+# mpesa payment
 
 
 # ================================== UPLOAD FOLDER =================================================
@@ -787,27 +792,176 @@ def delete_rating(rating_id):
     db.session.commit()
     return jsonify({"message": "Rating deleted"}), 200
 
-# Payments
-@app.route('/create_payment_intent', methods=['POST'])
-def create_payment_intent():
-    data = request.json
+
+
+
+# @app.route('/create_payment_intent', methods=['POST'])
+# def create_payment_intent():
+#     data = request.json
+#     try:
+#         # Calculate payment amount
+#         contract_id = data.get('contract_id')
+#         contract = Contract.query.get(contract_id)
+        
+#         if not contract:
+#             return jsonify(error='Contract not found'), 404
+
+#         amount = contract.hours_worked * contract.job.hourly_rate
+
+#         # Create a PaymentIntent with the order amount and currency
+#         payment_intent = stripe.PaymentIntent.create(
+#             amount=int(amount * 100),  # Stripe uses cents
+#             currency='usd',
+#             metadata={'contract_id': contract_id},
+#             automatic_payment_methods={'enabled': True},
+#         )
+
+#         return jsonify({
+#             'clientSecret': payment_intent['client_secret']
+#         })
+#     except stripe.error.StripeError as e:
+#         return jsonify(error=str(e.user_message)), 400
+#     except Exception as e:
+#         return jsonify(error=str(e)), 500
+    
+@app.route('/pay-freelancer', methods=['POST'])
+@jwt_required()
+def pay_freelancer():
+    data = request.get_json()
+    amount = data.get('amount')
+    freelancer_id = data.get('freelancer_id')
+    job_posting_id = data.get('job_posting_id')
+
+    if not amount or not freelancer_id or not job_posting_id:
+        abort(400, description="Invalid input")
+
+    # Fetch the client who is making the payment
+    client_id = get_jwt_identity()
+    client = User.query.get(client_id)
+    freelancer = User.query.get(freelancer_id)
+
+    if not client or not freelancer:
+        abort(404, description="Client or Freelancer not found")
+
     try:
-        # Calculate payment amount
-        contract_id = data['contract_id']
-        contract = Contract.query.get(contract_id)
-        amount = contract.hours_worked * contract.job.hourly_rate
-
-        # Create a PaymentIntent with the order amount and currency
-        payment_intent = stripe.PaymentIntent.create(
-            amount=int(amount * 100),  # Stripe uses cents
+        # Create a payment intent with Stripe
+        intent = stripe.PaymentIntent.create(
+            amount=int(amount * 100),  # Amount is in cents
             currency='usd',
-            metadata={'contract_id': contract_id}
+            payment_method=data.get('payment_method_id'),
+            confirm=True,
+            description=f'Payment for Job Posting ID {job_posting_id}'
         )
-        return jsonify({'clientSecret': payment_intent['client_secret']})
+
+        # Create payment record in the database
+        payment = Payment(
+            amount=amount,
+            client_id=client_id,
+            freelancer_id=freelancer_id,
+            status='completed'
+        )
+        db.session.add(payment)
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'payment_intent': intent.id,
+            'status': 'Payment completed'
+        }), 200
+    except stripe.error.CardError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify(error=str(e)), 403
+        return jsonify({'error': 'Payment failed', 'details': str(e)}), 500
+    
+    
+# ngrok exposed url 
+my_endpoint = ' https://8f50-102-209-18-54.ngrok-free.app'
 
 
+@app.route('/pay', methods=['POST'])
+def MpesaExpress():
+    data = request.get_json()
+    
+    # Validate incoming data
+    if not data or not all(key in data for key in ('amount', 'phone')):
+        abort(400, description="Invalid input")
+    
+    try:
+        amount = float(data['amount'])  # Convert amount to float
+    except ValueError:
+        abort(400, description="Invalid amount format")
+    
+    phone = str(data['phone'])  # Ensure phone is a string
+
+    if not phone.isdigit() or len(phone) < 10:
+        abort(400, description="Invalid phone number format")
+    
+    endpoint = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+    access_token = getAccesstoken()
+    headers = { "Authorization": "Bearer %s" % access_token }
+    
+    Timestamp = datetime.now()
+    times = Timestamp.strftime("%Y%m%d%H%M%S")
+    password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"+times
+    password = base64.b64encode(password.encode('utf-8')).decode('utf-8')
+    
+    data_to_send = {
+        "BusinessShortCode": 174379,
+        "Password": password,
+        "Timestamp": times,
+        "TransactionType": "CustomerPayBillOnline",
+        "Amount": amount,
+        "PartyA": phone,
+        "PartyB": 174379,
+        "PhoneNumber": phone,
+        "CallBackURL": my_endpoint + "/lnmo-callback",
+        "AccountReference": "JOB MTAANI",
+        "TransactionDesc": "Deposit of Funds"
+    }
+    
+    try:
+        response = requests.post(endpoint, json=data_to_send, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        result = response.json()
+        
+        # Handle result code
+        if result.get("Body", {}).get("stkCallback", {}).get("ResultCode") == 1032:
+            return jsonify({
+                "status": "Payment Canceled",
+                "message": "The payment request was canceled by the user.",
+                "details": result
+            })
+        elif result.get("ResponseCode") == "0":
+            return jsonify({
+                "status": "Payment Requested",
+                "message": "Your payment request has been successfully submitted and is being processed. Please wait for further updates.",
+                "details": result
+            })
+        else:
+            return jsonify({
+                "status": "Payment Request Failed",
+                "message": result.get("CustomerMessage", "An error occurred during payment request."),
+                "details": result
+            })
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+    
+@app.route('/lnmo-callback', methods=["POST"])
+def incoming():
+    data = request.get_json()
+    print(data)
+    return "ok"
+
+def getAccesstoken():
+    consumer_key = "5OvYNmDM0aQf7qGfqcTJcz6euvVv8QcCJK37Jg9S8mNiqfi3"
+    consumer_secret = "rdZdcjTsjb5ipLrAN5EQcAQCYrNddOkIGS90A6sXOuFrce2v68u4hf8ZNaXsK5x8"
+    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    
+    r = requests.get(endpoint, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+    data = r.json()
+    return data['access_token']
+    
 if __name__ == "__main__":
     app.run(debug=True, port=5555)
     

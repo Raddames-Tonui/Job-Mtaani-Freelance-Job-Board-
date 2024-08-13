@@ -295,3 +295,4 @@ class Rating(db.Model, SerializerMixin):
         return f"<Rating(id='{self.id}', score='{self.score}')>"
     
     
+    
