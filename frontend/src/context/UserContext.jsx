@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [authToken, setAuthToken] = useState(() => localStorage.getItem("access_token") || null);
 
-// ============================================ USER DETAILS ===============================================
+    // ============================================ USER DETAILS ===============================================
     // Fetch all users
     const fetchAllUsers = () => {
         fetch(`${server_url}/users`, {
@@ -62,7 +62,7 @@ export const UserProvider = ({ children }) => {
             console.error('Delete error:', error);
             toast.error("Network error: " + error.message);
         });
-    }
+    };
 
     // REGISTER USER
     const registerUser = (username, email, password, firstname = '', lastname = '', role = '') => {
@@ -105,7 +105,7 @@ export const UserProvider = ({ children }) => {
             } else {
                 toast.error("An error occurred");
             }
-        })
+        });
     };
 
     // UPDATE USER PROFILE
@@ -139,8 +139,7 @@ export const UserProvider = ({ children }) => {
         });
     };
 
-// ============================================= AUTHENTICATION =============================================
-
+    // ============================================= AUTHENTICATION =============================================
     // LOGIN USER
     const loginUser = (identifier, password) => {
         fetch(`${server_url}/login`, {
@@ -179,35 +178,33 @@ export const UserProvider = ({ children }) => {
         });
     };
 
+    // FETCH CURRENT USER
+    useEffect(() => {
+        if (!authToken) return;
 
-        // FETCH CURRENT USER
-        useEffect(() => {
-            if (!authToken) return;
-    
-            fetch(`${server_url}/current_user`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${authToken}`
-                }
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.email) {
-                    setCurrentUser(data);
-                } else {
-                    setCurrentUser(null);
-                    localStorage.removeItem("access_token");
-                    setAuthToken(null);
-                    nav("/login");
-                }
-            })
-            .catch((error) => {
-                toast.error("Network error: " + error.message);
-            });
-        }, [authToken, nav]);
+        fetch(`${server_url}/current_user`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.email) {
+                setCurrentUser(data);
+            } else {
+                setCurrentUser(null);
+                localStorage.removeItem("access_token");
+                setAuthToken(null);
+                nav("/login");
+            }
+        })
+        .catch((error) => {
+            toast.error("Network error: " + error.message);
+        });
+    }, [authToken, nav]);
 
-    
     // LOG OUT USER
     const logoutUser = () => {
         fetch(`${server_url}/logout`, {
@@ -233,7 +230,8 @@ export const UserProvider = ({ children }) => {
             toast.error("Network error: " + error.message);
         });
     };
-// =========================================PASSWORD ===================================
+
+    // =========================================PASSWORD ===================================
     // RESET PASSWORD
     const resetPassword = (token, newPassword) => {
         fetch(`${server_url}/reset-password/${token}`, {
@@ -259,60 +257,98 @@ export const UserProvider = ({ children }) => {
         });
     };
 
+    // =================================== ACCEPTED FREELANCER ==================================
+    // Function to add an accepted freelancer
+    const addAcceptedFreelancer = (freelancerId, jobPostingId = null) => {
+        const body = {
+            freelancer_id: freelancerId,
+        };
 
+        if (jobPostingId) {
+            body.job_posting_id = jobPostingId;
+        }
 
-// =================================== ACCEPTED FREELANCER ==================================
-        // Function to add an accepted freelancer
-        const addAcceptedFreelancer = (freelancerId, jobPostingId = null) => {
-            const body = {
-                freelancer_id: freelancerId,
-            };
+        fetch(`${server_url}/accepted-freelancers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(body),
+        })
+        .then(response => response.json())
+        .then(data => {
+            toast.success('Freelancer added successfully!');
+            return data;
+        })
+        .catch(err => {
+            toast.error(`Error: ${err.message}`);
+        });
+    };
 
-            if (jobPostingId) {
-                body.job_posting_id = jobPostingId;
+    // Function to delete an accepted freelancer
+    const deleteAcceptedFreelancer = (id) => {
+        fetch(`${server_url}/accepted-freelancers/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message); });
             }
+            return response.json();
+        })
+        .then(data => {
+            toast.success('Freelancer removed successfully!');
+            return data;
+        })
+        .catch(err => {
+            toast.error(`Error: ${err.message}`);
+        });
+    };
 
-            fetch(`${server_url}/accepted-freelancers`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken}`
-                },
-                body: JSON.stringify(body),
-            })
-            .then(response => response.json())
-            .then(data => {
-                toast.success('Freelancer added successfully!');
-                return data;
-            })
-            .catch(err => {
-                toast.error(`Error: ${err.message}`);
-            });
-        };
+    // =================================== RATING ===================================
+    // Function to create a rating
+    const createRating = (userId, score, review) => {
+        fetch(`${server_url}/ratings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({ user_id: userId, score, review })
+        })
+        .then(response => response.json())
+        .then(data => {
+            toast.success('Rating created successfully!');
+            return data;
+        })
+        .catch(err => {
+            toast.error(`Error: ${err.message}`);
+        });
+    };
 
-        // Function to delete an accepted freelancer
-        const deleteAcceptedFreelancer = (id) => {
-            fetch(`${server_url}/accepted-freelancers/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${authToken}`
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.message); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                toast.success('Freelancer removed successfully!');
-                return data;
-            })
-            .catch(err => {
-                toast.error(`Error: ${err.message}`);
-            });
-        };
-
+    // Function to update a rating
+    const updateRating = (ratingId, score, review) => {
+        fetch(`${server_url}/ratings/${ratingId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({ score, review })
+        })
+        .then(response => response.json())
+        .then(data => {
+            toast.success('Rating updated successfully!');
+            return data;
+        })
+        .catch(err => {
+            toast.error(`Error: ${err.message}`);
+        });
+    };
 
     const contextData = {
         currentUser,
@@ -326,7 +362,9 @@ export const UserProvider = ({ children }) => {
         users,
         deleteUser,
         addAcceptedFreelancer,
-        deleteAcceptedFreelancer
+        deleteAcceptedFreelancer,
+        createRating,
+        updateRating
     };
 
     return (

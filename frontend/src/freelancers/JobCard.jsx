@@ -5,7 +5,7 @@ import { FaArrowRight } from "react-icons/fa6";
 const JobCard = ({ job, actions, onClick, timeAgo }) => {
   return (
     <div
-      className="bg-white hover:bg-blue-200 shadow-md rounded-lg p-6 md:mx-auto mx-2 md:w-[60vw]"
+      className="bg-white hover:bg-blue-200 shadow-md rounded-lg p-6 md:mx-auto mx-2 md:w-[60vw] "
       onClick={onClick}
     >
       <h2>

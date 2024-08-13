@@ -45,16 +45,16 @@ const ProjectForm = () => {
                     <NavLink 
                         to="/client/projects/create-project"
                         className={({ isActive }) => 
-                            `py-2 px-6 rounded-l-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
-                        }
+                            `py-2 px-6 rounded-l-lg text-white ${isActive ? 'bg-indigo-600' : 'bg-indigo-400 hover:bg-indigo-500'}`
+                          }
                     >
                         Create Project
                     </NavLink>
                     <NavLink 
                         to="/client/my-projects"
                         className={({ isActive }) => 
-                            `py-2 px-6 rounded-r-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
-                        }
+                            `py-2 px-6 rounded-r-lg text-white ${isActive ? 'bg-indigo-600' : 'bg-indigo-400 hover:bg-indigo-500'}`
+                          }
                     >
                         My Projects
                     </NavLink>
@@ -63,8 +63,10 @@ const ProjectForm = () => {
 
             <div className="flex items-center justify-center py-5 px-6 lg:px-8">
                 <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-2xl w-full py-8 rounded-md shadow-md border-2 border-gray-200">
-                    
-                    <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
+                <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Create Project
+          </h2>                   
+          <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
                         {/* Title */}
                         <div>
                             <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">

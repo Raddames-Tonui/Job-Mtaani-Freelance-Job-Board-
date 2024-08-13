@@ -925,26 +925,30 @@ def delete_message(message_id):
 
 # Route to create a rating
 @app.route('/ratings', methods=['POST'])
+@jwt_required()
 def create_rating():
     data = request.get_json()
-    if not data or not all(key in data for key in ('user_id', 'rater_id', 'score')):
+    if not data or not all(key in data for key in ('score')):
         abort(400, description="Invalid input")
 
+    current_user = get_jwt_identity()  
+    rater_id = current_user['id']  
+
     rating = Rating(
-        user_id=data['user_id'],
-        rater_id=data['rater_id'],
+        user_id=data['user_id'], 
+        rater_id=rater_id,         
         score=data['score'],
         review=data.get('review')
     )
     db.session.add(rating)
     db.session.commit()
     return jsonify(rating.to_dict()), 201
-
 # Route to get all ratings
 @app.route('/ratings', methods=['GET'])
 def get_ratings():
     ratings = Rating.query.all()
     return jsonify([rating.to_dict() for rating in ratings]), 200
+
 
 # Route to get a single rating by ID
 @app.route('/ratings/<int:rating_id>', methods=['GET'])

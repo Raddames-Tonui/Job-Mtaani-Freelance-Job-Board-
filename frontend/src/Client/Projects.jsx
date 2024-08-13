@@ -1,36 +1,56 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ProjectContext } from '../context/ProjectContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import ProjectUpdateModal from './ProjectUpdateModal';
 
 function Projects() {
-    const { projects, fetchProjects } = useContext(ProjectContext);
-    
+    const { projects, fetchProjects, updateProject, deleteProject } = useContext(ProjectContext);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedProject, setSelectedProject] = useState(null);
 
     useEffect(() => {
-        fetchProjects(); 
+        fetchProjects();
     }, [fetchProjects]);
+
+    const handleEditClick = (project) => {
+        setSelectedProject(project);
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setSelectedProject(null);
+    };
+
+    const handleUpdateProject = (projectId, updatedData) => {
+        updateProject(projectId, updatedData);
+        handleCloseModal(); 
+    };
+
+    const handleDelete = (projectId) => {
+        if (window.confirm('Are you sure you want to delete this project?')) {
+            deleteProject(projectId);
+        }
+    };
 
     return (
         <div className="p-4 md:p-6 min-h-screen bg-gray-100">
             <div className="bg-white p-6 rounded-lg shadow-lg">
-           
-
                 <div className="flex justify-center mb-6">
                     <div className="inline-flex">
-                        <NavLink 
-                            to="/client/projects/create-project"                            
-                            className={({ isActive }) => 
-                                `py-2 px-6 rounded-l-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
+                        <NavLink
+                            to="/client/projects/create-project"
+                            className={({ isActive }) =>
+                                `py-2 px-6 rounded-l-lg text-white ${isActive ? 'bg-indigo-600' : 'bg-indigo-400 hover:bg-indigo-500'}`
                             }
                         >
                             Create Project
-                            
                         </NavLink>
-                        <NavLink 
+                        <NavLink
                             to="/client/my-projects"
-                            className={({ isActive }) => 
-                                `py-2 px-6 rounded-r-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
+                            className={({ isActive }) =>
+                                `py-2 px-6 rounded-r-lg text-white ${isActive ? 'bg-indigo-600' : 'bg-indigo-400 hover:bg-indigo-500'}`
                             }
                         >
                             My Projects
@@ -62,11 +82,12 @@ function Projects() {
                                     <td className="py-3 px-6 text-left">{project.deadline}</td>
                                     <td className="py-3 px-6 text-center">
                                         <div className="flex justify-center gap-2">
-                                            <NavLink to={`/client/projects/edit/${project.id}`}>
-                                                <button className="text-blue-500 hover:text-blue-600">
-                                                    <FaEdit />
-                                                </button>
-                                            </NavLink>
+                                            <button
+                                                className="text-blue-500 hover:text-blue-600"
+                                                onClick={() => handleEditClick(project)}
+                                            >
+                                                <FaEdit />
+                                            </button>
                                             <button
                                                 className="text-red-500 hover:text-red-600"
                                                 onClick={() => handleDelete(project.id)}
@@ -81,6 +102,15 @@ function Projects() {
                     </table>
                 </div>
             </div>
+
+            {selectedProject && (
+                <ProjectUpdateModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    project={selectedProject}
+                    onUpdate={handleUpdateProject}
+                />
+            )}
         </div>
     );
 }

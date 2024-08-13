@@ -274,21 +274,21 @@ class Project(db.Model, SerializerMixin):
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "client_id": self.client_id,
-            "freelancer_id": self.freelancer_id,
-            "status": self.status,
-            "deadline": self.deadline,
+            "client": {
+                "firstname": self.client.firstname,
+                "lastname": self.client.lastname
+            } if self.client else None,
             "freelancer": {
                 "firstname": self.freelancer.firstname,
                 "lastname": self.freelancer.lastname,
                 "username": self.freelancer.username
-            } if self.freelancer else None, 
+            } if self.freelancer else None,
+            "status": self.status,
+            "deadline": self.deadline,
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
-
-       
-
+     
     def __repr__(self):
         return f"<Project(title='{self.title}', status='{self.status}')>"
 

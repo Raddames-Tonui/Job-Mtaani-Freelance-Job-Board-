@@ -2,7 +2,7 @@ import React from "react";
 import { Toaster } from "react-hot-toast";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import Sidebar from "../Client/SideBar";
+import Sidebar from "../components/SideBar";
 import "../app.css";
 
 function LayoutClient() {

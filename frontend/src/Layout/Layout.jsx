@@ -13,7 +13,6 @@ function Layout() {
         position="top-center"
         reverseOrder={true}
         toastOptions={{
-          // className: "toast-below-navbar",
           style: {
             zIndex: 100,
           },

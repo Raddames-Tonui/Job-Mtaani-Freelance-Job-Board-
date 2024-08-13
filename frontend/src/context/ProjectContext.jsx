@@ -30,7 +30,6 @@ export const ProjectProvider = ({ children }) => {
       });
   };
 
-
   // Fetch freelancers accepted by the current client
   const fetchAcceptedFreelancers = () => {
     return fetch(`${server_url}/freelancers/accepted`, {
@@ -77,11 +76,70 @@ export const ProjectProvider = ({ children }) => {
       });
   };
 
+  // Update a project
+  const updateProject = (projectId, projectData) => {
+    return fetch(`${server_url}/projects/${projectId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(projectData)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(updatedProject => {
+        setProjects(prevProjects =>
+          prevProjects.map(project =>
+            project.id === updatedProject.id ? updatedProject : project
+          )
+        );
+        toast.success('Project updated successfully!');
+      })
+      .catch(error => {
+        console.error('Failed to update project:', error);
+        toast.error('Failed to update project');
+      });
+  };
+
+  // Delete a project
+  const deleteProject = (projectId) => {
+    return fetch(`${server_url}/projects/${projectId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(() => {
+        setProjects(prevProjects =>
+          prevProjects.filter(project => project.id !== projectId)
+        );
+        toast.success('Project deleted successfully!');
+      })
+      .catch(error => {
+        console.error('Failed to delete project:', error);
+        toast.error('Failed to delete project');
+      });
+  };
+
   const contextData = {
     projects,
     acceptedFreelancers,
     fetchProjects,
     createProject,
+    updateProject,
+    deleteProject,
     fetchAcceptedFreelancers 
   };
 

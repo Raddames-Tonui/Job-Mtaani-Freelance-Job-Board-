@@ -1,23 +1,36 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ProjectContext } from '../context/ProjectContext';
+import { UserContext } from '../context/UserContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import ReviewModal from '../components/ReviewModal';
 
 function FreelancerProjects() {
     const { projects, fetchProjects } = useContext(ProjectContext);
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProjectId, setSelectedProjectId] = useState(null);
+    
     useEffect(() => {
         fetchProjects();
     }, [fetchProjects]);
+
+    const handleReviewClick = (projectId) => {
+        setSelectedProjectId(projectId);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedProjectId(null);
+    };
 
     return (
         <div className="p-4 md:p-6 min-h-screen bg-gray-100">
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <div className="flex justify-center mb-6">
                     <div className="inline-flex">
-                    
                         <NavLink 
-                            to="/freelancers/projects"
+                            to="/freelancer/projects"
                             className={({ isActive }) => 
                                 `py-2 px-6 rounded-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
                             }
@@ -33,22 +46,25 @@ function FreelancerProjects() {
                             <tr>
                                 <th className="py-3 px-6 text-left">Title</th>
                                 <th className="py-3 px-6 text-left">Client</th>
-                                <th className="py-3 px-6 text-left">Milestone</th>
                                 <th className="py-3 px-6 text-left">Deadline</th>
+                                <th className="py-3 px-6 text-left">Milestone</th>                                
                                 <th className="py-3 px-6 text-center">Actions</th>
+                                <th className="py-3 px-6 text-center">Review</th>
                             </tr>
                         </thead>
                         <tbody className="text-gray-900 text-sm font-light">
                             {projects && projects.map((project) => (
                                 <tr key={project.id} className="border-b border-gray-300 hover:bg-gray-50">
                                     <td className="py-3 px-6 text-left capitalize">{project.title}</td>
-                                    <td className="py-3 px-6 text-left capitalize">{project.client.firstname} {project.client.lastname}</td>
+                                    <td className="py-3 px-6 text-left capitalize">
+                                        {project.client.firstname} {project.client.lastname}
+                                    </td>
+                                    <td className="py-3 px-6 text-left">{project.deadline}</td>
                                     <td className="py-3 px-6 text-left">
                                         <span className={`py-1 px-3 rounded-full text-sm ${project.status === 'completed' ? 'bg-green-600 text-white' : project.status === 'ongoing' ? 'bg-yellow-500 text-white' : 'bg-red-600 text-white'}`}>
                                             {project.status}
                                         </span>
                                     </td>
-                                    <td className="py-3 px-6 text-left">{project.deadline}</td>
                                     <td className="py-3 px-6 text-center">
                                         <div className="flex justify-center gap-2">
                                             <NavLink to={`/client/projects/edit/${project.id}`}>
@@ -56,13 +72,11 @@ function FreelancerProjects() {
                                                     <FaEdit />
                                                 </button>
                                             </NavLink>
-                                            <button
-                                                className="text-red-500 hover:text-red-600"
-                                                onClick={() => handleDelete(project.id)}
-                                            >
-                                                <FaTrash />
-                                            </button>
+                                            
                                         </div>
+                                    </td>
+                                    <td className="py-3 px-6 text-center cursor-pointer text-blue-500 hover:text-blue-600" onClick={() => handleReviewClick(project.id)}>
+                                        Review
                                     </td>
                                 </tr>
                             ))}
@@ -70,6 +84,13 @@ function FreelancerProjects() {
                     </table>
                 </div>
             </div>
+
+            {/* Review Modal */}
+            <ReviewModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                projectId={selectedProjectId}
+            />
         </div>
     );
 }

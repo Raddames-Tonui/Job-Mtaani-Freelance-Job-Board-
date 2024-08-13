@@ -35,7 +35,6 @@ import FreelancersPage from "./admin/FreelancersPage";
 import JobsPage from "./admin/JobsPage";
 import Settings from "./admin/Settings";
 
-import LayoutFreelancer from "./Layout/LayoutFreelancer";
 import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
@@ -51,7 +50,7 @@ function App() {
             <ProjectProvider>
               <Routes>
                 {/* FREELANCER ROUTES */}
-                <Route path="/freelancer" element={<LayoutFreelancer />}>
+                <Route path="/freelancer" element={<LayoutClient />}>
                   {/* <Route index element={<FreelancerDashboard />} /> */}
                   <Route path="find-jobs" element={<FindJobs />} />
                   <Route  path="updateprofile"  element={<UpdateFreelancerProfile />} />

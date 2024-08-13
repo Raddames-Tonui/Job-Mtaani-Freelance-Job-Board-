@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
 import { FaLocationDot } from "react-icons/fa6";
 import { GiTakeMyMoney, GiBrain } from "react-icons/gi";
@@ -115,23 +114,33 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
               Apply now
             </button>
 
-            <div className="flex flex-col items-center md:mt-8 border-2 rounded-xl">
-              <h2 className="font-bold text-xl pt-4 underline">About the client</h2>
-              <div className="flex flex-col items-center py-2">
-                {job.client.avatar ? (
-                  <img src={job.client.avatar} alt={job.client.username} className="w-16 h-16 rounded-full mb-2" />
-                ) : (
-                  <Icon icon="healthicons:ui-user-profile" className="w-16 h-16" />
-                )}
-                <h3 className="text-lg font-bold capitalize">{job.client.firstname} {job.client.lastname}</h3>
-                <p className="text-gray-500">{job.client.about}</p>
-                <hr />
-                <p>{job.client.about}</p>
-                <div>
-                  <p>{job.client.needs}</p>
-                </div>
-              </div>
-            </div>
+            <div className="bg-white rounded-lg p-4 shadow-md">
+      <div className="flex items-center mb-4">
+        <img
+          src="profile-image-url.jpg"
+          alt="Profile"
+          className="w-12 h-12 rounded-full mr-3"
+        />
+        <div>
+          <h2 className="text-lg font-bold text-green-700 hover:underline">
+            Raddames T.
+          </h2>
+          <p className="text-sm text-gray-600">Full stack web dev...</p>
+        </div>
+      </div>
+      <div>
+        <a href="#" className="text-green-600 hover:underline">
+          Complete your profile
+        </a>
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+          <div
+            className="bg-green-600 h-2.5 rounded-full"
+            style={{ width: '80%' }}
+          ></div>
+        </div>
+        <span className="text-sm text-gray-500">80%</span>
+      </div>
+    </div>
           </div>
         </section>
       </div>
@@ -165,7 +174,7 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
               </div>
               <div className="flex justify-end">
                 <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Apply
+                  Apply Now
                 </button>
               </div>
             </form>
@@ -176,11 +185,5 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
   );
 }
 
-JobDetails.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  job: PropTypes.object.isRequired,
-  timeAgo: PropTypes.string.isRequired,
-};
 
 export default JobDetails;

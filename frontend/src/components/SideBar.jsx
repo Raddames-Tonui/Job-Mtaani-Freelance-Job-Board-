@@ -34,8 +34,7 @@ const Sidebar = () => {
         </div>
       )}
       <nav className="mt-4">
-        <ul>
-          
+        <ul>         
 
         {/* CLIENT */}
 
@@ -73,15 +72,46 @@ const Sidebar = () => {
              <MdPeopleAlt  className="mr-3 text-2xl" /> Freelancers
           </NavLink>
           <NavLink
-            to="/client/my-projects"
+            to="/client/projects/create-project"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
             <RiProgress3Fill className="mr-2"  />
           Projects
+          </NavLink>                     
+            </>
+          )}   
+
+            {/* FREELANCER  */}
+        {currentUser && currentUser.is_freelancer && (
+            <>
+            <NavLink
+            to="/freelancer/find-jobs"
+            end
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >       
+            <FaHome className="mr-2" /> Overview
+          </NavLink>
+            <NavLink
+            to="/freelancer/updateprofile"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
+            <TiUserAdd className="mr-2" /> Profile
           </NavLink>
           
+          <NavLink
+            to="/freelancer/applied-jobs"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
+            <FaBriefcase  className="mr-2" /> Applied Jobs
+          </NavLink>
           
-              
+          <NavLink
+            to="/freelancer/projects"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
+            <RiProgress3Fill className="mr-2"  />
+          Projects
+          </NavLink>                     
             </>
           )}     
                

@@ -48,9 +48,9 @@ const FindJobs = () => {
       {jobs.length === 0 ? (
         <h3 className="text-center text-gray-500">No job postings found.</h3>
       ) : (
-        <div className="flex flex-col md:grid md:grid-cols-3 gap-4">
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-4  ">
           {/* Job cards */}
-          <div className="col-span-1 md:col-span-2 flex flex-col gap-4">
+          <div className="col-span-1 md:col-span-2 flex flex-col gap-4 justify-center">
             {jobs.map((job) => (
               <JobCard
                 key={job.id}
@@ -61,36 +61,7 @@ const FindJobs = () => {
               />
             ))}
           </div>
-          
-          {/* Additional content section */}
-          <div className="hidden md:block   md:col-span-1 h-screen p-4 w-[25vw] ">
-              <div className="flex flex-col items-center bg-blue-100 rounded-xl p-2 pb-6 ">
-                {currentUser && currentUser.username && (
-                      <>
-                        <div className='flex flex-col items-center justify-center mt-4 '>
-                          {currentUser.avatar ? (
-                            <img src={currentUser.avatar} alt={currentUser.firstname} className='h-24 w-24 rounded-md border-2 border-black object-cover top-0' />
-                          ) : (
-                            <Icon icon="healthicons:ui-user-profile" className='w-16 h-16'/>
-                          )}
-                          <h2 className="text-xl font-semibold mt-2 text-black capitalize">{currentUser.firstname} {currentUser.lastname}</h2>
-                          <Link to="/freelancer/updateprofile" className="underline text-blue-500 hover:text-blue-800 pt-2"> Complete Your Profile </Link>
-                          
-                        </div>
-                        
-                      </>
-                    )}
-              </div>
-              <div className="mt-4 bg-blue-100 rounded-xl p-4 ">
-                <h2 className="font-bold ">Skills</h2>
-                <p >{currentUser?.skills}</p>
-              
-                <h2 className="flex pt-4 font-bold ">Experience <span></span></h2>
-                <p className="flex  ">{currentUser?.experience}</p>
-                <h2 className="flex pt-4 font-bold ">Ratings:   <span className="font-normal"> {currentUser?.ratings  || " None"}</span></h2>
-                
-                </div>                  
-          </div>
+       
         </div>
       )}
       
