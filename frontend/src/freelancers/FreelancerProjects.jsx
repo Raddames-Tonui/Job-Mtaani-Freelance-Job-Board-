@@ -114,7 +114,7 @@ function FreelancerProjects() {
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="py-3 px-6 text-center cursor-pointer text-blue-500 hover:text-blue-600" onClick={() => handleReviewClick(project.id, 'client')}>
+                                        <td className="py-3 px-6 text-center cursor-pointer text-blue-500 hover:text-blue-600" onClick={() => handleReviewClick(project.client_id, 'client')}>
                                             Review Client
                                         </td>
                                     </tr>
@@ -130,7 +130,7 @@ function FreelancerProjects() {
                 <ReviewModal
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
-                    projectId={selectedProjectId}
+                    userId={selectedProjectId}  // Pass the selected project client_id here
                     reviewType={reviewType}
                 />
             )}
