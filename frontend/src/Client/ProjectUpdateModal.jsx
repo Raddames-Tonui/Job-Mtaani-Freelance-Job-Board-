@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ProjectContext } from '../context/ProjectContext';
+import { FaTimes } from 'react-icons/fa';
 
 const milestoneStates = {
   notStarted: "Not Started",
@@ -50,7 +51,7 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
     updateProject(project.id, formData);
 
     // Check if status is completed and open review modal
-    if (formData.status === 'completed') {
+    if (formData.status === 'Completed') {
       onReviewOpen(project.client_id);
     }
 
@@ -60,12 +61,14 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-4">
-        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-6">
-          Update Project
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose}></div>
+      <div className="bg-white p-6 rounded-lg shadow-lg relative z-10 w-full max-w-lg mx-4 md:max-w-sm sm:max-w-xs">
+        <button className="absolute top-2 right-2 text-gray-600 hover:text-gray-900" onClick={onClose}>
+          <FaTimes size={20} />
+        </button>
+        <h2 className="text-lg font-semibold mb-4">Update Project</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title Field */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">
@@ -79,7 +82,7 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                 placeholder="Project Title"
               />
             </div>
@@ -97,7 +100,7 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
                 value={formData.description}
                 onChange={handleChange}
                 required
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                 placeholder="Project Description"
               />
             </div>
@@ -115,10 +118,10 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
                 value={formData.status}
                 onChange={handleChange}
                 required
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               >
-                <option value="ongoing">Ongoing</option>
-                <option value="completed">Completed</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Completed">Completed</option>
               </select>
             </div>
           </div>
@@ -136,7 +139,7 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
                 value={formData.deadline}
                 onChange={handleChange}
                 required
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               />
             </div>
           </div>
@@ -153,10 +156,10 @@ const ProjectUpdateModal = ({ isOpen, onClose, project, onReviewOpen }) => {
 
           {/* Buttons */}
           <div className="flex justify-end space-x-2">
-            <button type="button" onClick={onClose} className="bg-gray-300 text-gray-900 px-4 py-2 rounded-md shadow-sm ring-1 ring-gray-300 hover:bg-gray-400 focus:ring-2 focus:ring-inset">
+            <button type="button" onClick={onClose} className="bg-gray-300 text-gray-900 px-3 py-1.5 rounded-md shadow-sm ring-1 ring-gray-300 hover:bg-gray-400 focus:ring-2 focus:ring-inset">
               Cancel
             </button>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm ring-1 ring-gray-300 hover:bg-blue-600 focus:ring-2 focus:ring-inset">
+            <button type="submit" className="bg-blue-500 text-white px-3 py-1.5 rounded-md shadow-sm ring-1 ring-gray-300 hover:bg-blue-600 focus:ring-2 focus:ring-inset">
               Update
             </button>
           </div>

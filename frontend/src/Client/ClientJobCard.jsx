@@ -3,6 +3,7 @@ import { formatDistanceToNow } from "date-fns";
 import { FaLocationDot } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import Swal from "sweetalert2"; 
 
 const ClientJobCard = ({ job, onDelete }) => {
   const navigate = useNavigate();
@@ -19,14 +20,26 @@ const ClientJobCard = ({ job, onDelete }) => {
   };
 
   const handleDeleteClick = async () => {
-    if (window.confirm("Are you sure you want to delete this job?")) {
-      try {
-        await onDelete();
-        toast.success("Job deleted successfully");
-      } catch (error) {
-        toast.error("Failed to delete job");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await onDelete();
+          Swal.fire("Deleted!", "Your job has been deleted.", "success");
+          toast.success("Job deleted successfully");
+        } catch (error) {
+          Swal.fire("Failed!", "There was an error deleting the job.", "error");
+          toast.error("Failed to delete job");
+        }
       }
-    }
+    });
   };
 
   return (

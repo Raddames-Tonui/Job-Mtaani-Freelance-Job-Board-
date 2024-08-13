@@ -259,7 +259,7 @@ class Project(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), nullable=False)  # 'ongoing', 'completed'
+    status = db.Column(db.String(20), nullable=False)  # 'ongoing', 'completed', 'cancelled', 'Not Started'
     deadline = db.Column(db.String(50), nullable=False)
 
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

@@ -79,7 +79,7 @@ export const ProjectProvider = ({ children }) => {
   // Update a project
   const updateProject = (projectId, projectData) => {
     return fetch(`${server_url}/projects/${projectId}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${authToken}`,
         'Content-Type': 'application/json'

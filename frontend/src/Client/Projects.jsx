@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ProjectContext } from '../context/ProjectContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 import ProjectUpdateModal from './ProjectUpdateModal';
 import ReviewModal from '../components/ReviewModal';
 
@@ -11,6 +12,14 @@ function Projects() {
     const [selectedProject, setSelectedProject] = useState(null);
     const [isReviewModalOpen, setReviewModalOpen] = useState(false);
     const [selectedFreelancerId, setSelectedFreelancerId] = useState(null);
+
+    const statusColors = {
+        'Not Started': 'bg-gray-500 text-white',
+        'Ongoing': 'bg-yellow-500 text-white',
+        'On Hold': 'bg-orange-500 text-white',
+        'Completed': 'bg-green-600 text-white',
+        'Cancelled': 'bg-red-600 text-white',
+    };
 
     useEffect(() => {
         fetchProjects();
@@ -27,14 +36,39 @@ function Projects() {
     };
 
     const handleUpdateProject = (projectId, updatedData) => {
-        updateProject(projectId, updatedData);
-        handleCloseModal(); 
+        updateProject(projectId, updatedData)
+            .then((updatedProject) => {
+                // Check if the status was updated to "Completed"
+                if (updatedProject.status === 'Completed') {                    
+                    setSelectedFreelancerId(updatedProject.freelancer_id); // Open the review modal for the freelancer associated with the project
+                    setReviewModalOpen(true);
+                }
+                handleCloseModal();
+            })
+            .catch(error => {
+                console.error('Failed to update project:', error);
+            });
     };
 
     const handleDelete = (projectId) => {
-        if (window.confirm('Are you sure you want to delete this project?')) {
-            deleteProject(projectId);
-        }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteProject(projectId);
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your project has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
     };
 
     const handleReviewOpen = (freelancerId) => {
@@ -89,7 +123,7 @@ function Projects() {
                                     <td className="py-3 px-6 text-left capitalize">{project.title}</td>
                                     <td className="py-3 px-6 text-left capitalize">{project.freelancer.firstname} {project.freelancer.lastname}</td>
                                     <td className="py-3 px-6 text-left">
-                                        <span className={`py-1 px-3 rounded-full text-sm ${project.status === 'completed' ? 'bg-green-600 text-white' : project.status === 'ongoing' ? 'bg-yellow-500 text-white' : 'bg-red-600 text-white'}`}>
+                                        <span className={`py-1 px-3 rounded-full text-sm ${statusColors[project.status]}`}>
                                             {project.status}
                                         </span>
                                     </td>
@@ -126,7 +160,7 @@ function Projects() {
                     onClose={handleCloseModal}
                     project={selectedProject}
                     onUpdate={handleUpdateProject}
-                    onReviewOpen={handleReviewOpen} 
+                    onReviewOpen={handleReviewOpen}
                 />
             )}
 

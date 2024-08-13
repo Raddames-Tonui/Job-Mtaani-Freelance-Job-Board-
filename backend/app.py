@@ -693,7 +693,7 @@ def create_project():
         abort(400, description="Invalid input")
 
    
-    allowed_statuses = ['started','ongoing', 'completed'] 
+    allowed_statuses = ['Not Started','started','ongoing', 'completed'] 
     if data['status'] not in allowed_statuses:
         abort(400, description="Invalid status")
 
@@ -741,7 +741,7 @@ def get_project(project_id):
     return jsonify(project.to_dict()), 200
 
 # Route to update a project
-@app.route('/projects/<int:project_id>', methods=['PUT'])
+@app.route('/projects/<int:project_id>', methods=['PATCH'])
 def update_project(project_id):
     data = request.get_json()
     project = Project.query.get_or_404(project_id)

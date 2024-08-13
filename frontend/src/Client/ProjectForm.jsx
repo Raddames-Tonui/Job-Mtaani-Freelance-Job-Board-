@@ -9,7 +9,7 @@ const ProjectForm = () => {
         title: '',
         description: '',
         freelancer_id: '',
-        status: 'started',
+        status: 'Not Started',
         deadline: ''
     });
 
@@ -142,7 +142,7 @@ const ProjectForm = () => {
                                     required
                                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                                 >
-                                    <option value="started">Started</option>
+                                    <option value="Not Started">Not started</option>
                                     {/* <option value="completed">Completed</option> */}
                                 </select>
                             </div>
