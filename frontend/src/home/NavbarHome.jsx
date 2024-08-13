@@ -39,7 +39,7 @@ function NavbarHome() {
               <NavLink
                 to="/"
                 className="text-white font-normal p-1 hover:text-gray-300 text-xl"
-                onClick={() => setIsMenuOpen(false)} // Close menu on click
+                onClick={() => setIsMenuOpen(false)} 
               >
                 Home
               </NavLink>
@@ -48,7 +48,7 @@ function NavbarHome() {
               <NavLink
                 to="/about"
                 className="text-white font-normal p-1 hover:text-gray-300 text-xl"
-                onClick={() => setIsMenuOpen(false)} // Close menu on click
+                onClick={() => setIsMenuOpen(false)} 
               >
                 About Us
               </NavLink>
@@ -57,7 +57,7 @@ function NavbarHome() {
               <NavLink
                 to="/customer-support"
                 className="text-white font-normal p-1 hover:text-gray-300 text-xl"
-                onClick={() => setIsMenuOpen(false)} // Close menu on click
+                onClick={() => setIsMenuOpen(false)} 
               >
                 Contact Us
               </NavLink>
@@ -71,14 +71,14 @@ function NavbarHome() {
             <NavLink
               to="/login"
               className="bg-transparent text-white border border-white py-2 px-4 hover:bg-white hover:text-black"
-              onClick={() => setIsMenuOpen(false)} // Close menu on click
+              onClick={() => setIsMenuOpen(false)} 
             >
               Log In
             </NavLink>
             <NavLink
               to="/signup"
               className="bg-white text-black py-2 px-4 hover:bg-gray-200"
-              onClick={() => setIsMenuOpen(false)} // Close menu on click
+              onClick={() => setIsMenuOpen(false)} 
             >
               Sign Up
             </NavLink>

@@ -76,7 +76,7 @@ const JobCreation = () => {
           Post a Job
           </h2>
           
-          <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
+          <form className="space-y-6 mt-4 w-full" onSubmit={handleSubmit}>
             {/* Job Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">

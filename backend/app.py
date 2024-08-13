@@ -2,6 +2,7 @@ import random,os
 from datetime import timedelta
 from flask import Flask, jsonify, request, abort, send_file
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import Session
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
@@ -612,25 +613,34 @@ def get_accepted_freelancers():
     freelancers = [
         {
             "id": af.freelancer.id,
-            "username": af.freelancer.username
+            "username": af.freelancer.username,
+            "firstname": af.freelancer.firstname,
+            "lastname": af.freelancer.lastname,
+            "avatar": af.freelancer.avatar
         }
         for af in accepted_freelancers
     ]
     
     return jsonify(freelancers), 200
+
 # Route to add an accepted freelancer
 @app.route('/accepted-freelancers', methods=['POST'])
 @jwt_required()
 def add_accepted_freelancer():
-    data = request.json
+    data = request.get_json()
     client_id = get_jwt_identity()
     
-    # Retrieve data from request
     freelancer_id = data.get('freelancer_id')
     job_posting_id = data.get('job_posting_id')
 
-    if not freelancer_id:
-        return jsonify({"error": "Freelancer ID is required"}), 400
+    # Check if the freelancer is already accepted
+    existing_accepted = AcceptedFreelancer.query.filter_by(
+        freelancer_id=freelancer_id,
+        client_id=client_id
+    ).first()
+    
+    if existing_accepted:
+        return jsonify({"message": "Freelancer is already accepted"}), 400
 
     try:
         new_accepted_freelancer = AcceptedFreelancer(
@@ -646,22 +656,14 @@ def add_accepted_freelancer():
         return jsonify({"error": str(e)}), 400
 
 # Route to delete an accepted freelancer
-@app.route('/accepted-freelancers/<int:id>', methods=['DELETE'])
+@app.route('/accepted-freelancers/<int:accepted_freelancer_id>', methods=['DELETE'])
 @jwt_required()
-def delete_accepted_freelancer(id):
-    client_id = get_jwt_identity()
-    
-    try:
-        accepted_freelancer = AcceptedFreelancer.query.get(id)
-        if not accepted_freelancer or accepted_freelancer.client_id != client_id:
-            return jsonify({"error": "AcceptedFreelancer not found or unauthorized"}), 404
-        
-        db.session.delete(accepted_freelancer)
-        db.session.commit()
-        return jsonify({"message": "Deleted successfully"}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 400
+def delete_accepted_freelancer(accepted_freelancer_id):
+    accepted_freelancer = AcceptedFreelancer.query.get_or_404(accepted_freelancer_id)
+    db.session.delete(accepted_freelancer)
+    db.session.commit()
+    return jsonify({"message": "Accepted freelancer deleted"}), 200
+
 
 
 
@@ -746,6 +748,17 @@ def delete_project(project_id):
     db.session.delete(project)
     db.session.commit()
     return jsonify({"message": "Project deleted"}), 200
+
+
+# Route to get all projects for a specific freelancer
+@app.route('/freelancer/projects', methods=['GET'])
+@jwt_required()
+def get_freelancer_projects():
+    freelancer_id = get_jwt_identity()  
+    
+    projects = Project.query.filter_by(freelancer_id=freelancer_id).all()
+    return jsonify([project.to_dict() for project in projects])
+
 
 
 # ================================ MILESTONES ================================

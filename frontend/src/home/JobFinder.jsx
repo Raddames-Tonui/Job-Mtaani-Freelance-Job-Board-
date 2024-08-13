@@ -16,15 +16,10 @@ const JobFinder = () => {
             />
             <select className="px-4 py-2 w-full sm:w-auto border border-gray-300 rounded-md">
               <option>All Locations</option>
-              {/* Add more options as needed */}
             </select>
             <button className="px-4 py-2 w-full sm:w-auto bg-blue-500 text-white rounded-md">Search</button>
           </div>
-          {/* <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-            {['designer', 'writer', 'team leader', 'fullstack', 'web developer', 'senior', 'financial analyst', 'software', 'web', 'tech'].map((search) => (
-              <span key={search} className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full">{search}</span>
-            ))}
-          </div> */}
+          
         </div>
         <div className="relative h-full shadow-lg shadow-gray-400 lg:w-auto flex-shrink-0 flex justify-center lg:justify-end">
           <div className="relative w-80 h-80 md:w-96 md:h-96">

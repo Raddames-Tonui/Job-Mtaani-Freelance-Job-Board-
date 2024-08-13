@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData , UniqueConstraint
 from sqlalchemy_serializer import SerializerMixin
 
 # Define metadata naming conventions
@@ -175,7 +175,7 @@ class AcceptedFreelancer(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     freelancer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=True)
 
     freelancer = db.relationship('User', foreign_keys=[freelancer_id], backref=db.backref('accepted_projects', lazy=True))
     client = db.relationship('User', foreign_keys=[client_id])
@@ -183,6 +183,11 @@ class AcceptedFreelancer(db.Model, SerializerMixin):
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    # Unique constraint to prevent duplicate freelancer-client combinations
+    __table_args__ = (
+        UniqueConstraint('freelancer_id', 'client_id', name='unique_freelancer_client'),
+    )
 
     def to_dict(self):
         return {
@@ -196,7 +201,8 @@ class AcceptedFreelancer(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<AcceptedFreelancer(freelancer_id='{self.freelancer_id}', client_id='{self.client_id}', job_posting_id='{self.job_posting_id}')>"
-
+    
+    
 class Payment(db.Model, SerializerMixin):
     __tablename__ = "payments"
 
@@ -281,17 +287,7 @@ class Project(db.Model, SerializerMixin):
             "updated_at": self.updated_at
         }
 
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "client_id": self.client_id,
-            "freelancer_id": self.freelancer_id,
-            "status": self.status,
-            "deadline": self.deadline,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
-        }
+       
 
     def __repr__(self):
         return f"<Project(title='{self.title}', status='{self.status}')>"

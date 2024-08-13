@@ -10,10 +10,10 @@ function Layout() {
     <div className="h-screen overflow-y-scroll no-scrollbar">
       <NavbarHome />
       <Toaster
-        position="top-right"
+        position="top-center"
         reverseOrder={true}
         toastOptions={{
-          className: "toast-below-navbar",
+          // className: "toast-below-navbar",
           style: {
             zIndex: 100,
           },

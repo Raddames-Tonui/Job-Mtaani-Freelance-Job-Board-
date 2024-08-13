@@ -27,9 +27,9 @@ export const ProjectProvider = ({ children }) => {
       .then(data => setProjects(data))
       .catch(error => {
         console.error('Failed to fetch projects:', error);
-       
       });
   };
+
 
   // Fetch freelancers accepted by the current client
   const fetchAcceptedFreelancers = () => {
@@ -40,19 +40,13 @@ export const ProjectProvider = ({ children }) => {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
         setAcceptedFreelancers(data);
         return data;
       })
       .catch(error => {
         console.error('Failed to fetch accepted freelancers:', error);
-      
         return [];
       });
   };
@@ -88,7 +82,6 @@ export const ProjectProvider = ({ children }) => {
     acceptedFreelancers,
     fetchProjects,
     createProject,
-    setAuthToken,
     fetchAcceptedFreelancers 
   };
 

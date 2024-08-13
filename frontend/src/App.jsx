@@ -22,6 +22,7 @@ import UpdateProfile from "./Client/UpdateProfile";
 import Proposals from "./Client/Proposals";
 import JobCreation from "./Client/JobCreation";
 import Freelancers from "./Client/Freelancers";
+import FreelancersSaved from "./Client/FreelancersSaved";
 import UserJobPostings from "./Client/UserJobPostings";
 import ClientDashboard from "./Client/ClientDashboard";
 import ProjectForm from "./Client/ProjectForm";
@@ -78,6 +79,7 @@ function App() {
                   <Route path="update-profile" element={<UpdateProfile />} />
                   <Route path="my-jobs" element={<UserJobPostings />} />
                   <Route path="freelancers" element={<Freelancers />} />                  
+                  <Route path="saved-freelancers" element={<FreelancersSaved />} />                  
                   <Route path="proposal/:jobId" element={<Proposals />} />
                   <Route path="my-projects" element={<Projects/>}/>
                   <Route path="projects/create-project" element={<ProjectForm />} />

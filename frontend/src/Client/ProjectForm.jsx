@@ -4,7 +4,7 @@ import { ProjectContext } from '../context/ProjectContext';
 import { NavLink } from 'react-router-dom';
 
 const ProjectForm = () => {
-    const { acceptedFreelancers, createProject } = useContext(ProjectContext);
+    const { acceptedFreelancers, createProject, fetchAcceptedFreelancers } = useContext(ProjectContext);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -29,6 +29,7 @@ const ProjectForm = () => {
                 status: 'started',
                 deadline: ''
             });
+            await fetchAcceptedFreelancers();
         } catch (error) {
             console.error('Failed to create project:', error);
             toast.error('Failed to create project');
@@ -36,33 +37,33 @@ const ProjectForm = () => {
     };
 
     return (
-        <div className="mt-[10vh]">
-            <h2 className="text-2xl font-bold mb-4">Projects</h2>
-            <div className="flex justify-between mb-6">
-                <div className="flex items-center gap-4">
+        <div className="p-4 md:p-6 min-h-screen bg-gray-100">
+                        <div className="bg-white p-6 rounded-lg shadow-lg">
+
+            <div className="flex justify-center mb-6">
+                <div className="inline-flex">
                     <NavLink 
-                            to="/client/my-projects"
-                            className={({ isActive }) => 
-                                `py-2 px-4 rounded text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
-                            }
-                        >
-                            My Projects
-                        </NavLink>
-                        <NavLink
-                            to="/client/projects/create-project"
-                            className={({ isActive }) => 
-                                `py-2 px-4 rounded text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
-                            }
-                        >
-                            Create Project
+                        to="/client/projects/create-project"
+                        className={({ isActive }) => 
+                            `py-2 px-6 rounded-l-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
+                        }
+                    >
+                        Create Project
+                    </NavLink>
+                    <NavLink 
+                        to="/client/my-projects"
+                        className={({ isActive }) => 
+                            `py-2 px-6 rounded-r-lg text-white ${isActive ? 'bg-blue-800' : 'bg-blue-500 hover:bg-blue-700'}`
+                        }
+                    >
+                        My Projects
                     </NavLink>
                 </div>
             </div>
+
             <div className="flex items-center justify-center py-5 px-6 lg:px-8">
                 <div className="bg-white mx-auto flex flex-col items-center justify-center px-6 max-w-2xl w-full py-8 rounded-md shadow-md border-2 border-gray-200">
-                    <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Create a New Project
-                    </h2>
+                    
                     <form className="space-y-6 mt-8 w-full" onSubmit={handleSubmit}>
                         {/* Title */}
                         <div>
@@ -171,6 +172,7 @@ const ProjectForm = () => {
                         </button>
                     </form>
                 </div>
+            </div>
             </div>
         </div>
     );

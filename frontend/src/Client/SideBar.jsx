@@ -67,6 +67,12 @@ const Sidebar = () => {
             <FaBriefcase  className="mr-2" /> My Jobs
           </NavLink>
           <NavLink
+            to="/client/freelancers"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
+             <MdPeopleAlt  className="mr-3 text-2xl" /> Freelancers
+          </NavLink>
+          <NavLink
             to="/client/my-projects"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >
@@ -74,12 +80,7 @@ const Sidebar = () => {
           Projects
           </NavLink>
           
-          <NavLink
-            to="/client/freelancers"
-            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-          >
-             <MdPeopleAlt  className="mr-3 text-2xl" /> Freelancers
-          </NavLink>
+          
               
             </>
           )}     

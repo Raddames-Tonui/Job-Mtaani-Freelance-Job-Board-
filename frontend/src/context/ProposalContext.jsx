@@ -58,7 +58,6 @@ export const ProposalProvider = ({ children }) => {
   // Update proposal status and handle acceptance
   const updateProposalStatus = (proposalId, status) => {
     if (status === 'accepted') {
-      // Call the route to accept the proposal
       fetch(`${server_url}/proposals/${proposalId}/accept`, {
         method: 'POST',
         headers: {

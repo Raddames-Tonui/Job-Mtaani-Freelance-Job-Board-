@@ -1,29 +1,101 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { server_url } from '../../config.json';
+import { NavLink } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { MdBookmarkAdd } from "react-icons/md";
+
 
 const Freelancers = () => {
-  const { users, fetchUsers, currentUser, addAcceptedFreelancer, deleteAcceptedFreelancer } = useContext(UserContext);
   const [freelancers, setFreelancers] = useState([]);
+  const [acceptedFreelancers, setAcceptedFreelancers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     navigate("/login");
-  //     return;
-  //   }
-
-  //   fetchUsers().catch((error) => {
-  //     console.error("Failed to fetch users:", error);
-  //   });
-  // }, [fetchUsers, navigate, currentUser]);
+  const [authToken, setAuthToken] = useState(localStorage.getItem("access_token"));
 
   useEffect(() => {
-    if (users) {
-      setFreelancers(users.filter(user => user.is_freelancer));
-    }
-  }, [users]);
+    if (!authToken) return;
+
+    // Fetch freelancers
+    fetch(`${server_url}/users?is_freelancer=true`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setFreelancers(data);
+    })
+    .catch((error) => {
+      toast.error("Network error: " + error.message);
+    });
+
+    // Fetch accepted freelancers
+    fetch(`${server_url}/freelancers/accepted`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setAcceptedFreelancers(data);
+    })
+    .catch((error) => {
+      toast.error("Network error: " + error.message);
+    });
+  }, [authToken]);
+
+  const handleChoose = (id) => {
+    fetch(`${server_url}/accepted-freelancers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ freelancer_id: id }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success('Freelancer added successfully!');
+        setFreelancers(freelancers.map(freelancer =>
+          freelancer.id === id ? { ...freelancer, status: 'accepted' } : freelancer
+        ));
+        setAcceptedFreelancers([...acceptedFreelancers, data]);
+      }
+    })
+    .catch(err => {
+      toast.error(`Error: ${err.message}`);
+    });
+  };
+
+  const handleRemove = (id) => {
+    fetch(`${server_url}/accepted-freelancers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success('Freelancer removed successfully!');
+        setFreelancers(freelancers.map(freelancer =>
+          freelancer.id === id ? { ...freelancer, status: 'not-accepted' } : freelancer
+        ));
+        setAcceptedFreelancers(acceptedFreelancers.filter(freelancer => freelancer.id !== id));
+      }
+    })
+    .catch(err => {
+      toast.error(`Error: ${err.message}`);
+    });
+  };
 
   const filteredFreelancers = freelancers.filter(freelancer => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -35,68 +107,83 @@ const Freelancers = () => {
     );
   });
 
-  const handleChoose = (id) => {
-    addAcceptedFreelancer(id)
-      .then(() => {
-        console.log(`Freelancer with ID ${id} added successfully`);
-      })
-      .catch((error) => {
-        console.error(`Failed to add freelancer with ID ${id}:`, error);
-      });
-  };
+  const isAccepted = (id) => acceptedFreelancers.some(freelancer => freelancer.id === id);
 
-  const handleRemove = (id) => {
-    deleteAcceptedFreelancer(id)
-      .then(() => {
-        console.log(`Freelancer with ID ${id} removed successfully`);
-        setFreelancers(freelancers.filter(freelancer => freelancer.id !== id));
-      })
-      .catch((error) => {
-        console.error(`Failed to remove freelancer with ID ${id}:`, error);
-      });
+  const getCardColor = (id) => {
+    return isAccepted(id)
+      ? 'bg-green-50 border-green-400 hover:bg-green-100'
+      : 'bg-yellow-100 border-yellow-400 hover:bg-yellow-100';
   };
-
-  if (!currentUser) {
-    return null;
-  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">Available Freelancers</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="Search by skills, experience, education, or location..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredFreelancers.map((freelancer) => (
-          <div key={freelancer.id} className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-2 capitalize underline flex justify-center">{freelancer.firstname} {freelancer.lastname}</h2>
-            <p><span className='font-semibold'> Experience:</span>  {freelancer.experience}</p>
-            <p><span className='font-semibold'>Education:</span>  {freelancer.education}</p>
-            <p><span className='font-semibold'>Location:</span>  {freelancer.location}</p>
-            <h3 className="font-semibold underline flex justify-center">Skills</h3>
-            <p>{freelancer.skills}</p>
-            <div className="mt-4 flex space-x-4">
-              <button
-                onClick={() => handleChoose(freelancer.id)}
-                className="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600"
-              >
-                Choose
-              </button>
-              <button
-                onClick={() => handleRemove(freelancer.id)}
-                className="bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600"
-              >
-                Decline
-              </button>
-            </div>
+    <div className="p-4 md:p-6 min-h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex">
+            <NavLink 
+              to="/client/freelancers"
+              className={({ isActive }) => 
+                `py-2 px-6 rounded-l-lg text-white ${isActive ? 'bg-indigo-600' : 'bg-indigo-400 hover:bg-indigo-500'}`
+              }
+            >
+              All Freelancers
+            </NavLink>
+            <NavLink 
+              to="/client/saved-freelancers"
+              className={({ isActive }) => 
+                `py-2 px-6 rounded-r-lg text-white ${isActive ? 'bg-indigo-600' : 'bg-indigo-400 hover:bg-indigo-500'}`
+              }
+            >
+              Saved Freelancers
+            </NavLink>
           </div>
-        ))}
+        </div>
+
+        <div className="mb-6">
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-500"
+            placeholder="Search by skills, experience, education, or location..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredFreelancers.map((freelancer) => (
+            <div
+              key={freelancer.id}
+              className={`border rounded-lg shadow-md p-6 cursor-pointer ${getCardColor(freelancer.id)} transition-transform transform hover:scale-105`}
+            >
+              <div className="flex items-center mb-4">
+                <img src={freelancer.avatar} alt="Profile" className="w-16 h-16 rounded-full border-2 border-indigo-500 mr-4" />
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">{freelancer.firstname} {freelancer.lastname}</h2>
+                  <p className="text-gray-600"><strong>Experience:</strong> {freelancer.experience}</p>
+                  <p className="text-gray-600"><strong>Education:</strong> {freelancer.education}</p>
+                  <p className="text-gray-600"><strong>Location:</strong> {freelancer.location}</p>
+                </div>
+              </div>
+              <h3 className="mt-4 text-lg font-semibold text-gray-800">Skills</h3>
+              <p className="text-gray-600 mb-4">{freelancer.skills}</p>
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => handleChoose(freelancer.id)}
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex justify-center items-center"
+                >
+                  Save Freelancer <span className='ml-2 text-xl'><MdBookmarkAdd /> </span>
+                </button>
+                {/* <button
+                  onClick={() => handleRemove(freelancer.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                >
+                  Decline
+                </button> */}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
