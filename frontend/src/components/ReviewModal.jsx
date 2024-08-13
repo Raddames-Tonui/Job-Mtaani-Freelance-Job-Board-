@@ -3,15 +3,15 @@ import { UserContext } from '../context/UserContext';
 import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
-const ReviewModal = ({ isOpen, onClose, userId }) => {
+const ReviewModal = ({ isOpen, onClose, userId, reviewType }) => {
     const [score, setScore] = useState(5);
     const [review, setReview] = useState('');
     const { createRating, currentUser } = useContext(UserContext);
 
     const handleSubmit = () => {
-        if (!currentUser || !userId) return;
+        if (!currentUser || !userId || !reviewType) return;
 
-        createRating(userId, score, review)
+        createRating(userId, score, review, reviewType)
             .then(() => {
                 toast.success('Review submitted successfully!');
                 onClose();

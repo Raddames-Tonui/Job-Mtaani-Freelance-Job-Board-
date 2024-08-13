@@ -38,8 +38,7 @@ function Projects() {
     const handleUpdateProject = (projectId, updatedData) => {
         updateProject(projectId, updatedData)
             .then((updatedProject) => {
-                // Check if the status was updated to "Completed"
-                if (updatedProject.status === 'Completed') {                    
+                if (updatedProject.status === 'Completed') {
                     setSelectedFreelancerId(updatedProject.freelancer_id); // Open the review modal for the freelancer associated with the project
                     setReviewModalOpen(true);
                 }
@@ -160,7 +159,6 @@ function Projects() {
                     onClose={handleCloseModal}
                     project={selectedProject}
                     onUpdate={handleUpdateProject}
-                    onReviewOpen={handleReviewOpen}
                 />
             )}
 
@@ -169,6 +167,7 @@ function Projects() {
                     isOpen={isReviewModalOpen}
                     onClose={handleCloseReviewModal}
                     userId={selectedFreelancerId}
+                    reviewType="freelancer" 
                 />
             )}
         </div>
