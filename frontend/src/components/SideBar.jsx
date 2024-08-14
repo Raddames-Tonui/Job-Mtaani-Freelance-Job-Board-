@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
-import {  FiUsers } from 'react-icons/fi';
+import { FaMoneyCheckAlt } from "react-icons/fa";
+
 import { CgProfile } from "react-icons/cg";
 import { FaHome } from "react-icons/fa";
 import { RiProgress3Fill } from "react-icons/ri";
@@ -40,13 +41,13 @@ const Sidebar = () => {
 
         {currentUser && currentUser.is_client && (
             <>
-            <NavLink
+            {/* <NavLink
             to="/client"
             end
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
           >       
             <FaHome className="mr-2" /> Overview
-          </NavLink>
+          </NavLink> */}
             <NavLink
             to="/client/update-profile"
             className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
@@ -77,6 +78,13 @@ const Sidebar = () => {
           >
             <RiProgress3Fill className="mr-2"  />
           Projects
+          </NavLink>                     
+          <NavLink
+            to="/client/payment"
+            className={({ isActive }) => `p-4 flex items-center text-xl font-semibold ${isActive ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+          >
+            < FaMoneyCheckAlt className="mr-2"  />
+          Payment
           </NavLink>                     
             </>
           )}   

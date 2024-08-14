@@ -44,9 +44,16 @@ const Navbar = () => {
   return (
     <header className={`fixed top-0 w-full ${currentUser?.is_admin ? 'bg-gradient-to-b from-blue-300 to-blue-200' : 'bg-blue-300'} flex justify-between items-center px-6 h-[10vh] z-50`}>
       <div className="flex items-center space-x-2">
-        <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300">
-          Job Mtaani
-        </Link>
+        {currentUser && (
+            <Link
+              to={currentUser.is_freelancer ? "/freelancer/find-jobs" : "/client/update-profile"}
+              className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition duration-300"
+            >
+              Job Mtaani
+            </Link>
+          )}
+
+        
       </div>
 
       {/* Desktop Menu */}

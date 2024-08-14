@@ -159,7 +159,7 @@ export const UserProvider = ({ children }) => {
                 if (res.is_admin) {
                     nav("/admin/overview");
                 } else if (res.is_client) {
-                    nav("/client");
+                    nav("/client/update-profile");
                 } else if (res.is_freelancer) {
                     nav("/freelancer/find-jobs");
                 } else {

@@ -39,6 +39,7 @@ import FindJobs from "./freelancers/FindJobs";
 import AppliedJobs from "./freelancers/AppliedJobs";
 import UpdateFreelancerProfile from "./freelancers/UpdateFreelancerProfile";
 import FreelancerProjects from "./freelancers/FreelancerProjects";
+import AccountPage from "./payment/AccountPage";
 
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
                   <Route path="proposal/:jobId" element={<Proposals />} />
                   <Route path="my-projects" element={<Projects/>}/>
                   <Route path="projects/create-project" element={<ProjectForm />} />
+                  <Route path="payment" element={<AccountPage/>}/>
                 </Route>
 
                 {/* ADMIN ROUTES */}

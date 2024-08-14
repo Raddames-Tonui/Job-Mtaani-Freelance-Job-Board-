@@ -13,7 +13,6 @@ const ReviewModal = ({ isOpen, onClose, userId, reviewType }) => {
 
         createRating(userId, score, review, reviewType)
             .then(() => {
-                toast.success('Review submitted successfully!');
                 onClose();
             })
             .catch(err => {

@@ -1,5 +1,5 @@
 import random,os
-from datetime import timedelta
+from datetime import timedelta, datetime
 from flask import Flask, jsonify, request, abort, send_file
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Session
@@ -13,6 +13,10 @@ from flask_mail import Mail, Message
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename  # For uploading files
 from flask import send_from_directory # For downloading files
+
+import requests
+from requests.auth import HTTPBasicAuth
+import base64
 
 
 
@@ -949,6 +953,93 @@ def delete_rating(rating_id):
 
 
 
+# =================================MPESA PAYMENT ===============================================
+
+my_endpoint = 'https://3166-102-0-7-74.ngrok-free.app'
+
+@app.route('/pay', methods=['POST'])
+def MpesaExpress():
+    data = request.get_json()
+    
+    # Validate incoming data
+    if not data or not all(key in data for key in ('amount', 'phone')):
+        abort(400, description="Invalid input")
+    
+    try:
+        amount = float(data['amount'])  # Convert amount to float
+    except ValueError:
+        abort(400, description="Invalid amount format")
+    
+    phone = str(data['phone'])  # Ensure phone is a string
+
+    if not phone.isdigit() or len(phone) < 10:
+        abort(400, description="Invalid phone number format")
+    
+    endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    access_token = getAccesstoken()
+    headers = { "Authorization": "Bearer %s" % access_token }
+    
+    Timestamp = datetime.now()
+    times = Timestamp.strftime("%Y%m%d%H%M%S")
+    password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
+    password = base64.b64encode(password.encode('utf-8')).decode('utf-8')
+    
+    data_to_send = {
+        "BusinessShortCode": "174379",  # BusinessShortCode should be a string
+        "Password": password,
+        "Timestamp": times,
+        "TransactionType": "CustomerPayBillOnline",
+        "Amount": amount,
+        "PartyA": phone,  # PartyA is the phone number initiating the payment
+        "PartyB": "174379",  # PartyB is the BusinessShortCode
+        "PhoneNumber": phone,  # This should match the format 2547XXXXXXXX
+        "CallBackURL": my_endpoint + "/lnmo-callback",
+        "AccountReference": "JOB MTAANI",
+        "TransactionDesc": "Deposit of Funds"
+    }
+    
+    try:
+        response = requests.post(endpoint, json=data_to_send, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        result = response.json()
+        
+        # Handle result code
+        if result.get("Body", {}).get("stkCallback", {}).get("ResultCode") == 1032:
+            return jsonify({
+                "status": "Payment Canceled",
+                "message": "The payment request was canceled by the user.",
+                "details": result
+            })
+        elif result.get("ResponseCode") == "0":
+            return jsonify({
+                "status": "Payment Requested",
+                "message": "Your payment request has been successfully submitted and is being processed. Please wait for further updates.",
+                "details": result
+            })
+        else:
+            return jsonify({
+                "status": "Payment Request Failed",
+                "message": result.get("CustomerMessage", "An error occurred during payment request."),
+                "details": result
+            })
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+    
+@app.route('/lnmo-callback', methods=["POST"])
+def incoming():
+    data = request.get_json()
+    print(data)
+    return "ok"
+
+def getAccesstoken():
+    consumer_key = "5OvYNmDM0aQf7qGfqcTJcz6euvVv8QcCJK37Jg9S8mNiqfi3"
+    consumer_secret = "rdZdcjTsjb5ipLrAN5EQcAQCYrNddOkIGS90A6sXOuFrce2v68u4hf8ZNaXsK5x8"
+    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    
+    r = requests.get(endpoint, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+    data = r.json()
+    return data['access_token']
 
 if __name__ == "__main__":
     app.run(debug=True, port=5555)

@@ -118,13 +118,14 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
             <p  className="text-green-600 hover:underline flex justify-center font-bold text-xl">
           Client profile
         </p>
-        <img
-          src={job.client.avatar}
-          alt="Profile"
-          className="w-12 h-12 rounded-full  flex justify-center"
-        />
       <div className="flex items-center mb-4 pt-3">
-        
+       {job.client.avatar && (
+         <img
+         src={job.client.avatar}
+         alt="Profile"
+         className="w-12 h-12 rounded-full mr-3"
+       />
+       )} 
         
         <div>
           <h2 className="text-lg font-bold text-green-700 hover:underline">
@@ -144,7 +145,7 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
         {/* <span className="text-sm text-gray-500">80%</span> */}
       </div>
       <h2 className='flex justify-center pt-3'>About</h2>
-      <p>{job.client?.about}</p>
+      <p className='text-center'>{job.client?.about}</p>
 
     </div>
           </div>
