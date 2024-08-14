@@ -8,7 +8,7 @@ import "../app.css";
 function Layout() {
   return (
     <div className="h-screen overflow-y-scroll no-scrollbar">
-      <NavbarHome />
+      
       <Toaster
         position="top-center"
         reverseOrder={true}

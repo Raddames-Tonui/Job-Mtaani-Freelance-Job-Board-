@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Footer from '../components/Footer';
 import server_url from '../../config.json';
+import NavbarHome from "../home/NavbarHome";
 
 const CustomerSupport = () => {
   const [formData, setFormData] = useState({
@@ -48,6 +49,7 @@ const CustomerSupport = () => {
 
   return (
     <div>
+      <NavbarHome />
       <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 bg-gray-100">
         <div className="lg:w-1/2 text-center lg:text-left p-4">
           <h2 className="text-3xl font-bold mb-4">We care about customer services</h2>

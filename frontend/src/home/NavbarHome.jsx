@@ -5,7 +5,6 @@ function NavbarHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
-  // List of paths where the Navbar should not be displayed
   const noNavbarPaths = ['/login', '/signup', '/reset-password/:token', '/forgot-password'];
   
   const shouldDisplayNavbar = !noNavbarPaths.includes(location.pathname);
@@ -15,8 +14,8 @@ function NavbarHome() {
   }
 
   return (
-    <nav className="absolute top-2 w-full px-4 sm:px-6 lg:px-8 bg">
-      <div className="container mx-auto">
+    <nav className=" top-2 w-full bg-blue-300 h-[10vh] px-4 sm:px-6 lg:px-8 ">
+      <div className="container mx-auto ">
         <div className="flex flex-row items-center justify-between">
           <NavLink
             to="/"
