@@ -114,32 +114,38 @@ function JobDetails({ isOpen, onClose, job, timeAgo }) {
               Apply now
             </button>
 
-            <div className="bg-white rounded-lg p-4 shadow-md">
-      <div className="flex items-center mb-4">
+            <div className="bg-white rounded-lg p-4 shadow-md mt-5">
+            <p  className="text-green-600 hover:underline flex justify-center font-bold text-xl">
+          Client profile
+        </p>
         <img
-          src="profile-image-url.jpg"
+          src={job.client.avatar}
           alt="Profile"
-          className="w-12 h-12 rounded-full mr-3"
+          className="w-12 h-12 rounded-full  flex justify-center"
         />
+      <div className="flex items-center mb-4 pt-3">
+        
+        
         <div>
           <h2 className="text-lg font-bold text-green-700 hover:underline">
-            Raddames T.
+          {job.client.firstname} {job.client.lastname}
           </h2>
-          <p className="text-sm text-gray-600">Full stack web dev...</p>
+          <p className="text-sm text-gray-600">{job.client.email}</p>
         </div>
       </div>
       <div>
-        <a href="#" className="text-green-600 hover:underline">
-          Complete your profile
-        </a>
+        
         <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
           <div
             className="bg-green-600 h-2.5 rounded-full"
-            style={{ width: '80%' }}
+            style={{ width: '100%' }}
           ></div>
         </div>
-        <span className="text-sm text-gray-500">80%</span>
+        {/* <span className="text-sm text-gray-500">80%</span> */}
       </div>
+      <h2 className='flex justify-center pt-3'>About</h2>
+      <p>{job.client?.about}</p>
+
     </div>
           </div>
         </section>
