@@ -1,12 +1,11 @@
 import React from "react";
 import { FaLocationDot } from "react-icons/fa6";
-import { FaArrowRight } from "react-icons/fa6";
 
 const JobCard = ({ job, actions, onClick, timeAgo }) => {
   return (
     <div
       className="bg-white hover:bg-blue-200 shadow-md rounded-lg p-6 md:mx-auto mx-2 md:w-[60vw] "
-      onClick={onClick}
+      
     >
       <h2>
         <span className="text-sm text-gray-500">Posted {timeAgo}</span>
@@ -67,14 +66,24 @@ const JobCard = ({ job, actions, onClick, timeAgo }) => {
         )}
       </div>
       <div className="flex justify-end mt-4">
-        {actions?.map((action, index) => (
-          <button
-            key={index}
-            className="bg-blue-500 hover:bg-blue-700 px-3 text-white py-1 rounded-md ml-2 flex items-center gap-2"             
-          >
-            View More Details <span><FaArrowRight /></span>
-          </button>
-        ))}
+      {actions?.map((action, index) => (
+  <button
+    key={index}
+    onClick={onClick}
+    className="relative inline-flex items-center justify-center px-3 py-1 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-blue-500 rounded-md shadow-md group"
+  >
+    <span className="absolute inset-0 flex items-center justify-center w-full h-full bg-blue-500 text-white duration-300 -translate-x-full group-hover:translate-x-0 ease">
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+      </svg>
+    </span>
+    <span className="absolute flex items-center justify-center w-full h-full text-blue-500 transition-all duration-300 transform group-hover:translate-x-full ease">
+      View More Details
+    </span>
+    <span className="relative invisible">View More Details</span>
+  </button>
+))}
+
       </div>
     </div>
   );

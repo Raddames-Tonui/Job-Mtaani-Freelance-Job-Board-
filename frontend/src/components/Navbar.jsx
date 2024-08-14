@@ -65,7 +65,16 @@ const Navbar = () => {
                 className="rounded-full w-10 h-10 ring-1 object-cover" 
               />
             )}
-            <button onClick={logoutUser} className={`font-bold rounded-full bg-blue-600 py-2 px-3 hover:bg-blue-700 transition duration-300 ${currentUser.is_admin ? 'bg-blue-700' : ''}`}>Logout</button>
+         <button
+  onClick={logoutUser}
+  className={`relative inline-flex items-center px-6 py-2 text-base font-medium text-white border-1 border-blue-500 rounded-full bg-blue-500 transition duration-300 ease-in-out hover:bg-indigo-600 hover:text-white ${currentUser.is_admin ? 'border-blue-700 text-blue-700 hover:bg-blue-700' : ''}`}
+>
+  <span className="absolute inset-0 bg-indigo-600 transition-all duration-300 ease-out opacity-0 group-hover:opacity-100"></span>
+  <span className="relative">Logout</span>
+</button>
+
+
+
           </>
         ) : (
           <>
