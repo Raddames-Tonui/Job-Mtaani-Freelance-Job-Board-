@@ -311,16 +311,21 @@ export const UserProvider = ({ children }) => {
 
     // =================================== RATING ===================================
     // Function to create a rating
-    const createRating = (userId, score, review) => {
-        fetch(`${server_url}/ratings`, {
+    const createRating = (userId, score, review, reviewType) => {
+        return fetch(`${server_url}/ratings`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             },
-            body: JSON.stringify({ user_id: userId, score, review })
+            body: JSON.stringify({ user_id: userId, score, review, review_type: reviewType })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create rating');
+            }
+            return response.json();
+        })
         .then(data => {
             toast.success('Rating created successfully!');
             return data;
@@ -329,6 +334,7 @@ export const UserProvider = ({ children }) => {
             toast.error(`Error: ${err.message}`);
         });
     };
+
 
     // Function to update a rating
     const updateRating = (ratingId, score, review) => {
