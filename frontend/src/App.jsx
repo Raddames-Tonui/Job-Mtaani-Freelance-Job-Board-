@@ -24,7 +24,7 @@ import JobCreation from "./Client/JobCreation";
 import Freelancers from "./Client/Freelancers";
 import FreelancersSaved from "./Client/FreelancersSaved";
 import UserJobPostings from "./Client/UserJobPostings";
-import ClientDashboard from "./Client/ClientDashboard";
+// import ClientDashboard from "./Client/ClientDashboard";
 import ProjectForm from "./Client/ProjectForm";
 import Projects from "./Client/Projects";
 
@@ -75,7 +75,7 @@ function App() {
 
                 {/* CLIENT ROUTES */}
                 <Route path="/client" element={<LayoutClient />}>
-                  <Route index element={<ClientDashboard />} />
+                  {/* <Route index element={<ClientDashboard />} /> */}
                   <Route path="create-job" element={<JobCreation />} />
                   <Route path="update-profile" element={<UpdateProfile />} />
                   <Route path="my-jobs" element={<UserJobPostings />} />

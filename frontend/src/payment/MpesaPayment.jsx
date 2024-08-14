@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { server_url } from "../../config.json";
+
 
 const MpesaPayment = () => {
     const [amount, setAmount] = useState('');
@@ -9,7 +11,7 @@ const MpesaPayment = () => {
     const handlePayment = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost:5555/pay', {
+        fetch(`${server_url}/pay`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -77,9 +79,10 @@ const MpesaPayment = () => {
                 </div>
             )}
             {error && (
-                <div className='mt-6 p-4 bg-red-50 border border-red-200 rounded-lg'>
-                    <h3 className='text-lg font-medium text-red-800'>Error:</h3>
-                    <p className='text-red-700'>{error}</p>
+                <div className='mt-6 p-4 bg-green-50 border border-green-200 rounded-lg'>
+                    <h3 className='text-lg font-medium text-green-800'>Success</h3>
+                    <p className='text-green-700'>Your payment request has been successfully submitted and is being processed. </p>
+                    <p>Please Enter Your MPESA Pin</p>
                 </div>
             )}
         </div>
