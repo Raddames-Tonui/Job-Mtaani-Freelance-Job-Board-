@@ -955,7 +955,7 @@ def delete_rating(rating_id):
 
 # =================================MPESA PAYMENT ===============================================
 
-my_endpoint = 'https://3166-102-0-7-74.ngrok-free.app'
+my_endpoint = 'https://9313-102-0-7-74.ngrok-free.app'
 
 @app.route('/pay', methods=['POST'])
 def MpesaExpress():

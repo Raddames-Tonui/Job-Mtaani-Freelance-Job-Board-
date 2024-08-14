@@ -82,10 +82,10 @@ const Proposals = () => {
                 <p className="text-gray-500 text-sm mb-4">
                   <strong>Submitted:</strong> {new Date(proposal.created_at).toLocaleDateString()}
                 </p>
-                {/* <div className="flex justify-center items-center text-blue-600 cursor-pointer" onClick={() => handleDownloadClick(proposal.resume_path)}>
+                <div className="flex justify-center items-center text-blue-600 cursor-pointer" onClick={() => handleDownloadClick(proposal.resume_path)}>
                   <LuDownload className="mr-2" />
                   <span className="font-semibold">Download CV</span>
-                </div> */}
+                </div>
                 <div className="flex justify-between mt-6">
                   <button
                     className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded-md"
