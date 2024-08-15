@@ -21,7 +21,7 @@ const ClientsPage = () => {
                             <th className="py-3 px-6 text-left">FirstName</th>
                             <th className="py-3 px-6 text-left">Last Name</th>                            
                             <th className="py-3 px-6 text-left">Email</th>
-                            <th className="py-3 px-6 text-right">Ratings</th>
+                            {/* <th className="py-3 px-6 text-right">Ratings</th> */}
                             <th className="py-3 px-6 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -37,12 +37,12 @@ const ClientsPage = () => {
                                 <td className="py-3 px-6 text-left">{client.firstname}</td>
                                 <td className="py-3 px-6 text-left">{client.lastname || 'N/A'}</td>
                                 <td className="py-3 px-6 text-left">{client.email || 'N/A'}</td>
-                                <td className="py-3 px-6 text-left">{client.ratings || 'N/A'}</td>
+                                {/* <td className="py-3 px-6 text-left">{client.ratings || 'N/A'}</td> */}
                                 <td className="py-3 px-6 text-center">
                                     <div className="flex item-center justify-center">
-                                        <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                                        {/* <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                             <FaEdit />
-                                        </button>
+                                        </button> */}
                                         <button
                                             className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
                                             onClick={() => deleteUser(client.id)}

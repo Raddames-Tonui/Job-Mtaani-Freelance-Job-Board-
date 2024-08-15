@@ -18,10 +18,10 @@ const FreelancersPage = () => {
                     <thead className="sticky top-0 bg-gray-700 text-gray-400 uppercase text-sm leading-normal">
                         <tr>
                             <th className="py-3 px-6 text-left">User Name</th>
-                            <th className="py-3 px-6 text-left">FirstName</th>
+                            <th className="py-3 px-6 text-left">First Name</th>
                             <th className="py-3 px-6 text-left">Last Name</th>
                             <th className="py-3 px-6 text-left">Email</th>
-                            <th className="py-3 px-6 text-center">Actions</th>
+                            {/* <th className="py-3 px-6 text-center">Actions</th> */}
                         </tr>
                     </thead>
                     <tbody className="text-gray-300 text-sm font-light">
@@ -36,17 +36,19 @@ const FreelancersPage = () => {
                                 <td className="py-3 px-6 text-left">{freelancer.firstname}</td>
                                 <td className="py-3 px-6 text-left">{freelancer.lastname || 'N/A'}</td>
                                 <td className="py-3 px-6 text-left">{freelancer.email || 'N/A'}</td>
-                                <td className="py-3 px-6 text-center">
+                                {/* <td className="py-3 px-6 text-center">
                                     <div className="flex item-center justify-center">
                                         <button className="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                             <FaEdit />
                                         </button>
-                                        <button className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
-                                            onClick={() => deleteUser(freelancer.id)}>
+                                        <button
+                                            className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                            onClick={() => deleteUser(freelancer.id)}
+                                        >
                                             <FaTrash />
                                         </button>
                                     </div>
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                     </tbody>

@@ -35,6 +35,8 @@ export const UserProvider = ({ children }) => {
         }
     }, [authToken]);
 
+    
+
     // DELETE USER
     const deleteUser = (id) => {
         fetch(`${server_url}/users/${id}`, {

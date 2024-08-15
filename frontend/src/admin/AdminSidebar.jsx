@@ -49,14 +49,14 @@ const AdminSidebar = () => {
                   <TbBriefcaseFilled className="mr-3 text-2xl" /> Jobs
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="/admin/settings"
                   className={({ isActive }) => `flex items-center p-4 text-lg ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-800'}`}
                 >
                   <FiSettings className="mr-3 text-2xl" /> Settings
                 </NavLink>
-              </li>
+              </li> */}
           
           <li>
             <button
