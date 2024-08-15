@@ -14,21 +14,17 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename  # For uploading files
 from flask import send_from_directory # For downloading files
 
-from dotenv import load_dotenv
-
-load_dotenv()  # take environment variables from .env
-postgres_pwd = os.getenv("POSTGRES_PWD")  
-
-
 import requests
 from requests.auth import HTTPBasicAuth
 import base64
+
+
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Rating,  AcceptedFreelancer
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://job_mtaani_user:{postgres_pwd}"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://job_mtaani_user:t2Asg3oxQoSvln2VgAYIeh7FWZyXw0WE@dpg-cqurebij1k6c73dkfp30-a.oregon-postgres.render.com/job_mtaani"
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "$hhjd4q%h%$#@%ggh^#7&893" + str(random.randint(1, 1000000))
