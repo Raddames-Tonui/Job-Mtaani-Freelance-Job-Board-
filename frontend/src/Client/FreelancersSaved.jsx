@@ -3,7 +3,7 @@ import { server_url } from '../../config.json';
 import { NavLink } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { UserContext } from '../context/UserContext';
-import { FaUserCircle } from 'react-icons/fa'; // Import the default user icon
+import { FaUserCircle } from 'react-icons/fa'; 
 
 const FreelancersSaved = () => {
   const [freelancers, setFreelancers] = useState([]);
@@ -125,11 +125,11 @@ const FreelancersSaved = () => {
                     >
                       Remove
                     </button>
-                    <button
+                    {/* <button
                       className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
                     >
                       Message
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}
