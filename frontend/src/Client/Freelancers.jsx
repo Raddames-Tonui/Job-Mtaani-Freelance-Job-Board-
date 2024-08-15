@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { server_url } from '../../config.json';
 import { NavLink } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { MdBookmarkAdd } from "react-icons/md";
-import { UserContext } from '../context/UserContext'; 
+import { MdBookmarkAdd, MdDelete } from "react-icons/md"; 
+import { UserContext } from '../context/UserContext';
+import { FaUserCircle } from 'react-icons/fa'; 
 
 const Freelancers = () => {
   const [acceptedFreelancers, setAcceptedFreelancers] = useState([]);
@@ -59,7 +60,25 @@ const Freelancers = () => {
     });
   };
 
-
+  const handleRemove = (id) => {
+    fetch(`${server_url}/accepted-freelancers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        toast.success('Freelancer removed successfully!');
+        setAcceptedFreelancers(acceptedFreelancers.filter(freelancer => freelancer.id !== id));
+      } else {
+        toast.error('Failed to remove freelancer.');
+      }
+    })
+    .catch(err => {
+      toast.error(`Error: ${err.message}`);
+    });
+  };
 
   const filteredFreelancers = freelancers.filter(freelancer => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -72,12 +91,6 @@ const Freelancers = () => {
   });
 
   const isAccepted = (id) => acceptedFreelancers.some(freelancer => freelancer.id === id);
-
-  const getCardColor = (id) => {
-    return isAccepted(id)
-      ? 'bg-green-50 border-green-400 hover:bg-green-100'
-      : 'bg-yellow-100 border-yellow-400 hover:bg-yellow-100';
-  };
 
   return (
     <div className="p-4 md:p-6 min-h-screen bg-gray-100">
@@ -114,35 +127,73 @@ const Freelancers = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredFreelancers.map((freelancer) => (
-            <div
-              key={freelancer.id}
-              className={`border rounded-lg shadow-md p-6 cursor-pointer ${getCardColor(freelancer.id)} transition-transform transform hover:scale-105`}
-            >
-              <div className="flex items-center mb-4">
-                <img src={freelancer.avatar} alt="Profile" className="w-16 h-16 rounded-full border-2 border-indigo-500 mr-4" />
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">{freelancer.firstname} {freelancer.lastname}</h2>
-                  <p className="text-gray-600"><strong>Experience:</strong> {freelancer.experience}</p>
-                  <p className="text-gray-600"><strong>Education:</strong> {freelancer.education}</p>
-                  <p className="text-gray-600"><strong>Location:</strong> {freelancer.location}</p>
-                </div>
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-800">Skills</h3>
-              <p className="text-gray-600 mb-4">{freelancer.skills}</p>
-              <div className="flex justify-between mt-4">
-                <button
-                  onClick={() => handleChoose(freelancer.id)}
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex justify-center items-center"
-                >
-                  Save Freelancer <span className='ml-2 text-xl'><MdBookmarkAdd /> </span>
-                </button>
-                
-              </div>
-            </div>
-          ))}
-        </div>
+        <table className="min-w-full bg-white border">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Avatar</th>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Name</th>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Experience</th>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Education</th>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Location</th>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Skills</th>
+              <th className="py-2 px-4 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredFreelancers.map((freelancer) => (
+              <tr
+                key={freelancer.id}
+                className={`cursor-pointer ${isAccepted(freelancer.id) ? 'bg-green-100 hover:bg-green-200' : 'hover:bg-gray-100'}`}
+              >
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {freelancer.avatar ? (
+                    <img src={freelancer.avatar} alt="Profile" className="w-12 h-12 rounded-full" />
+                  ) : (
+                    <FaUserCircle className="w-12 h-12 text-gray-400" />
+                  )}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {freelancer.firstname} {freelancer.lastname}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {freelancer.experience}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {freelancer.education}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {freelancer.location}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {freelancer.skills}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-300">
+                  {isAccepted(freelancer.id) ? (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleRemove(freelancer.id);
+                      }}
+                      className="bg-red-500 hover:bg-red-600 text-white w-32 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center"
+                    >
+                      Remove <span className='ml-2 text-xl'><MdDelete /></span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleChoose(freelancer.id);
+                      }}
+                      className="bg-green-500 hover:bg-green-600 text-white w-32 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center"
+                    >
+                      Save <span className='ml-2 text-xl'><MdBookmarkAdd /></span>
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

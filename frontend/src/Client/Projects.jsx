@@ -39,7 +39,7 @@ function Projects() {
         updateProject(projectId, updatedData)
             .then((updatedProject) => {
                 if (updatedProject.status === 'Completed') {
-                    setSelectedFreelancerId(updatedProject.freelancer_id); // Open the review modal for the freelancer associated with the project
+                    setSelectedFreelancerId(updatedProject.freelancer_id);
                     setReviewModalOpen(true);
                 }
                 handleCloseModal();
