@@ -113,7 +113,7 @@ def forgot_password():
         return jsonify({"message": "User not found"}), 404
     
     token = s.dumps(email, salt='password-reset-salt')
-    reset_url = f'http://localhost:5173/reset-password/{token}' 
+    reset_url = f'https://job-mtaani.netlify.app/reset-password/{token}' 
 
     # Compose HTML email
     msg = Message('Password Reset Request', sender='noreply@example.com', recipients=[email])
