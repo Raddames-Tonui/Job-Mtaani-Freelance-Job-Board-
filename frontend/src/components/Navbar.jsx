@@ -1,14 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-import { FiBell } from 'react-icons/fi';
-import { FaMoneyCheckAlt } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
-import { RiProgress3Fill } from "react-icons/ri";
-import { BiSolidAddToQueue } from "react-icons/bi";
-import { TiUserAdd } from "react-icons/ti";
-import { FaBriefcase } from "react-icons/fa6";
-import { MdPeopleAlt } from "react-icons/md";
 
 const Navbar = () => {
   const { currentUser, logoutUser } = useContext(UserContext);
@@ -20,6 +12,11 @@ const Navbar = () => {
 
   const closeMenu = () => {
     setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    logoutUser();
+    closeMenu();
   };
 
   const renderMenuItems = () => {
@@ -83,7 +80,7 @@ const Navbar = () => {
               />
             )}
             <button
-              onClick={logoutUser}
+              onClick={handleLogout}
               className={`relative inline-flex items-center px-6 py-2 text-base font-medium text-white border-1 border-blue-500 rounded-full bg-blue-500 transition duration-300 ease-in-out hover:bg-indigo-600 hover:text-white ${currentUser.is_admin ? 'border-blue-700 text-blue-700 hover:bg-blue-700' : ''}`}
             >
               <span className="absolute inset-0 bg-indigo-600 transition-all duration-300 ease-out opacity-0 group-hover:opacity-100"></span>
@@ -112,7 +109,7 @@ const Navbar = () => {
           <nav className="flex flex-col items-center space-y-4 py-4 text-blue-600">
             {renderMenuItems()}
             {currentUser ? (
-              <button onClick={logoutUser} className="py-2 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300" onClick={closeMenu}>Logout</button>
+              <button onClick={handleLogout} className="py-2 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300">Logout</button>
             ) : (
               <>
                 <NavLink to="/login" className="py-2 px-4 text-blue-600 rounded-full hover:text-white transition duration-300" onClick={closeMenu}>Login</NavLink>

@@ -144,7 +144,7 @@ function SignUpForm() {
               className="block w-full border-b border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-0  focus:border-blue-500"
             >
               <option value="" disabled>Select your role</option>
-              {/* <option value="Admin">Admin</option> */}
+              <option value="Admin">Admin</option>
               <option value="Freelancer">Freelancer</option>
               <option value="Client">Client</option>
             </select>
