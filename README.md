@@ -15,7 +15,7 @@ JOB MTAANI is a robust freelance job board platform designed to bridge the gap b
 # Important Links
 Deployed Frontend:[Netlify](https://job-mtaani.netlify.app/)
 
-Deployed Backend: [Render](https://freelance-job-board.onrender.com/)
+Deployed Backend: [Render](https://freelance-job-board-1.onrender.com/)
 
 UI Design: [Figma Design]( https://www.figma.com/design/80T0mxXVzQ7b3E4LaQBY1j/Freelance-Job-Board?node-id=0-1&t=M5LDMzvvintLLmJz-0 )
 
@@ -31,7 +31,7 @@ Payment Integration:
 MPESA
 # Setup/Installation Requirements
 - Clone the Repository:
-  ` git clone https://github.com/your-username/job-mtaani.git`
+  ` git clone git@github.com:Raddames-Tonui/Freelance-Job-Board.git`
    `cd job-mtaani`
 
 - Backend Setup:
@@ -55,7 +55,7 @@ MPESA
    `npm install`
 
 - Start the React application:
-   `npm start`
+   `npm run dev`
 
 ## User capabilities  
  ### Freelancer
@@ -86,9 +86,9 @@ MPESA
 1. Trying to refresh in Netlify gives Page Not found
 # Support and Contact Details
 - [Raddames Tonui](raddamestonui95@gmail.com)
-- [Shadrack Ngeno](     @gmail.com)
+- [Shadrack Ngeno]@gmail.com)
 - [Rehema Somo](rehemasomo30@gmail.com)
-- [Regina Ngunga](   @gmail.com)
+- [Regina Ngunga](@gmail.com)
 - [James Nyakundi](Omarejames082@gmail.cokCom)
 
 
