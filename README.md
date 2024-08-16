@@ -86,7 +86,7 @@ MPESA
 1. Trying to refresh in Netlify gives Page Not found
 # Support and Contact Details
 - [Raddames Tonui](raddamestonui95@gmail.com)
-- [Shadrack Ngeno]@gmail.com)
+- [Shadrack Ngeno](@gmail.com)
 - [Rehema Somo](rehemasomo30@gmail.com)
 - [Regina Ngunga](@gmail.com)
 - [James Nyakundi](Omarejames082@gmail.cokCom)
