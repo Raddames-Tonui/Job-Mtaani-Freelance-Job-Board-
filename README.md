@@ -1,18 +1,17 @@
 # Freelance-Job-Board -JOB MTAANI
-A Comprehensive Freelance Job Board Platform
+## Project Description
+JOB MTAANI is a robust freelance job board platform designed to bridge the gap between freelancers and clients. It provides a seamless experience for job posting, application, and project management.
+
 August 12, 2024
 
-# Developers
+## Developers
 - Raddames Tonui
 - Rehema Somo
 - Shadrack Ngeno
 - Regina Ngunga
 - James Nyakundi
 
-# Project Description
-JOB MTAANI is a robust freelance job board platform designed to bridge the gap between freelancers and clients. It provides a seamless experience for job posting, application, and project management.
-
-# Important Links
+## Important Links
 Deployed Frontend:[Netlify](https://job-mtaani.netlify.app/)
 
 Deployed Backend: [Render](https://freelance-job-board.onrender.com/)
@@ -23,12 +22,16 @@ SQL Tables Diagram:[SQL Models](  https://drawsql.app/teams/raddames/diagrams/jo
 
 # Technologies Used
 React (Vite)
+
 Tailwind CSS
+
 Python
+
 Flask
+
 SQLAlchemy
-Payment Integration:
-MPESA
+
+Payment Integration: MPESA
 # Setup/Installation Requirements
 - Clone the Repository:
   ` git clone https://github.com/your-username/job-mtaani.git`
@@ -48,14 +51,14 @@ MPESA
    `flask run`
 
 - Frontend Setup:
-   Navigate to the frontend directory:
+   Navigate to the frontend directory in new terminal:
    `cd frontend`
 
 - Install dependencies:
    `npm install`
 
 - Start the React application:
-   `npm start`
+   `npm run dev`
 
 ## User capabilities  
  ### Freelancer
@@ -82,8 +85,7 @@ MPESA
     3.Technical Support
     4.Reporting for performance analysis
 
-# Known Bugs
-1. Trying to refresh in Netlify gives Page Not found
+
 # Support and Contact Details
 - [Raddames Tonui](raddamestonui95@gmail.com)
 - [Shadrack Ngeno](     @gmail.com)
