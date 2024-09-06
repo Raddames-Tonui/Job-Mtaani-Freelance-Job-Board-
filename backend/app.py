@@ -10,6 +10,10 @@ from flask_cors import CORS
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message  
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename  # For uploading files
 from flask import send_from_directory # For downloading files
@@ -17,8 +21,6 @@ from flask import send_from_directory # For downloading files
 import requests
 from requests.auth import HTTPBasicAuth
 import base64
-
-
 
 from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project, Rating,  AcceptedFreelancer
 
@@ -31,6 +33,9 @@ app.config["SECRET_KEY"] = "$hhjd4q%h%$#@%ggh^#7&893" + str(random.randint(1, 10
 app.config["JWT_SECRET_KEY"] = "a44u5$%*47992n3i*#*#99s29" + str(random.randint(1, 100000))
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 app.json.compact = False
+
+app.config['MY_ENDPOINT'] = os.getenv('MY_ENDPOINT')
+
 
 # Mailtrap configuration
 app.config['MAIL_SERVER'] = 'sandbox.smtp.mailtrap.io'
@@ -956,7 +961,8 @@ def delete_rating(rating_id):
 
 # =================================MPESA PAYMENT ===============================================
 
-my_endpoint = 'https://ee39-102-0-7-74.ngrok-free.app'
+my_endpoint = 'MY_ENDPOINT'
+
 
 @app.route('/pay', methods=['POST'])
 def MpesaExpress():
