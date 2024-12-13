@@ -26,8 +26,8 @@ from models import db, User, JobPosting, Proposal, Payment, Usermessage, Project
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://job_mtaani_user:t2Asg3oxQoSvln2VgAYIeh7FWZyXw0WE@dpg-cqurebij1k6c73dkfp30-a.oregon-postgres.render.com/job_mtaani"
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://job_mtaani_user:t2Asg3oxQoSvln2VgAYIeh7FWZyXw0WE@dpg-cqurebij1k6c73dkfp30-a.oregon-postgres.render.com/job_mtaani"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "$hhjd4q%h%$#@%ggh^#7&893" + str(random.randint(1, 1000000))
 app.config["JWT_SECRET_KEY"] = "a44u5$%*47992n3i*#*#99s29" + str(random.randint(1, 100000))
@@ -1049,4 +1049,4 @@ def getAccesstoken():
     return data['access_token']
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5555)
+    app.run(debug=True, port=5550)

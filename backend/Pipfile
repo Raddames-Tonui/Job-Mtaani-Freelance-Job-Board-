@@ -19,6 +19,8 @@ flask-bcrypt = "*"
 flask-socketio = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+flask-mail = "*"
+requests = "*"
 
 [dev-packages]
 
